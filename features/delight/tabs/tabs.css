@@ -1,0 +1,55 @@
+.tabs [type='radio']{
+    display: none;    
+}
+
+.tabs {
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  justify-content: flex-end;
+}
+.tabs label {
+    opacity: .5;
+}
+/* default style */
+.tabs label {
+    color: white;
+    text-shadow: 1px 1px black;
+    margin: 3px;
+    padding: 1px 5px;
+    font-family: sans-serif;
+    font-size: smaller;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 3px;
+}
+.tabs label:hover {
+    border: 1px solid #aaa;
+}
+.tabs label:hover:not([selected=true]) {
+    background: grey;    
+    color: whitesmoke;
+    text-shadow: 1px 1px black;
+}
+.tabs label[selected=true]{
+    background: lightgrey; 
+    cursor: default;
+}
+.tabs label[selected=true]:hover{
+}
+.tabs label {
+    -webkit-transition: opacity 1s ease-out 1s;
+}
+.tabs:not(:hover) label {
+    opacity: 0;
+    -webkit-transition-delay: 1s;
+}
+.tabs:hover label {
+    -webkit-transition-delay: 0s;
+}
+.tabs label[error=true]{
+    color: red;
+    background: pink;
+}
+.tabs label[force=true] {
+    opacity: 1 !important;
+}

@@ -1,0 +1,30 @@
+{
+  "template": {
+    "sections": {
+      "jade": "p hello {{world}}",
+      "mustache": "<p>hello {{world}}</p>",
+      "ractive": "[{\"t\":7,\"e\":\"p\",\"f\":[\"hello \",{\"t\":2,\"r\":\"world\"}]}]"
+    },
+    "error": null
+  },
+  "style": {
+    "sections": {
+      "stylus": "p\n\tcolor: green",
+      "css": "p { color: green }"
+    },
+    "error": null
+  },
+  "data": {
+    "sections": {
+      "eval": "{ world: 'earth' }",
+      "json": "{\"world\": \"earth\"}"
+    },
+    "error": null
+  },
+  "script": {
+    "sections": {
+      "js": "component.export = {}"
+    },
+    "error": null
+  }
+}

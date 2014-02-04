@@ -1,0 +1,85 @@
+!!! 
+html 
+  head
+
+    style
+      body {
+        position: absolute;
+        top: 0; bottom: 0;
+        left: 0; right: 0;
+        margin: 0;
+      }
+
+    style(feature=feature, template=templateName) !{style}
+       
+    script(id='main', type='text/ractive')
+      <#{templateName}
+      each v, key in JSON.parse(json)
+        #{key}='{{#{key}}}'
+      ></#{templateName}>
+    script(id='#{templateName}', type='text/ractive') !{html}
+
+    each component in components
+      link(rel='ractive', href='component/#{app}/#{feature}/#{component}')
+
+  body
+    #container
+    script(src="http://localhost:8080/Ractive.js")
+    script(src="http://localhost:8080/test/vendor/Ractive-events-tap.js")
+    script(src="../js-new/Ractive-transitions-fade.js")
+
+    script(src="../js-new/ace/ace.js")
+    script(src="../js-new/ace/ext-themelist.js")
+    script(src="../js-new/ace/ext-modelist.js")
+    script(src="../js-new/jade.js")
+    script(src="../js-new/stylus.js")
+
+    script.
+
+      console.log('Ractive components', Ractive.components)
+    
+      Ractive.load().then( function () {
+        try {
+
+          console.log('Ractive components', Ractive.components)
+
+          function init(component){
+            !{javascript}
+          }
+
+          var Component = Ractive.extend({
+            template: '##{templateName}'
+            ,
+            magic: true
+          })
+
+          var component = {}
+          init(component)
+          exports = component.exports;
+
+          if ( typeof exports === 'undefined' ) {
+            //fine for now, need to warn?
+          } else if ( typeof exports === 'function' ) {
+            Component = exports( Component );
+          } else if ( typeof exports === 'object' ) {
+            Component = Component.extend( exports );
+          }
+
+          //var test = new Component()
+          //console.log('#{templateName}', components, (test.components))
+
+          var ractive = new Ractive({
+            el: document.body,
+            template: '#main',
+            magic: true,
+            components: { '#{templateName}': Component },
+            data: !{json}
+          })
+
+        }
+        catch(error){
+          document.body.innerHTML = error
+        }
+      })
+    
+

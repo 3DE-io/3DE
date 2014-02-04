@@ -1,0 +1,13 @@
+{
+  "title": "layout",
+  "datasections": {
+    "eval": "{ world: 'earth' }",
+    "json": ""
+  },
+  "sections": {
+    "jade": "p hello {{world}}",
+    "mustache": "",
+    "ractive": ""
+  },
+  "error": null
+}
