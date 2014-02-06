@@ -1,8 +1,8 @@
-doctype
+doctype 
 html 
   head
 
-    style.
+    style
       body {
         position: absolute;
         top: 0; bottom: 0;
@@ -10,86 +10,80 @@ html
         margin: 0;
       }
 
-    style#component-css !{css}
+    style(feature=feature, template=templateName) !{style}
        
     script(id='main', type='text/ractive')
-      component
+      <#{templateName}
+      each v, key in JSON.parse(json)
+        #{key}='{{#{key}}}'
+      ></#{templateName}>
+    script(id='#{templateName}', type='text/ractive') !{html}
+
+    each component in components
+      link(rel='ractive', href='component/#{app}/#{feature}/#{component}')
 
   body
     #container
-      p hello world
     script(src="http://localhost:8080/Ractive.js")
     script(src="http://localhost:8080/test/vendor/Ractive-events-tap.js")
+    script(src="../js-new/Ractive-transitions-fade.js")
+
+    script(src="../js-new/ace/ace.js")
+    script(src="../js-new/ace/ext-themelist.js")
+    script(src="../js-new/ace/ext-modelist.js")
+    script(src="../js-new/jade.js")
+    script(src="../js-new/stylus.js")
 
     script.
 
-        window.addEventListener('message', function(e){
-          var component = e.data
-          if(component.hasOwnProperty('css')) {
-            document.getElementById('component-css').innerHTML = component.css
-          }
-          if(component.hasOwnProperty('init') || 
-             component.hasOwnProperty('template') || 
-             component.hasOwnProperty('data')) {
+    
+      Ractive.load().then( function () {
+        try {
 
-            render(component)
+          //- console.log('Ractive components', Ractive.components)
+
+          function init(component){
+            !{javascript}
+          }
+
+          var Component = Ractive.extend({
+            template: '##{templateName}'
+            //- ,
+            //- magic: true
+          })
+
+
+
+          var component = {}
+          init(component)
+          var exports = component.exports;
+
+          if ( typeof exports === 'undefined' ) {
+            //fine for now, need to warn?
+          } else if ( typeof exports === 'function' ) {
+            Component = exports( Component );
+          } else if ( typeof exports === 'object' ) {
           
-          }
-        })
-
-        var ractive, component = {}
-        function render(c){
-          if(c.hasOwnProperty('init')){ 
-            component.init = c.init 
-          }
-          if(c.hasOwnProperty('template')){ 
-            component.template = c.template ? JSON.parse(c.template) : null
-          }
-          if(c.hasOwnProperty('data')){ 
-            component.data = c.data ? JSON.parse(c.data) : null
+            Component = Component.extend( exports );
           }
 
-          try {
-
-            if(ractive){
-              ractive.teardown()
-            }
-
-            var Component = Ractive.extend({
-              template: component.template,
-              magic: true
-            })
-
-            if(component.init) {
-              var init = new Function('component', 'Ractive', component.init)
-              var comp_opt = {}
-              init(comp_opt, Ractive)
-              var exports = comp_opt.exports;
-
-              
-              if ( typeof exports === 'undefined' ) {
-                //no prob, just use base definition...
-              } else if ( typeof exports === 'function' ) {
-                //this may change...
-                Component = exports( Component );
-              } else if ( typeof exports === 'object' ) {
-                Component = Component.extend( exports );
-              }
-            }
-
-            var options = {
-              el: '#container', //document.body,
-              template: '#main',
-              magic: true,
-              components: { component: Component },
-              data: component.data
-            }
-
-            var ractive = new Ractive(options)
-
+          var options = {
+            el: '#container' //document.body,
+            template: '#main',
+            //- magic: true,
+            components: { '#{templateName}': Component },
+            data: !{json}
           }
-          catch(error){
-            document.body.innerHTML = '<pre color="red">' + error + '</pre>'
-          }
+          //- if(exports && exports.adapt){
+          //-     options.adapt = exports.adapt
+          //- }  
+
+          var ractive = new Ractive(options)
+
         }
+        catch(error){
+          document.body.innerHTML = error
+        }
+      })
+    
 

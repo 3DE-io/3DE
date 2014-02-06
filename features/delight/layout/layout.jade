@@ -48,8 +48,8 @@ html
 
           var Component = Ractive.extend({
             template: '##{templateName}'
-            ,
-            magic: true
+            //- ,
+            //- magic: true
           })
 
 
@@ -70,7 +70,7 @@ html
           var options = {
             el: document.body,
             template: '#main',
-            magic: true,
+            //- magic: true,
             components: { '#{templateName}': Component },
             data: !{json}
           }

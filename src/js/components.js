@@ -211,14 +211,18 @@ function editor(node, language, code, config){
 },
 {
 	name: 'flow',
-	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"pane","f":[{"t":7,"e":"template"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"styling"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"datum"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"scripting"}]}]},{"t":7,"e":"pane","f":[{"t":7,"e":"preview","a":{"component":[{"t":2,"r":"component"}]}}]}],
+	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"pane","f":[{"t":7,"e":"template"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"styling"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"datum"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"scripting"}]},{"t":7,"e":"sizer","a":{"position":[{"t":2,"r":"config.position"}]}}]}],
 	init: function(component, Ractive) {
-		
+		component.exports = {
+    beforeInit: function(){
+        
+    }
+}
 	},
 },
 {
 	name: 'pane',
-	template: [{"t":7,"e":"div","a":{"class":"pane"},"f":[{"t":7,"e":"div","a":{"class":"pane-inner"},"f":[{"t":8,"r":"content"}]}]}],
+	template: [{"t":7,"e":"pane-imp","f":[{"t":7,"e":"div","a":{"class":"pane-inner"},"f":[{"t":8,"r":"content"}]}]}],
 	init: function(component, Ractive) {
 		
 	},
@@ -346,6 +350,109 @@ function editor(node, language, code, config){
 	template: [{"t":7,"e":"div","a":{"force":[{"t":2,"x":{"r":["error"],"s":"!!${0}"}}],"class":"settings"},"f":[{"t":7,"e":"div","a":{"class":"set-box"},"f":[{"t":7,"e":"div","a":{"class":"gear"},"f":"&#x2699;"},{"t":7,"e":"div","a":{"class":"title"},"f":[{"t":2,"r":"title"}]},{"t":7,"e":"div","a":{"class":"tabs"},"f":[{"t":4,"r":"tabs","i":"code","f":["\n",{"t":7,"e":"label","a":{"selected":[{"t":2,"x":{"r":["code","selected"],"s":"${0}===${1}"}}],"error":[{"t":2,"x":{"r":["code","error"],"s":"${0}===${1}"}}]},"f":[{"t":2,"r":"code"},{"t":7,"e":"input","a":{"type":"radio","name":[{"t":2,"r":"selected"}],"value":[{"t":2,"r":"code"}]}}]}]}]}]}]}],
 	init: function(component, Ractive) {
 		
+	},
+},
+{
+	name: 'sizer',
+	template: [{"t":7,"e":"div","a":{"style":["-webkit-transform: translate(",{"t":2,"r":"position.x"},"px, ",{"t":2,"r":"position.y"},"px)"],"class":"sizer"},"o":{"n":"moveable","d":[" ",{"t":2,"r":"position"}]}}],
+	init: function(component, Ractive) {
+		component.exports = {
+    decorators: {
+        moveable: moveable
+    }
+}
+
+var rAF = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        function (cb) { window.setTimeout(cb, 1000 / 60) }
+var cAF = window.cancelAnimationFrame        ||
+        window.webkitCancelAnimationFrame        ||
+        function (index) { clearTimeout(index); };
+
+function moveable(node, position, noRAF){
+    var ractive = this
+    
+    var doMove = noRAF ? _move : _rAFMove
+    
+    function events(target, event, fn){
+        return {
+            start: function() {  
+                target.addEventListener(event, fn)
+            },
+            stop: function() { 
+                target.removeEventListener(event, fn)
+            }
+        }
+    }
+    
+    var dragstart = events(node, 'mousedown', start),
+        drag = events(document, 'mousemove', move),
+        /* need to watch both document and top-most window */
+        documentend = events(document, 'mouseup', end),
+        windowend = events(window.top, 'mouseup', end),
+        dragend = {
+            start: function(){ documentend.start(); windowend.start() },
+            stop: function(){ documentend.stop(); windowend.stop() }
+        } 
+        
+    dragstart.start()
+
+    function current(e){
+        return { x: e.x, y: e.y } 
+    }
+    
+    var original, begin
+    
+    function start(e){
+        e.preventDefault()
+        
+        original = { x: position.x, y: position.y }
+        begin = current(e)
+        
+        dragstart.stop()
+        drag.start()
+        dragend.start() 
+    }
+
+    var _current, _index, _ticking = false
+    
+    function move(e){
+        _current = current(e)
+        doMove()
+    }
+    
+    function _rAFMove(e){
+        if(!_ticking) {
+            _index = rAF(_move)
+        }
+        _ticking = true        
+    }
+    
+    function _move(e){
+        _ticking = false
+
+        ractive.set('position.x', original.x + (_current.x - begin.x) )
+        ractive.set('position.y', original.y + (_current.y - begin.y) )
+        
+        //position.x = original.x + (_current.x - begin.x)
+        //position.y = original.y + (_current.y - begin.y)
+    }
+    
+    function end(){
+        teardown()
+        dragstart.start()
+    }
+    
+    function teardown(){
+        cAF(_index)
+        _ticking = false
+        if(dragend) dragend.stop()
+        if(drag) drag.stop()
+        if(dragstart) dragstart.stop()
+    }  
+    
+    return { teardown: teardown }
+}
 	},
 },
 {
