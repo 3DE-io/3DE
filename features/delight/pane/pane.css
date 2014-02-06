@@ -1,0 +1,45 @@
+.pane {
+    position: absolute;    
+    padding: 25px;
+}
+.pane-inner {
+    position: absolute;
+    top: 1px; bottom: 1px;
+    left: 1px; right: 1px;
+}
+.pane:first-child:last-child {
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+}
+/* of 4 */
+.pane:first-child:nth-last-child(4) {
+    top: 0; bottom: 50%;
+    left: 0; right: 50%;
+}
+.pane:first-child:nth-last-child(4) 
++ .pane {
+    top: 0; bottom: 50%;
+    left: 50%; right: 0;
+}
+.pane:first-child:nth-last-child(4)
++ .pane + .pane  {
+    top: 50%; bottom: 0;
+    left: 0; right: 50%;
+}
+.pane:first-child:nth-last-child(4)
++ .pane + .pane + .pane {
+    top: 50%; bottom: 0;
+    left: 50%; right: 0;
+}
+
+/* of 2 */
+.pane:first-child:nth-last-child(2){
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 30%;
+}
+.pane:first-child:nth-last-child(2) ~ .pane {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 70%; right: 0;
+}

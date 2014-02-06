@@ -36,12 +36,11 @@ html
 
     script.
 
-      console.log('Ractive components', Ractive.components)
     
       Ractive.load().then( function () {
         try {
 
-          console.log('Ractive components', Ractive.components)
+          //- console.log('Ractive components', Ractive.components)
 
           function init(component){
             !{javascript}
@@ -53,28 +52,33 @@ html
             magic: true
           })
 
+
+
           var component = {}
           init(component)
-          exports = component.exports;
+          var exports = component.exports;
 
           if ( typeof exports === 'undefined' ) {
             //fine for now, need to warn?
           } else if ( typeof exports === 'function' ) {
             Component = exports( Component );
           } else if ( typeof exports === 'object' ) {
+          
             Component = Component.extend( exports );
           }
 
-          //var test = new Component()
-          //console.log('#{templateName}', components, (test.components))
-
-          var ractive = new Ractive({
+          var options = {
             el: document.body,
             template: '#main',
             magic: true,
             components: { '#{templateName}': Component },
             data: !{json}
-          })
+          }
+          //- if(exports && exports.adapt){
+          //-     options.adapt = exports.adapt
+          //- }  
+
+          var ractive = new Ractive(options)
 
         }
         catch(error){

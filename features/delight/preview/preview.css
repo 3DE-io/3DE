@@ -1,0 +1,9 @@
+.preview {
+    position: absolute;
+    top: 1px; bottom: 1px;
+    right: 1px; left: 1px;
+    background: white;
+}
+.preview > iframe {
+    height: 100%; width: 100%;
+}

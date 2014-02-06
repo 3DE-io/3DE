@@ -9,6 +9,10 @@ module.exports = function(grunt) {
       index: {
         src: 'assets/index.jade',
         dest: 'src/index.html'
+      },
+      layout: {
+        src: 'features/temp/layout/layout.jade',
+        dest: 'src/layout.html'
       }
     },
     cssmin: {
@@ -21,13 +25,23 @@ module.exports = function(grunt) {
         }    
       }
     },
+    components: {
+      delight: {
+        src: 'features/delight/*',
+        dest: 'src/js/components.js'
+      }
+    },
     watch: {
-      jade: {
-        files: ['<%= jade.index.src %>'],
-        tasks: ['jade'],
-        options: {
+      options: {
           interrupt: true
-        }
+      },
+      jade_index: {
+          files: ['<%= jade.index.src %>'],
+          tasks: ['jade:index'],
+      },
+      jade_layout: {
+          files: ['<%= jade.layout.src %>'],
+          tasks: ['jade:layout'],
       },
       components: {
         files: ['features/delight/**/*.{js,html}'],
@@ -47,13 +61,11 @@ module.exports = function(grunt) {
   })
 
   grunt.loadTasks('./tasks')
-
   grunt.loadNpmTasks('grunt-contrib-cssmin')
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-jade')
   grunt.loadNpmTasks('grunt-contrib-watch')
 
-  // Default task(s).
-  //grunt.registerTask('default', ['jade']);
+  grunt.registerTask('default', ['jade', 'cssmin', 'components']);
 
 };

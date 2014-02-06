@@ -1,30 +1,32 @@
 {
-  "template": {
-    "sections": {
-      "jade": "p hello {{world}}",
-      "mustache": "<p>hello {{world}}</p>",
-      "ractive": "[{\"t\":7,\"e\":\"p\",\"f\":[\"hello \",{\"t\":2,\"r\":\"world\"}]}]"
+  "component": {
+    "template": {
+      "code": {
+        "jade": "p hiyya {{world}}",
+        "mustache": "",
+        "ractive": ""
+      },
+      "error": null
     },
-    "error": null
-  },
-  "style": {
-    "sections": {
-      "stylus": "p\n\tcolor: green",
-      "css": "p { color: green }"
+    "style": {
+      "code": {
+        "stylus": "p\n\tcolor: green",
+        "css": ""
+      },
+      "error": null
     },
-    "error": null
-  },
-  "data": {
-    "sections": {
-      "eval": "{ world: 'earth' }",
-      "json": "{\"world\": \"earth\"}"
+    "data": {
+      "code": {
+        "eval": "{ world: 'earth' }",
+        "json": ""
+      },
+      "error": null
     },
-    "error": null
-  },
-  "script": {
-    "sections": {
-      "js": "component.export = {}"
-    },
-    "error": null
+    "script": {
+      "code": {
+        "js": ""
+      },
+      "error": null
+    }
   }
 }

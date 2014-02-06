@@ -3,44 +3,53 @@ var ractive = require('ractive'),
 
 module.exports = function(grunt){
 
-	grunt.registerTask('components', 'create components based on directories', components)	
+	var desc = 'Create components based on feature directories'
+	grunt.registerMultiTask('components', desc, components)	
 	
-
-	var base = './features/delight/'
-
-	var file = ['var components = [']
 	function components(){
-		grunt.log.writeln('Compiling components...')
+		grunt.verbose.writeln('Compiling components...')
 
-		grunt.file.expand(base + '*').forEach(component)
-		file.push(']')
-		var out = './src/js/components.js'
-		grunt.file.write(out, file.join('\n'))
+		this.files.forEach(function(file){
+			var component = file.src.map(function(dir){
+				return {
+					dir: dir, 
+					name: path.basename(dir)
+				}
+			}).filter(function(dir){
+				return dir.name!=='layout'
+			}).map(make).join('\n')
 
-		grunt.log.writeln('Components completed to ' + out)
+			grunt.file.write(file.dest, 'var components = [\n' + component + '\n]')
+			grunt.log.writeln('File "' + file.dest + '" created.')
+		})
 	}
 
-	function component(dir){
-		var name = path.basename(dir)
-		if(name==='layout') { return; }
+	function make(componentInfo){
+		var name = componentInfo.name,
+			dir = path.join(componentInfo.dir, name)
+			component = []
 
-		file.push('{')
-		add('name', '\'' + name + '\'')
+		grunt.verbose.writeln('Packaging component ' + name)
 
-		var html = grunt.file.read(dir + '/' + name + '.html')
+		component.push('{')
+		add(component, 'name', '\'' + name + '\'')
+
+		var html = grunt.file.read(dir + '.html')
 		var parsed = ractive.parse(html, { preserveWhitespace: true } )
-		add('template', JSON.stringify(parsed) )
+		add(component, 'template', JSON.stringify(parsed) )
 
-		var js = grunt.file.read(dir + '/' + name + '.js')
-		add('init', 'function(component, Ractive) {\n\t\t' + js + '\n\t}')
+		var js = grunt.file.read(dir + '.js')
+		add(component, 'init', 'function(component, Ractive) {\n\t\t' + js + '\n\t}')
 
-		file.push('},')
+		component.push('},')
 
-		grunt.log.ok(name)
+		grunt.verbose.ok()
+
+		return component.join('\n')
 	}
 
-	function add(prop, value){
-		file.push('\t' + prop + ': ' + value + ',')
+	function add(component, prop, value){
+		component.push('\t' + prop + ': ' + value + ',')
 	}
 }
 

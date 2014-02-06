@@ -1,0 +1,13 @@
+{
+  "type": "template",
+  "component": {
+    "template": {
+      "code": {
+        "jade": "p hello {{world}}",
+        "mustache": "",
+        "ractive": ""
+      },
+      "error": null
+    }
+  }
+}

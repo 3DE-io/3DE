@@ -1,7 +1,15 @@
 {
-  "code": "p hello",
+  "code": "ul\n\tli hello",
   "language": "jade",
-  "label": "jade",
-  "name": "template",
-  "i": 0
+  "config": {
+    "theme": "",
+    "gutter": true,
+    "tab": 2,
+    "softTab": false,
+    "highlightLine": false,
+    "invisibles": false,
+    "indentGuides": true,
+    "fadeFold": true,
+    "scrollPastEnd": true
+  }
 }

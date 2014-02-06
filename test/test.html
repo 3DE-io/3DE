@@ -1,0 +1,59 @@
+<!DOCTYPE html><html><head><style>body {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+  margin: 0;
+}
+</style><style id="component-css">p {
+  color: #008000;
+}
+
+</style><script id="main" type="text/ractive"><component></component></script></head><body><div id="container"></div><script src="http://localhost:8080/Ractive.js"></script><script src="http://localhost:8080/test/vendor/Ractive-events-tap.js"></script><script>window.css = function(css){
+  document.getElementById('component-css').innerHTML = css
+}
+
+try {
+
+  function init(component, Ractive){
+    //hello
+  }
+  
+  var Component = Ractive.extend({
+    template: [{"t":7,"e":"p","f":["hello ",{"t":2,"r":"world"}]}],
+    magic: true
+  })
+  
+  var component = {}
+  init(component, Ractive)
+  var exports = component.exports;
+  
+  
+  if ( typeof exports === 'undefined' ) {
+    //fine for now, need to warn?
+  } else if ( typeof exports === 'function' ) {
+    Component = exports( Component );
+  } else if ( typeof exports === 'object' ) {
+    Component = Component.extend( exports );
+  }
+  
+  
+  var options = {
+    el: '#container', //document.body,
+    template: '#main',
+    magic: true,
+    components: { component: Component },
+    data: {
+  "world": "earth"
+}
+  }
+  
+  
+  
+  var ractive = new Ractive(options)
+  
+}
+catch(error){
+  document.body.innerHTML = error
+}
+
+</script></body></html>

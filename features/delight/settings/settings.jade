@@ -1,0 +1,12 @@
+.settings(force='{{!!error}}')
+  .set-box
+    .gear &#x2699;
+    .title {{title}}
+    .tabs
+      {{#tabs:code}}
+      label(selected='{{code===selected}}',
+            error='{{code===error}}') {{code}}
+        input(type='radio',
+          name='{{selected}}',
+          value='{{code}}')
+      {{/tabs}}

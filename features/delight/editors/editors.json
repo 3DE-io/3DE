@@ -1,0 +1,27 @@
+{
+  "title": "layout",
+  "section": {
+    "code": {
+      "jade": "p hello {{world}}",
+      "mustache": "",
+      "ractive": ""
+    },
+    "error": null
+  },
+  "config": {
+    "layout": {
+      "jade": {
+        "theme": "solarized_light",
+        "temp": "ace-solarized-light",
+        "gutter": true,
+        "tab": 2,
+        "softTab": false,
+        "highlightLine": false,
+        "invisibles": false,
+        "indentGuides": true,
+        "fadeFold": true,
+        "scrollPastEnd": true
+      }
+    }
+  }
+}

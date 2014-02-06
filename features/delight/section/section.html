@@ -1,6 +1,0 @@
-<div class="section"><div class="title">{{title}}</div><tabs tabs="{{sections}}" selected="{{selected}}" error="{{error.location}}"></tabs><div class="editors">{{#sections:language}}
-<div class="editor {{selected!==language ? 'hide' : 'show'}}"><editor-control language="{{language}}" code="{{.}}"></editor-control></div>{{/sections}}
-</div>{{#error}}
-<pre class="error">{{message}}
-</pre>{{/error}}
-</div>

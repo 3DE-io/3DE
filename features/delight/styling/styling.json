@@ -1,0 +1,11 @@
+{
+  "component": {
+    "style": {
+      "code": {
+        "stylus": "p\n\tcolor: green",
+        "css": ""
+      },
+      "error": null
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "component": {
+    "template": {
+      "code": {
+        "jade": "p hiyya {{world}}",
+        "mustache": "",
+        "ractive": "[{\"t\":7,\"e\":\"p\",\"f\":[\"hello \",{\"t\":2,\"r\":\"world\"}]}]"
+      },
+      "error": null
+    },
+    "style": {
+      "code": {
+        "stylus": "p\n\tcolor: green",
+        "css": "p { color: orange;}"
+      },
+      "error": null
+    },
+    "data": {
+      "code": {
+        "eval": "{ world: 'earth' }",
+        "json": "{world: 'earth'}"
+      },
+      "error": null
+    },
+    "script": {
+      "code": {
+        "js": ""
+      },
+      "error": null
+    }
+  }
+}

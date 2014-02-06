@@ -23,33 +23,35 @@ components.forEach(function(component){
 })
 
 var data = {
-	"template": {
-		"sections": {
-			"jade": "p hello {{world}}",
-			"mustache": "",
-			"ractive": ""
+	component: {
+		"template": {
+			"code": {
+				"jade": "p hello {{world}}\ninput(value='{{world}}')",
+				"mustache": "",
+				"ractive": ""
+			},
+			"error": null
 		},
-		"error": null
-	},
-	"style": {
-		"sections": {
-			"stylus": "p\n\tcolor: green",
-			"css": ""
+		"style": {
+			"code": {
+				"stylus": "p\n\tcolor: green",
+				"css": ""
+			},
+			"error": null
 		},
-		"error": null
-	},
-	"data": {
-		"sections": {
-			"eval": "{ world: 'earth' }",
-			"json": ""
+		"data": {
+			"code": {
+				"eval": "{ world: 'earth' }",
+				"json": ""
+			},
+			"error": null
 		},
-		"error": null
-	},
-	"script": {
-		"sections": {
-			"js": ""
-		},
-		"error": null
+		"script": {
+			"code": {
+				"js": ""
+			},
+			"error": null
+		}
 	}
 }
 

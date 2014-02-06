@@ -1,0 +1,11 @@
+{
+  "component": {
+    "data": {
+      "code": {
+        "eval": "{ world: 'earth' }",
+        "json": ""
+      },
+      "error": null
+    }
+  }
+}

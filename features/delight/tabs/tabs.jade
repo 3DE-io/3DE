@@ -1,9 +1,0 @@
-.tabs
-  {{#_tabs}}
-  label(selected='{{.===selected}}',
-        error='{{.===error}}',
-        force='{{!!error}}') {{.}}
-    input(type='radio',
-      name='{{selected}}',
-      value='{{.}}')
-  {{/_tabs}}
