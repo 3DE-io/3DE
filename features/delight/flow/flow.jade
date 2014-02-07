@@ -1,12 +1,20 @@
 pane
-  pane
+  pane(position='', 
+    p1='right', v1='{{100-position.x}}', 
+    p2='bottom', v2='{{100-position.y}}')
     template
-  pane
+  pane(position='', 
+    p1='left', v1='{{position.x}}', 
+    p2='bottom', v2='{{100-position.y}}')
     styling
-  pane
+  pane(position='', 
+    p1='right', v1='{{100-position.x}}', 
+    p2='top', v2='{{position.y}}')
     datum
-  pane
+  pane(position='', 
+    p1='left', v1='{{position.x}}', 
+    p2='top', v2='{{position.y}}')
     scripting
-  sizer(position="{{config.position}}")
-//-pane
+  sizer(position="{{position}}")
+pane
   preview(component="{{component}}")

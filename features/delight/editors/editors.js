@@ -21,6 +21,7 @@ component.exports =  {
                         }
 
                         ractive.set('section.code.' + to, result)
+                        
                         if(section.error && section.error.location===from){
                             ractive.set('section.error', null)
                         }

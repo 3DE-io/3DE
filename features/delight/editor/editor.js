@@ -36,7 +36,7 @@ function editor(node, language, code, config){
     
     function setTheme(theme, oldTheme){
         //this check should be in config.theme
-        if(!themelist.themesByName[theme]){
+        if(theme && !themelist.themesByName[theme]){
             console.warn('no theme', theme)
             theme = oldTheme
         }

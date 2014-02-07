@@ -55,7 +55,7 @@ function editor(node, language, code, config){
     
     function setTheme(theme, oldTheme){
         //this check should be in config.theme
-        if(!themelist.themesByName[theme]){
+        if(theme && !themelist.themesByName[theme]){
             console.warn('no theme', theme)
             theme = oldTheme
         }
@@ -123,6 +123,7 @@ function editor(node, language, code, config){
                         }
 
                         ractive.set('section.code.' + to, result)
+                        
                         if(section.error && section.error.location===from){
                             ractive.set('section.error', null)
                         }
@@ -211,7 +212,7 @@ function editor(node, language, code, config){
 },
 {
 	name: 'flow',
-	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"pane","f":[{"t":7,"e":"template"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"styling"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"datum"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"scripting"}]},{"t":7,"e":"sizer","a":{"position":[{"t":2,"r":"config.position"}]}}]}],
+	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"pane","a":{"position":"","p1":"right","v1":[{"t":2,"x":{"r":["position.x"],"s":"100-${0}"}}],"p2":"bottom","v2":[{"t":2,"x":{"r":["position.y"],"s":"100-${0}"}}]},"f":[{"t":7,"e":"template"}]},{"t":7,"e":"pane","a":{"position":"","p1":"left","v1":[{"t":2,"r":"position.x"}],"p2":"bottom","v2":[{"t":2,"x":{"r":["position.y"],"s":"100-${0}"}}]},"f":[{"t":7,"e":"styling"}]},{"t":7,"e":"pane","a":{"position":"","p1":"right","v1":[{"t":2,"x":{"r":["position.x"],"s":"100-${0}"}}],"p2":"top","v2":[{"t":2,"r":"position.y"}]},"f":[{"t":7,"e":"datum"}]},{"t":7,"e":"pane","a":{"position":"","p1":"left","v1":[{"t":2,"r":"position.x"}],"p2":"top","v2":[{"t":2,"r":"position.y"}]},"f":[{"t":7,"e":"scripting"}]},{"t":7,"e":"sizer","a":{"position":[{"t":2,"r":"position"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"preview","a":{"component":[{"t":2,"r":"component"}]}}]}],
 	init: function(component, Ractive) {
 		component.exports = {
     beforeInit: function(){
@@ -222,14 +223,24 @@ function editor(node, language, code, config){
 },
 {
 	name: 'pane',
-	template: [{"t":7,"e":"pane-imp","f":[{"t":7,"e":"div","a":{"class":"pane-inner"},"f":[{"t":8,"r":"content"}]}]}],
+	template: [{"t":7,"e":"pane-node","a":{"style":[{"t":2,"x":{"r":["calcStyle","position","p1","v1","p2","v2"],"s":"${0}(${1},${2},${3},${4},${5})"}}]},"f":[{"t":7,"e":"div","a":{"class":"pane-inner"},"f":[{"t":8,"r":"content"}]}]}],
 	init: function(component, Ractive) {
-		
+		component.exports = {
+    data: {
+        calcStyle: function(ignore, p1, v1, p2, v2){
+            var style = p1 + ': ' + v1 + '%; '
+            if(p2) {
+                style += p2 + ': ' + v2 + '%;'
+            }
+            return style
+        }
+    }
+}
 	},
 },
 {
 	name: 'pane-invoke',
-	template: [{"t":7,"e":"pane","f":"<p>hello</p>"}],
+	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"pane","a":{"position":"","p1":"right","v1":[{"t":2,"x":{"r":["position.x"],"s":"100-${0}"}}],"p2":"bottom","v2":[{"t":2,"x":{"r":["position.y"],"s":"100-${0}"}}]},"f":"<div class=color></div>"},{"t":7,"e":"pane","a":{"position":"","p1":"left","v1":[{"t":2,"r":"position.x"}],"p2":"bottom","v2":[{"t":2,"x":{"r":["position.y"],"s":"100-${0}"}}]},"f":"<div class=color></div>"},{"t":7,"e":"pane","a":{"position":"","p1":"right","v1":[{"t":2,"x":{"r":["position.x"],"s":"100-${0}"}}],"p2":"top","v2":[{"t":2,"r":"position.y"}]},"f":"<div class=color></div>"},{"t":7,"e":"pane","a":{"position":"","p1":"left","v1":[{"t":2,"r":"position.x"}],"p2":"top","v2":[{"t":2,"r":"position.y"}]},"f":"<div class=color></div>"},{"t":7,"e":"sizer","a":{"position":[{"t":2,"r":"position"}],"orientation":[{"t":2,"r":"orientation"}]}}]}],
 	init: function(component, Ractive) {
 		
 	},
@@ -354,11 +365,15 @@ function editor(node, language, code, config){
 },
 {
 	name: 'sizer',
-	template: [{"t":7,"e":"div","a":{"style":["-webkit-transform: translate(",{"t":2,"r":"position.x"},"px, ",{"t":2,"r":"position.y"},"px)"],"class":"sizer"},"o":{"n":"moveable","d":[" ",{"t":2,"r":"position"}]}}],
+	template: [{"t":7,"e":"div","a":{"style":["top: ",{"t":2,"r":"position.y"},"%; left: ",{"t":2,"r":"position.x"},"%;"],"class":["sizer orientation-",{"t":2,"r":"orientation"}]},"o":{"n":"moveable","d":[" ",{"t":2,"r":"position"},", ",{"t":2,"r":"orientation"}]}}],
 	init: function(component, Ractive) {
 		component.exports = {
+    magic: false,
     decorators: {
         moveable: moveable
+    },
+    data: {
+      "orientation": 'both'
     }
 }
 
@@ -369,10 +384,18 @@ var cAF = window.cancelAnimationFrame        ||
         window.webkitCancelAnimationFrame        ||
         function (index) { clearTimeout(index); };
 
-function moveable(node, position, noRAF){
-    var ractive = this
+function moveable(node, position, orientation, noRAF){
+
+    //seeing flickering at about 95% with RAF
+    //need to investigate
+    noRAF = true
     
-    var doMove = noRAF ? _move : _rAFMove
+    var ractive = this,
+        doMove = noRAF ? _move : _rAFMove
+        direction = {
+            x: orientation!=='vertical',
+            y: orientation!=='horizontal'
+        }
     
     function events(target, event, fn){
         return {
@@ -384,15 +407,14 @@ function moveable(node, position, noRAF){
             }
         }
     }
-    
     var dragstart = events(node, 'mousedown', start),
         drag = events(document, 'mousemove', move),
-        /* need to watch both document and top-most window */
-        documentend = events(document, 'mouseup', end),
-        windowend = events(window.top, 'mouseup', end),
+        /* need to listen on both document and top-most window */
+        doc = events(document, 'mouseup', end),
+        win = events(window.top, 'mouseup', end),
         dragend = {
-            start: function(){ documentend.start(); windowend.start() },
-            stop: function(){ documentend.stop(); windowend.stop() }
+            start: function(){ doc.start(); win.start() },
+            stop: function(){ doc.stop(); win.stop() }
         } 
         
     dragstart.start()
@@ -401,10 +423,22 @@ function moveable(node, position, noRAF){
         return { x: e.x, y: e.y } 
     }
     
-    var original, begin
+    var original, begin, total, buffer
+        parent = node.parentNode
     
     function start(e){
         e.preventDefault()
+        
+        node.classList.add('moving')
+        
+        total = { 
+            x: parent.clientWidth, 
+            y: parent.clientHeight
+        }
+        buffer = {
+            x: node.offsetWidth*.5/total.x,
+            y: node.offsetHeight*.5/total.y
+        }
         
         original = { x: position.x, y: position.y }
         begin = current(e)
@@ -430,15 +464,37 @@ function moveable(node, position, noRAF){
     
     function _move(e){
         _ticking = false
-
-        ractive.set('position.x', original.x + (_current.x - begin.x) )
-        ractive.set('position.y', original.y + (_current.y - begin.y) )
         
+        var delta = {
+            x: _current.x - begin.x,
+            y: _current.y - begin.y
+        }
+        var asPercent = {
+            x: delta.x/total.x*100,
+            y: delta.y/total.y*100,
+        } 
+        var moveTo = {
+            x: original.x + asPercent.x,
+            y: original.y + asPercent.y
+        }
+        
+        moveTo.x = Math.max(moveTo.x, buffer.x)
+        moveTo.x = Math.min(moveTo.x, 100-buffer.x)
+        moveTo.y = Math.max(moveTo.y, buffer.y)
+        moveTo.y = Math.min(moveTo.y, 100-buffer.y)
+        
+        if(direction.x){
+            ractive.set('position.x', moveTo.x )
+        }
+        if(direction.y){
+            ractive.set('position.y', moveTo.y )
+        }
         //position.x = original.x + (_current.x - begin.x)
         //position.y = original.y + (_current.y - begin.y)
     }
     
     function end(){
+        node.classList.remove('moving')
         teardown()
         dragstart.start()
     }

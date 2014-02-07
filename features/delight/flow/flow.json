@@ -1,9 +1,7 @@
 {
-  "config": {
-    "position": {
-      "x": 50,
-      "y": 50
-    }
+  "position": {
+    "x": 50,
+    "y": 50
   },
   "component": {
     "template": {

@@ -56,7 +56,7 @@
           
           var Component = Ractive.extend({
             template: component.template,
-            magic: true
+            // magic: true
           })
           
           if(component.init) {
@@ -79,7 +79,7 @@
           var options = {
             el: '#container', //document.body,
             template: '#main',
-            magic: true,
+            // magic: true,
             components: { component: Component },
             data: component.data
           }

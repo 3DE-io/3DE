@@ -23,6 +23,10 @@ components.forEach(function(component){
 })
 
 var data = {
+	position: {
+	    x: 50,
+	    y: 50
+	},
 	component: {
 		"template": {
 			"code": {

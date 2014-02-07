@@ -12,7 +12,6 @@
     "layout": {
       "jade": {
         "theme": "solarized_light",
-        "temp": "ace-solarized-light",
         "gutter": true,
         "tab": 2,
         "softTab": false,

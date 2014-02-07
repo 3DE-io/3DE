@@ -1,4 +1,18 @@
 pane
-  pane
-  pane
-  sizer
+  pane(position='', 
+    p1='right', v1='{{100-position.x}}', 
+    p2='bottom', v2='{{100-position.y}}')
+    .color
+  pane(position='', 
+    p1='left', v1='{{position.x}}', 
+    p2='bottom', v2='{{100-position.y}}')
+    .color
+  pane(position='', 
+    p1='right', v1='{{100-position.x}}', 
+    p2='top', v2='{{position.y}}')
+    .color
+  pane(position='', 
+    p1='left', v1='{{position.x}}', 
+    p2='top', v2='{{position.y}}')
+    .color
+  sizer(position="{{position}}", orientation="{{orientation}}")
