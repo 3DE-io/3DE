@@ -23,10 +23,17 @@ components.forEach(function(component){
 })
 
 var data = {
-	position: {
-	    x: 50,
-	    y: 50
-	},
+  "pane": {
+    "position": {
+      "x": 70
+    },
+    "pane": {
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    }
+  },
 	component: {
 		"template": {
 			"code": {
@@ -66,13 +73,14 @@ Object.keys(data).forEach(function(key){
 })
 template += '/>'
 
-try {
-	var ractive = new Ractive({
-	  el: document.body,
-	  template: template,
-	  magic: true,
-	  data: data
-	})
-} catch(error){
-	document.body.innerHTML = error
-}
+	try {
+		var ractive = new Ractive({
+		  el: document.body,
+		  template: template,
+		  magic: true,
+		  data: data
+		})
+	} catch(error){
+		document.body.innerHTML = error
+	}
+

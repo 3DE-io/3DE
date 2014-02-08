@@ -1,5 +1,3 @@
 component.exports = {
-    beforeInit: function(){
-        
-    }
+    magic: false,
 }

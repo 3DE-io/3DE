@@ -1,1 +1,2 @@
-<div decorator="moveable: {{position}}, {{orientation}}" style="top: {{position.y}}%; left: {{position.x}}%;" class="sizer orientation-{{orientation}}"></div>
+{{#pane}}
+<div decorator="moveable: {{.position}}, {{orientation}}" style="top: {{.position.y || 50}}%; left: {{.position.x || 50}}%;" class="sizer orientation-{{orientation}}">{{ignore(.position)}}</div>{{/pane}}

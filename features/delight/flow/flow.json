@@ -1,12 +1,19 @@
 {
-  "position": {
-    "x": 50,
-    "y": 50
+  "pane": {
+    "position": {
+      "x": 70
+    },
+    "pane": {
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    }
   },
   "component": {
     "template": {
       "code": {
-        "jade": "p hiyya {{world}}",
+        "jade": "p hello {{world}}\ninput(value='{{world}}')",
         "mustache": "",
         "ractive": ""
       },

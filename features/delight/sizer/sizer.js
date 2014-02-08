@@ -4,7 +4,11 @@ component.exports = {
         moveable: moveable
     },
     data: {
-      "orientation": 'both'
+        ignore: function(ignored){
+            //Ractive bug if position property
+            //is not 'encountered'
+        },
+        "orientation": 'both'
     }
 }
 
@@ -17,17 +21,15 @@ var cAF = window.cancelAnimationFrame        ||
 
 function moveable(node, position, orientation, noRAF){
 
-    //seeing flickering at about 95% with RAF
-    //need to investigate
-    noRAF = true
     
     var ractive = this,
+        //using RAF as default...
         doMove = noRAF ? _move : _rAFMove
         direction = {
             x: orientation!=='vertical',
             y: orientation!=='horizontal'
         }
-    
+        
     function events(target, event, fn){
         return {
             start: function() {  
@@ -55,17 +57,19 @@ function moveable(node, position, orientation, noRAF){
     }
     
     var original, begin, total, buffer
-        parent = node.parentNode
     
     function start(e){
         e.preventDefault()
         
         node.classList.add('moving')
+        document.body.style.pointerEvents = 'none'
         
+        var parent = node.parentNode
         total = { 
             x: parent.clientWidth, 
             y: parent.clientHeight
         }
+        
         buffer = {
             x: node.offsetWidth*.5/total.x,
             y: node.offsetHeight*.5/total.y
@@ -113,19 +117,21 @@ function moveable(node, position, orientation, noRAF){
         moveTo.x = Math.min(moveTo.x, 100-buffer.x)
         moveTo.y = Math.max(moveTo.y, buffer.y)
         moveTo.y = Math.min(moveTo.y, 100-buffer.y)
-        
+
+        //console.log(moveTo.x, moveTo.y)
         if(direction.x){
-            ractive.set('position.x', moveTo.x )
+            ractive.set('pane.position.x', moveTo.x )
+            //position.x = moveTo.x
         }
         if(direction.y){
-            ractive.set('position.y', moveTo.y )
+            ractive.set('pane.position.y', moveTo.y )
+            //position.y = moveTo.y
         }
-        //position.x = original.x + (_current.x - begin.x)
-        //position.y = original.y + (_current.y - begin.y)
     }
     
     function end(){
         node.classList.remove('moving')
+        document.body.style.pointerEvents = null
         teardown()
         dragstart.start()
     }

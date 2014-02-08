@@ -1,0 +1,11 @@
+{
+  "obj": {
+    "prop": "one",
+    "obj": {
+      "prop": "two",
+      "obj": {
+        "prop": "three"
+      }
+    }
+  }
+}

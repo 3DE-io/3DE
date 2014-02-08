@@ -12,7 +12,7 @@ component.exports =  {
                 return function(value){
                     fn(value, function(err, result){
                         if(err){
-                            console.warn(from, 'to', to, 'err', e)
+                            //console.warn(from, 'to', to, 'err', err)
                             ractive.set('section.error', {
                                 location: from,
                                 message: err
