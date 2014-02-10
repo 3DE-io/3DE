@@ -1,3 +1,3 @@
 {{#pane}}
-<pane-node style="{{ignore(.position)}};  right: {{100-.position.x}}%;  bottom: {{100-.position.y}}%;  left: {{.position.x}}%;  top: {{.position.y}}%;"><div class="pane-inner">{{>content}}
+<pane-node decorator="sizable: {{.position}}" style="{{{{ignore}}  right: {{100-.position.x}}%;  bottom: {{100-.position.y}}%;  left: {{.position.x}}%;  top: {{.position.y}}%;"><div class="pane-inner">{{>content}}
 </div></pane-node>{{/pane}}

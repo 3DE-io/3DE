@@ -16,14 +16,12 @@
     </script>
   </head>
   <body>
-    <div id="container">
-      <p>hello world</p>
-    </div>
     <script src="http://localhost:8080/Ractive.js"></script>
     <script src="http://localhost:8080/test/vendor/Ractive-events-tap.js"></script>
     <script>
       window.addEventListener('message', function(e){
         var component = e.data
+        
         if(component.hasOwnProperty('css')) {
           document.getElementById('component-css').innerHTML = component.css
         }
@@ -77,14 +75,14 @@
           }
           
           var options = {
-            el: '#container', //document.body,
+            el: document.body,
             template: '#main',
             // magic: true,
             components: { component: Component },
             data: component.data
           }
           
-          var ractive = new Ractive(options)
+          ractive = new Ractive(options)
           
         }
         catch(error){
@@ -92,6 +90,6 @@
         }
       }
       
-    </script>
-  </body>
-</html>
+    </script></script>
+  </body></body>
+</html></html>

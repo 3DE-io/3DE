@@ -1,13 +1,23 @@
 component.exports =  {
+    decorators: {
+      render: function(node){
+        var r=this
+        //console.log('decorator', JSON.stringify(r.data))
+        return { teardown:function(){} }
+      }  
+    },
     complete: function(){
         var c = this.data.component,
+            component
+        if(c) {
             component = {
                 template: c.template.code.ractive,
                 css: c.style.code.css,
                 data: c.data.code.json,
                 init: c.script.code.js 
             }
-            
+        }
+        
         var html
         try{
             html = jade.render(layout, component)

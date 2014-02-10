@@ -12,54 +12,26 @@ component.exports = {
     }
 }
 
-var rAF = window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        function (cb) { window.setTimeout(cb, 1000 / 60) }
-var cAF = window.cancelAnimationFrame        ||
-        window.webkitCancelAnimationFrame        ||
-        function (index) { clearTimeout(index); };
+
+var MoveEvents = require('move')
 
 function moveable(node, position, orientation, noRAF){
-
-    
     var ractive = this,
-        //using RAF as default...
-        doMove = noRAF ? _move : _rAFMove
         direction = {
             x: orientation!=='vertical',
             y: orientation!=='horizontal'
         }
         
-    function events(target, event, fn){
-        return {
-            start: function() {  
-                target.addEventListener(event, fn)
-            },
-            stop: function() { 
-                target.removeEventListener(event, fn)
-            }
-        }
-    }
-    var dragstart = events(node, 'mousedown', start),
-        drag = events(document, 'mousemove', move),
-        /* need to listen on both document and top-most window */
-        doc = events(document, 'mouseup', end),
-        win = events(window.top, 'mouseup', end),
-        dragend = {
-            start: function(){ doc.start(); win.start() },
-            stop: function(){ doc.stop(); win.stop() }
-        } 
-        
-    dragstart.start()
+    var events = new MoveEvents(node, {
+        start: start,
+        move: move,
+        end: end
+    })
 
-    function current(e){
-        return { x: e.x, y: e.y } 
-    }
     
-    var original, begin, total, buffer
+    var original, total, buffer
     
-    function start(e){
-        e.preventDefault()
+    function start(){
         
         node.classList.add('moving')
         document.body.style.pointerEvents = 'none'
@@ -76,34 +48,11 @@ function moveable(node, position, orientation, noRAF){
         }
         
         original = { x: position.x, y: position.y }
-        begin = current(e)
-        
-        dragstart.stop()
-        drag.start()
-        dragend.start() 
     }
 
-    var _current, _index, _ticking = false
-    
-    function move(e){
-        _current = current(e)
-        doMove()
-    }
-    
-    function _rAFMove(e){
-        if(!_ticking) {
-            _index = rAF(_move)
-        }
-        _ticking = true        
-    }
-    
-    function _move(e){
+    function move(delta){
         _ticking = false
         
-        var delta = {
-            x: _current.x - begin.x,
-            y: _current.y - begin.y
-        }
         var asPercent = {
             x: delta.x/total.x*100,
             y: delta.y/total.y*100,
@@ -132,17 +81,12 @@ function moveable(node, position, orientation, noRAF){
     function end(){
         node.classList.remove('moving')
         document.body.style.pointerEvents = null
-        teardown()
-        dragstart.start()
     }
     
     function teardown(){
-        cAF(_index)
-        _ticking = false
-        if(dragend) dragend.stop()
-        if(drag) drag.stop()
-        if(dragstart) dragstart.stop()
+        events.stop()
     }  
     
     return { teardown: teardown }
 }
+

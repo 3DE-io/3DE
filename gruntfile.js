@@ -9,12 +9,11 @@ module.exports = function(grunt) {
       index: {
         src: 'assets/index.jade',
         dest: 'src/index.html'
+      },
+      layout: {
+        src: 'assets/layout.jade',
+        dest: 'src/layout.html'
       }
-      // ,
-      // layout: {
-      //   src: 'assets/layout.jade',
-      //   dest: 'src/layout.html'
-      // }
     },
     cssmin: {
       components: {
@@ -40,10 +39,10 @@ module.exports = function(grunt) {
           files: ['<%= jade.index.src %>'],
           tasks: ['jade:index'],
       },
-      // jade_layout: {
-      //     files: ['<%= jade.layout.src %>'],
-      //     tasks: ['jade:layout'],
-      // },
+      jade_layout: {
+          files: ['<%= jade.layout.src %>'],
+          tasks: ['jade:layout'],
+      },
       components: {
         files: ['features/delight/**/*.{js,html}'],
         tasks: ['components'],
@@ -60,6 +59,8 @@ module.exports = function(grunt) {
       }
     }
   })
+
+//browserify -r ./assets/js/track-move-events:track-move-events > ./src/js/move-events.js
 
   grunt.loadTasks('./tasks')
   grunt.loadNpmTasks('grunt-contrib-cssmin')

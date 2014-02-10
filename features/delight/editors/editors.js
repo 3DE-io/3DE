@@ -69,7 +69,7 @@ component.exports =  {
 
         observe('mustache', 'ractive', async(function(m){
             var parsed = Ractive.parse(m, { preserveWhitespace: true })
-        	return JSON.stringify(parsed) //, true, 2)
+        	return JSON.stringify(parsed, true, 2)
         }))
         observe('eval', 'json', async(function(js){
             var code = js.trim(),
@@ -89,6 +89,11 @@ component.exports =  {
         observe('stylus', 'css', function(s, cb){
             stylus(s).render(cb)
         })
+        
+        observe('eval', 'js', async(function(js){
+            eval(js)
+            return js
+        })) 
     },
     beforeInit: function(o){
         var section = o.data.section

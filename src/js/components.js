@@ -17,12 +17,12 @@ var components = [
 	name: 'editor',
 	template: [{"t":7,"e":"div","a":{"class":"editor-control"},"f":[{"t":2,"r":"code"}],"o":{"n":"editor","d":[" ",{"t":2,"r":"language"},", ",{"t":2,"r":"code"},", ",{"t":2,"r":"config"}]}}],
 	init: function(component, Ractive) {
-		var themelist = require("ace/ext/themelist")  
-themelist.toCss = function(theme){
-    return 'ace-' + theme.replace(/_/g, '-')
-}
-var modes = ace.require('ace/ext/modelist')
-//var Editor = ace.require('./editor')
+		
+
+//themelist.toCss = function(theme){
+//  return 'ace-' + theme.replace(/_/g, '-')
+//}
+
 
 component.exports = {
     decorators: { editor: editor },
@@ -30,9 +30,10 @@ component.exports = {
     }
 }
 
-function editor(node, language, code, config){  
+function editor(node, language, code, config){ 
     var e = ace.edit(node)
 
+    var modes = ace.require('ace/ext/modelist')
     var mode = modes.getModeForPath('.' + language).mode
     var s = e.getSession()
     s.setMode(mode)
@@ -53,6 +54,7 @@ function editor(node, language, code, config){
         getting = false
     })
     
+    var themelist = ace.require("ace/ext/themelist")  
     function setTheme(theme, oldTheme){
         //this check should be in config.theme
         if(theme && !themelist.themesByName[theme]){
@@ -98,7 +100,7 @@ function editor(node, language, code, config){
 },
 {
 	name: 'editors',
-	template: [{"t":7,"e":"div","a":{"class":"editors"},"f":[{"t":4,"r":"section","f":["\n",{"t":7,"e":"settings","a":{"tabs":[{"t":2,"r":"code"}],"selected":[{"t":2,"r":"selected"}],"error":[{"t":2,"r":"error.location"}]}},{"t":7,"e":"div","a":{"class":"editor-container"},"f":[{"t":4,"r":"code","i":"language","f":["\n",{"t":7,"e":"div","a":{"style":[{"t":2,"x":{"r":["selected","language"],"s":"${0}!==${1}?'visibility: none; z-index: -1;':''"}}],"class":"editor"},"f":[{"t":7,"e":"editor","a":{"language":[{"t":2,"r":"language"}],"code":[{"t":2,"r":"."}],"config":[{"t":2,"x":{"r":["language","title","config"],"s":"${2}[${1}][${0}]"}}]}}]}]}]},{"t":7,"e":"error"}]}]}],
+	template: [{"t":7,"e":"div","a":{"class":"editors"},"f":[{"t":4,"r":"section","f":["\n",{"t":7,"e":"settings","a":{"tabs":[{"t":2,"r":"code"}],"selected":[{"t":2,"r":"selected"}],"error":[{"t":2,"r":"error.location"}]}},{"t":7,"e":"div","a":{"class":"editor-container"},"f":[{"t":4,"r":"code","i":"language","f":["\n",{"t":7,"e":"div","a":{"style":[{"t":2,"x":{"r":["selected","language"],"s":"${0}!==${1}?\"visibility: none; z-index: -1;\":\"\""}}],"class":"editor"},"f":[{"t":7,"e":"editor","a":{"language":[{"t":2,"r":"language"}],"code":[{"t":2,"r":"."}],"config":[{"t":2,"x":{"r":["language","title","config"],"s":"${2}[${1}][${0}]"}}]}}]}]},"\n"]},{"t":7,"e":"error"}]},"\n"]}],
 	init: function(component, Ractive) {
 		component.exports =  {
     complete: function(){
@@ -171,7 +173,7 @@ function editor(node, language, code, config){
 
         observe('mustache', 'ractive', async(function(m){
             var parsed = Ractive.parse(m, { preserveWhitespace: true })
-        	return JSON.stringify(parsed) //, true, 2)
+        	return JSON.stringify(parsed, true, 2)
         }))
         observe('eval', 'json', async(function(js){
             var code = js.trim(),
@@ -191,6 +193,11 @@ function editor(node, language, code, config){
         observe('stylus', 'css', function(s, cb){
             stylus(s).render(cb)
         })
+        
+        observe('eval', 'js', async(function(js){
+            eval(js)
+            return js
+        })) 
     },
     beforeInit: function(o){
         var section = o.data.section
@@ -221,14 +228,49 @@ function editor(node, language, code, config){
 },
 {
 	name: 'pane',
-	template: [{"t":4,"r":"pane","f":["\n",{"t":7,"e":"pane-node","a":{"style":[{"t":2,"x":{"r":["ignore",".position"],"s":"${0}(${1})"}},"; right: ",{"t":2,"x":{"r":[".position.x"],"s":"100-${0}"}},"%; bottom: ",{"t":2,"x":{"r":[".position.y"],"s":"100-${0}"}},"%; left: ",{"t":2,"r":".position.x"},"%; top: ",{"t":2,"r":".position.y"},"%;"]},"f":[{"t":7,"e":"div","a":{"class":"pane-inner"},"f":[{"t":8,"r":"content"}]}]}]},"\n"],
+	template: [{"t":4,"r":"pane","f":["\n",{"t":7,"e":"pane-node","a":{"style":[{"t":2,"r":"{{ignore"}," right: ",{"t":2,"x":{"r":[".position.x"],"s":"100-${0}"}},"%; bottom: ",{"t":2,"x":{"r":[".position.y"],"s":"100-${0}"}},"%; left: ",{"t":2,"r":".position.x"},"%; top: ",{"t":2,"r":".position.y"},"%;"]},"f":[{"t":7,"e":"div","a":{"class":"pane-inner"},"f":[{"t":8,"r":"content"},"\n"]}],"o":{"n":"sizable","d":[" ",{"t":2,"r":".position"}]}}]},"\n"],
 	init: function(component, Ractive) {
-		component.exports = {
+		
+
+var map = [null,{},{},{},{},{},{},{}]
+function assign(quad, list){
+    list.forEach(function(i){
+        map[i][quad] = true
+    })
+}
+assign('left', [2,4,6])
+assign('right', [3,5,7])
+assign('top', [4,5])
+assign('bottom', [6,7])
+
+
+component.exports = {
     magic: false,
     data: {
         ignore: function(ignored){
             //Ractive bug if position property
             //is not 'encountered'
+        }
+    },
+    decorators: {
+        sizable: function(node, position){
+            
+            var p = node.parentNode.children,
+                name = node.nodeName
+             ,  count = 0, order
+             
+            for(var i=0; i<p.length; i++){
+                var current = p[i]
+                if(current.nodeName!==name){ break;}
+                if(current===node){
+                    order=i
+                }
+                count++
+            }
+
+            //console.log('dec', order, 'of', count, 'key', map[order+count], node)
+            return { teardown: function(){} }
+            
         }
     }
 }
@@ -265,18 +307,28 @@ function editor(node, language, code, config){
 },
 {
 	name: 'preview',
-	template: [{"t":7,"e":"div","a":{"class":"preview"},"f":"<iframe name=newpreview seamless=seamless src=layout.html></iframe>","v":{"click":"writeIt"}}],
+	template: [{"t":7,"e":"div","a":{"class":"preview"},"f":"<iframe name=newpreview seamless=seamless src=layout.html></iframe>","o":"render"}],
 	init: function(component, Ractive) {
 		component.exports =  {
+    decorators: {
+      render: function(node){
+        var r=this
+        //console.log('decorator', JSON.stringify(r.data))
+        return { teardown:function(){} }
+      }  
+    },
     complete: function(){
         var c = this.data.component,
+            component
+        if(c) {
             component = {
                 template: c.template.code.ractive,
                 css: c.style.code.css,
                 data: c.data.code.json,
                 init: c.script.code.js 
             }
-            
+        }
+        
         var html
         try{
             html = jade.render(layout, component)
@@ -354,7 +406,7 @@ function editor(node, language, code, config){
 },
 {
 	name: 'settings',
-	template: [{"t":7,"e":"div","a":{"force":[{"t":2,"x":{"r":["error"],"s":"!!${0}"}}],"class":"settings"},"f":[{"t":7,"e":"div","a":{"class":"set-box"},"f":[{"t":7,"e":"div","a":{"class":"gear"},"f":"&#x2699;"},{"t":7,"e":"div","a":{"class":"title"},"f":[{"t":2,"r":"title"}]},{"t":7,"e":"div","a":{"class":"tabs"},"f":[{"t":4,"r":"tabs","i":"code","f":["\n",{"t":7,"e":"label","a":{"selected":[{"t":2,"x":{"r":["code","selected"],"s":"${0}===${1}"}}],"error":[{"t":2,"x":{"r":["code","error"],"s":"${0}===${1}"}}]},"f":[{"t":2,"r":"code"},{"t":7,"e":"input","a":{"type":"radio","name":[{"t":2,"r":"selected"}],"value":[{"t":2,"r":"code"}]}}]}]}]}]}]}],
+	template: [{"t":7,"e":"div","a":{"force":[{"t":2,"x":{"r":["error"],"s":"!!${0}"}}],"class":"settings"},"f":[{"t":7,"e":"div","a":{"class":"set-box"},"f":[{"t":7,"e":"div","a":{"class":"gear"},"f":"&#x2699;"},{"t":7,"e":"div","a":{"class":"title"},"f":[{"t":2,"r":"title"}]},{"t":7,"e":"div","a":{"class":"tabs"},"f":[{"t":4,"r":"tabs","i":"code","f":["\n",{"t":7,"e":"label","a":{"selected":[{"t":2,"x":{"r":["code","selected"],"s":"${0}===${1}"}}],"error":[{"t":2,"x":{"r":["code","error"],"s":"${0}===${1}"}}]},"f":[{"t":2,"r":"code"},{"t":7,"e":"input","a":{"type":"radio","name":[{"t":2,"r":"selected"}],"value":[{"t":2,"r":"code"}]}}]}]},"\n"]}]}]}],
 	init: function(component, Ractive) {
 		
 	},
@@ -377,54 +429,26 @@ function editor(node, language, code, config){
     }
 }
 
-var rAF = window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        function (cb) { window.setTimeout(cb, 1000 / 60) }
-var cAF = window.cancelAnimationFrame        ||
-        window.webkitCancelAnimationFrame        ||
-        function (index) { clearTimeout(index); };
+
+var MoveEvents = require('move')
 
 function moveable(node, position, orientation, noRAF){
-
-    
     var ractive = this,
-        //using RAF as default...
-        doMove = noRAF ? _move : _rAFMove
         direction = {
             x: orientation!=='vertical',
             y: orientation!=='horizontal'
         }
         
-    function events(target, event, fn){
-        return {
-            start: function() {  
-                target.addEventListener(event, fn)
-            },
-            stop: function() { 
-                target.removeEventListener(event, fn)
-            }
-        }
-    }
-    var dragstart = events(node, 'mousedown', start),
-        drag = events(document, 'mousemove', move),
-        /* need to listen on both document and top-most window */
-        doc = events(document, 'mouseup', end),
-        win = events(window.top, 'mouseup', end),
-        dragend = {
-            start: function(){ doc.start(); win.start() },
-            stop: function(){ doc.stop(); win.stop() }
-        } 
-        
-    dragstart.start()
+    var events = new MoveEvents(node, {
+        start: start,
+        move: move,
+        end: end
+    })
 
-    function current(e){
-        return { x: e.x, y: e.y } 
-    }
     
-    var original, begin, total, buffer
+    var original, total, buffer
     
-    function start(e){
-        e.preventDefault()
+    function start(){
         
         node.classList.add('moving')
         document.body.style.pointerEvents = 'none'
@@ -441,34 +465,11 @@ function moveable(node, position, orientation, noRAF){
         }
         
         original = { x: position.x, y: position.y }
-        begin = current(e)
-        
-        dragstart.stop()
-        drag.start()
-        dragend.start() 
     }
 
-    var _current, _index, _ticking = false
-    
-    function move(e){
-        _current = current(e)
-        doMove()
-    }
-    
-    function _rAFMove(e){
-        if(!_ticking) {
-            _index = rAF(_move)
-        }
-        _ticking = true        
-    }
-    
-    function _move(e){
+    function move(delta){
         _ticking = false
         
-        var delta = {
-            x: _current.x - begin.x,
-            y: _current.y - begin.y
-        }
         var asPercent = {
             x: delta.x/total.x*100,
             y: delta.y/total.y*100,
@@ -497,20 +498,16 @@ function moveable(node, position, orientation, noRAF){
     function end(){
         node.classList.remove('moving')
         document.body.style.pointerEvents = null
-        teardown()
-        dragstart.start()
     }
     
     function teardown(){
-        cAF(_index)
-        _ticking = false
-        if(dragend) dragend.stop()
-        if(drag) drag.stop()
-        if(dragstart) dragstart.stop()
+        events.stop()
     }  
     
     return { teardown: teardown }
 }
+
+
 	},
 },
 {

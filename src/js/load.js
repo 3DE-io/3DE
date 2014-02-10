@@ -22,56 +22,110 @@ components.forEach(function(component){
 	Ractive.components[component.name] = Component
 })
 
-var data = {
-  "pane": {
-    "position": {
-      "x": 70
-    },
-    "pane": {
-      "position": {
-        "x": 50,
-        "y": 50
-      }
-    }
-  },
-	component: {
-		"template": {
-			"code": {
-				"jade": "p hello {{world}}\ninput(value='{{world}}')",
-				"mustache": "",
-				"ractive": ""
-			},
-			"error": null
+var data = {}
+var component = {
+	"template": {
+		"code": {
+			"jade": "p hello {{world}}\ninput(value='{{world}}')",
+			"mustache": "",
+			"ractive": ""
 		},
-		"style": {
-			"code": {
-				"stylus": "p\n\tcolor: green",
-				"css": ""
-			},
-			"error": null
+		"error": null
+	},
+	"style": {
+		"code": {
+			"stylus": "p\n\tcolor: green",
+			"css": ""
 		},
-		"data": {
-			"code": {
-				"eval": "{ world: 'earth' }",
-				"json": ""
-			},
-			"error": null
+		"error": null
+	},
+	"data": {
+		"code": {
+			"eval": "{ world: 'earth' }",
+			"json": ""
 		},
-		"script": {
-			"code": {
-				"js": ""
-			},
-			"error": null
+		"error": null
+	},
+	"script": {
+		"code": {
+			"js": ""
+		},
+		"error": null
+	}
+}
+var other = {
+	"template": {
+		"code": {
+			"jade": "ul\n\t{{#items}}\n\tli {{.}}\n\t{{/items}}",
+			"mustache": "",
+			"ractive": ""
+		},
+		"error": null
+	},
+	"style": {
+		"code": {
+			"stylus": "li\n\tcolor: orange",
+			"css": ""
+		},
+		"error": null
+	},
+	"data": {
+		"code": {
+			"eval": "{ items: ['earth', 'mars','venus'] }",
+			"json": ""
+		},
+		"error": null
+	},
+	"script": {
+		"code": {
+			"eval": "",
+			"js": ""
+		},
+		"error": null
+	}
+}
+
+data.component = other
+
+var config = new ConfigService()
+
+function ConfigService() {
+
+	var defaultPane = {
+		position: { x: 70, y: 50 },
+		pane: {
+			position: { x: 50, y: 50 }
+		}
+	}
+
+	return {
+		get pane(){
+			var ls = localStorage.paneConfig
+			return ls ? JSON.parse(ls) : defaultPane
+		},
+		set pane(pc){
+			localStorage.paneConfig = JSON.stringify(pc)
 		}
 	}
 }
 
-var main = 'flow'
-var template = '<' + main + ' '
-Object.keys(data).forEach(function(key){
-	template += key + '="{{' + key + '}}" ' 
+data.pane = config.pane
+
+window.onbeforeunload = function(){
+	config.pane = data.pane
+}
+
+setTimeout(function(){
+	load(data)
 })
-template += '/>'
+
+function load(data){
+	var main = 'flow'
+	var template = '<' + main + ' '
+	Object.keys(data).forEach(function(key){
+		template += key + '="{{' + key + '}}" ' 
+	})
+	template += '/>'
 
 	try {
 		var ractive = new Ractive({
@@ -80,7 +134,9 @@ template += '/>'
 		  magic: true,
 		  data: data
 		})
+
+
 	} catch(error){
 		document.body.innerHTML = error
 	}
-
+}

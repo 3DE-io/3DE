@@ -1,4 +1,4 @@
-var ractive = require('ractive'),
+var ractive = require('../src/js/Ractive.js'),
 	path = require('path')
 
 module.exports = function(grunt){

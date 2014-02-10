@@ -1,0 +1,92 @@
+doctype
+html
+  head
+    style.
+      body {
+        position: absolute;
+        top: 0; bottom: 0;
+        left: 0; right: 0;
+        margin: 0;
+      }
+
+    style#component-css
+    script#main(type="text/ractive")
+      component
+  body
+    script(src="http://localhost:8080/Ractive.js")
+    script(src="http://localhost:8080/test/vendor/Ractive-events-tap.js")
+    script.
+      window.addEventListener('message', function(e){
+        var component = e.data
+        
+        if(component.hasOwnProperty('css')) {
+          document.getElementById('component-css').innerHTML = component.css
+        }
+        if(component.hasOwnProperty('init') || 
+           component.hasOwnProperty('template') || 
+           component.hasOwnProperty('data')) {
+           
+          render(component)
+        
+        }
+      })
+      
+      var ractive, component = {}
+      function render(c){
+        if(c.hasOwnProperty('init')){ 
+          component.init = c.init 
+        }
+        if(c.hasOwnProperty('template')){ 
+          component.template = c.template ? JSON.parse(c.template) : null
+        }
+        if(c.hasOwnProperty('data')){ 
+          component.data = c.data ? JSON.parse(c.data) : null
+        }
+        
+        try {
+        
+          if(ractive){
+            ractive.teardown()
+          }
+          
+          var Component = Ractive.extend({
+            template: component.template,
+            // magic: true
+          })
+          
+          if(component.init) {
+            var init = new Function('component', 'Ractive', component.init)
+            var comp_opt = {}
+            init(comp_opt, Ractive)
+            var exports = comp_opt.exports;
+            
+            
+            if ( typeof exports === 'undefined' ) {
+              //no prob, just use base definition...
+            } else if ( typeof exports === 'function' ) {
+              //this may change...
+              Component = exports( Component );
+            } else if ( typeof exports === 'object' ) {
+              Component = Component.extend( exports );
+            }
+          }
+          
+          var options = {
+            el: document.body,
+            template: '#main',
+            // magic: true,
+            components: { component: Component },
+            data: component.data
+          }
+          
+          ractive = new Ractive(options)
+          
+        }
+        catch(error){
+          document.body.innerHTML = '<pre color="red">' + error + '</pre>'
+        }
+      }
+      
+    </script>
+  </body>
+</html>

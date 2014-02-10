@@ -173,7 +173,7 @@ window.onmessage = function(e) {
 };
 })(this);// https://github.com/kriskowal/es5-shim
 
-define('ace/lib/es5-shim', ['require', 'exports', 'module' ], function(require, exports, module) {
+ace.define('ace/lib/es5-shim', ['require', 'exports', 'module' ], function(require, exports, module) {
 
 function Empty() {}
 
@@ -870,7 +870,7 @@ var toObject = function (o) {
 
 });
 
-define('ace/mode/javascript_worker', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/worker/mirror', 'ace/mode/javascript/jshint'], function(require, exports, module) {
+ace.define('ace/mode/javascript_worker', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/worker/mirror', 'ace/mode/javascript/jshint'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");
@@ -919,7 +919,6 @@ oop.inherits(JavaScriptWorker, Mirror);
 (function() {
     this.setOptions = function(options) {
         this.options = options || {
-            asi: true,
             esnext: true,
             moz: true,
             devel: true,
@@ -1019,7 +1018,7 @@ oop.inherits(JavaScriptWorker, Mirror);
 
 });
 
-define('ace/lib/oop', ['require', 'exports', 'module' ], function(require, exports, module) {
+ace.define('ace/lib/oop', ['require', 'exports', 'module' ], function(require, exports, module) {
 
 
 exports.inherits = (function() {
@@ -1057,7 +1056,7 @@ exports.implement = function(proto, mixin) {
 };
 
 });
-define('ace/worker/mirror', ['require', 'exports', 'module' , 'ace/document', 'ace/lib/lang'], function(require, exports, module) {
+ace.define('ace/worker/mirror', ['require', 'exports', 'module' , 'ace/document', 'ace/lib/lang'], function(require, exports, module) {
 
 
 var Document = require("../document").Document;
@@ -1106,7 +1105,7 @@ var Mirror = exports.Mirror = function(sender) {
 
 });
 
-define('ace/document', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/event_emitter', 'ace/range', 'ace/anchor'], function(require, exports, module) {
+ace.define('ace/document', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/event_emitter', 'ace/range', 'ace/anchor'], function(require, exports, module) {
 
 
 var oop = require("./lib/oop");
@@ -1462,7 +1461,7 @@ var Document = function(text) {
 exports.Document = Document;
 });
 
-define('ace/lib/event_emitter', ['require', 'exports', 'module' ], function(require, exports, module) {
+ace.define('ace/lib/event_emitter', ['require', 'exports', 'module' ], function(require, exports, module) {
 
 
 var EventEmitter = {};
@@ -1588,7 +1587,7 @@ exports.EventEmitter = EventEmitter;
 
 });
 
-define('ace/range', ['require', 'exports', 'module' ], function(require, exports, module) {
+ace.define('ace/range', ['require', 'exports', 'module' ], function(require, exports, module) {
 
 var comparePoints = function(p1, p2) {
     return p1.row - p2.row || p1.column - p2.column;
@@ -1827,7 +1826,7 @@ Range.comparePoints = function(p1, p2) {
 exports.Range = Range;
 });
 
-define('ace/anchor', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/event_emitter'], function(require, exports, module) {
+ace.define('ace/anchor', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/event_emitter'], function(require, exports, module) {
 
 
 var oop = require("./lib/oop");
@@ -1974,7 +1973,7 @@ var Anchor = exports.Anchor = function(doc, row, column) {
 
 });
 
-define('ace/lib/lang', ['require', 'exports', 'module' ], function(require, exports, module) {
+ace.define('ace/lib/lang', ['require', 'exports', 'module' ], function(require, exports, module) {
 
 
 exports.stringReverse = function(string) {
@@ -2156,7 +2155,7 @@ exports.delayedCall = function(fcn, defaultTimeout) {
     return _self;
 };
 });
-define('ace/mode/javascript/jshint', ['require', 'exports', 'module' ], function(require, exports, module) {
+ace.define('ace/mode/javascript/jshint', ['require', 'exports', 'module' ], function(require, exports, module) {
 require = null;
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({
 9:[function (req,module,exports){
@@ -5232,8 +5231,9 @@ var JSHINT = (function () {
 			} else if (state.option.nonew && r && r.left && r.id === "(" && r.left.id === "new") {
 				warning("W031", t);
 			}
-            if (state.tokens.next.id !== ";") {
-            	if (!state.option.asi) {
+
+			if (state.tokens.next.id !== ";") {
+				if (!state.option.asi) {
 					if (!state.option.lastsemic || state.tokens.next.id !== "}" ||
 						state.tokens.next.line !== state.tokens.curr.line) {
 						warningAt("W033", state.tokens.curr.line, state.tokens.curr.character);
@@ -7723,7 +7723,7 @@ var JSHINT = (function () {
 					} else if (state.tokens.next.id === ",") {
 						error("E028", state.tokens.next);
 					} else if (state.tokens.next.id !== "(string)") {
-						//warning("W095", state.tokens.next, state.tokens.next.value);
+						warning("W095", state.tokens.next, state.tokens.next.value);
 					}
 					if (o[state.tokens.next.value] === true) {
 						warning("W075", state.tokens.next, state.tokens.next.value);
@@ -9092,11 +9092,11 @@ Lexer.prototype = {
 		if (quote !== "\"" && quote !== "'") {
 			return null;
 		}
-		// this.triggerAsync("warning", {
-		// 	code: "W108",
-		// 	line: this.line,
-		// 	character: this.char // +1?
-		// }, checks, function () { return state.jsonMode && quote !== "\""; });
+		this.triggerAsync("warning", {
+			code: "W108",
+			line: this.line,
+			character: this.char // +1?
+		}, checks, function () { return state.jsonMode && quote !== "\""; });
 
 		var value = "";
 		var startLine = this.line;

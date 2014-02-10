@@ -1,9 +1,9 @@
-var themelist = require("ace/ext/themelist")  
-themelist.toCss = function(theme){
-    return 'ace-' + theme.replace(/_/g, '-')
-}
-var modes = ace.require('ace/ext/modelist')
-//var Editor = ace.require('./editor')
+
+
+//themelist.toCss = function(theme){
+//  return 'ace-' + theme.replace(/_/g, '-')
+//}
+
 
 component.exports = {
     decorators: { editor: editor },
@@ -11,9 +11,10 @@ component.exports = {
     }
 }
 
-function editor(node, language, code, config){  
+function editor(node, language, code, config){ 
     var e = ace.edit(node)
 
+    var modes = ace.require('ace/ext/modelist')
     var mode = modes.getModeForPath('.' + language).mode
     var s = e.getSession()
     s.setMode(mode)
@@ -34,6 +35,7 @@ function editor(node, language, code, config){
         getting = false
     })
     
+    var themelist = ace.require("ace/ext/themelist")  
     function setTheme(theme, oldTheme){
         //this check should be in config.theme
         if(theme && !themelist.themesByName[theme]){
