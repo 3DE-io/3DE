@@ -13,8 +13,7 @@ html
     script#main(type="text/ractive")
       component
   body
-    script(src="http://localhost:8080/Ractive.js")
-    script(src="http://localhost:8080/test/vendor/Ractive-events-tap.js")
+    script(src="js/Ractive.js")
     script.
       window.addEventListener('message', function(e){
         var component = e.data
@@ -51,7 +50,7 @@ html
           
           var Component = Ractive.extend({
             template: component.template,
-            // magic: true
+            magic: true
           })
           
           if(component.init) {
@@ -73,13 +72,13 @@ html
           
           var options = {
             el: document.body,
-            template: '#main',
-            // magic: true,
-            components: { component: Component },
+            //template: '#main',
+            //magic: true,
+            //components: { component: Component },
             data: component.data
           }
           
-          ractive = new Ractive(options)
+          ractive = new Component(options)
           
         }
         catch(error){

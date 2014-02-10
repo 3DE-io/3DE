@@ -56,7 +56,8 @@ var component = {
 var other = {
 	"template": {
 		"code": {
-			"jade": "ul\n\t{{#items}}\n\tli {{.}}\n\t{{/items}}",
+			"jade": "ul\n\t{{#items}}\n\tli {{.}}\n\t{{/items}}\n" +
+					"input(value='{{new}}')\nbutton(on-click='add:{{new}}') add",
 			"mustache": "",
 			"ractive": ""
 		},
@@ -78,7 +79,16 @@ var other = {
 	},
 	"script": {
 		"code": {
-			"eval": "",
+			"eval": "component.exports = {\n\
+	init: function(){\n\
+		var items = this.data.items\n\
+		this.on('add', function(e, item){\n\
+			if(!item){ return }\n\
+			items.push(item)\n\
+			this.data.new = ''\n\
+		})\n\
+	}\n\
+}",
 			"js": ""
 		},
 		"error": null
