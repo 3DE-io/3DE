@@ -65,7 +65,7 @@ var other = {
 	},
 	"style": {
 		"code": {
-			"stylus": "li\n\tcolor: orange",
+			"stylus": "li\n\tcolor saddlebrown\n\tfont-family fantasy",
 			"css": ""
 		},
 		"error": null
