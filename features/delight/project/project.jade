@@ -1,7 +1,9 @@
 .project
-  ul
+  ul.components
     {{#project}}
-    {{#components}}
-    li.component(on-click='select', class='{{#(.name===project.current.name)}}selected') {{name}}
+    {{#components:i}}
+    li(on-click='select', class='{{#(.name===project.current.name)}}selected') {{name}}
     {{/components}}
+    li
+      input(on-enter_kp='add:{{new}}', value='{{new}}')
     {{/project}}

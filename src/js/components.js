@@ -1,9 +1,62 @@
 var components = [
 {
 	name: 'component',
-	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"pane","f":[{"t":7,"e":"template"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"styling"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"datum"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"scripting"}]},{"t":7,"e":"sizer"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"preview","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"sizer","a":{"orientation":"horizontal"}}],
+	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"pane","f":[{"t":7,"e":"template","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"styling","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"datum","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"scripting","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"sizer"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"preview","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"sizer","a":{"orientation":"horizontal"}}],
 	init: function(component, Ractive) {
-		
+		var empty = JSON.stringify({
+	"template": {
+		"code": {
+			"jade": "",
+			"mustache": "",
+			"ractive": ""
+		},
+		"error": null
+	},
+	"style": {
+		"code": {
+			"stylus": "",
+			"css": ""
+		},
+		"error": null
+	},
+	"data": {
+		"code": {
+			"eval": "",
+			"json": ""
+		},
+		"error": null
+	},
+	"script": {
+		"code": {
+			"js": "",
+			"init": ""
+		},
+		"error": null
+	}
+})
+component.exports = (function(){
+
+	function validate(comp){
+		if(!comp){
+        	throw 'Data "component" must be provided'
+        }
+        if(!comp.name) { 
+            throw 'Component must be named with property "name"'
+        }
+        if(!comp.assets){
+            comp.assets = JSON.parse(empty)
+        }        
+	}
+
+	return {
+		beforeInit: function(options){
+			validate(options.data.component)
+		},
+		init: function(){
+			this.observe('component', validate)
+		}
+	}
+})()
 	},
 },
 {
@@ -36,10 +89,7 @@ component.exports = {
         var node = this.find('.editor-control'),
             data = this.data
 
-        this.editor = this.createEditor(node, 
-            data.language,
-            data.code,
-            data.config)
+        this.editor = this.createEditor(node, data)
     },    
     reset: function(){
         if(!this.editor) { return }
@@ -49,11 +99,11 @@ component.exports = {
         if(!this.editor) { return }
         this.editor.teardown()  
     },
-    createEditor: function(node, language, code, config){ 
+    createEditor: function(node, data){ 
         var e = ace.edit(node)
 
         var modes = ace.require('ace/ext/modelist')
-        var mode = modes.getModeForPath('.' + language).mode
+        var mode = modes.getModeForPath('.' + data.language).mode
         var s = e.getSession()
         s.setMode(mode)
         
@@ -63,7 +113,7 @@ component.exports = {
         ractive.observe('code', function(v){
             if(getting) return;
             setting = true
-            e.setValue(v,-1)
+            e.setValue(v)
             e.clearSelection()
             setting = false
         }, {init: false })
@@ -71,7 +121,8 @@ component.exports = {
         e.on('change', function(){
             if(setting) return;
             getting = true
-            ractive.set('code', e.getValue())
+            data.code = e.getValue()
+            //ractive.set('code', e.getValue())
             getting = false
         })
         
@@ -132,7 +183,8 @@ component.exports = {
         return {
             teardown: teardown,
             resize: resize,
-            reset: reset
+            reset: reset,
+            language: data.language
         }
     }
 }
@@ -144,7 +196,7 @@ component.exports = {
 	template: [{"t":7,"e":"div","a":{"class":"editors"},"f":[{"t":4,"r":"section","f":["\n",{"t":7,"e":"settings","a":{"tabs":[{"t":2,"r":"code"}],"selected":[{"t":2,"r":"config.selected"}],"error":[{"t":2,"r":"error.location"}]}},{"t":7,"e":"div","a":{"class":"editor-container"},"f":[{"t":4,"r":"code","i":"language","f":["\n",{"t":7,"e":"div","a":{"style":[{"t":4,"x":{"r":["config.selected","language"],"s":"${0}!==${1}"},"f":" visibility: none; z-index: -1; "}],"class":"editor"},"f":[{"t":7,"e":"editor","a":{"language":[{"t":2,"r":"language"}],"code":[{"t":2,"r":"."}],"config":[{"t":2,"x":{"r":["language","title","config"],"s":"${2}[${1}][${0}]"}}]}}]}]},"\n"]},{"t":7,"e":"error"}]},"\n"]}],
 	init: function(component, Ractive) {
 		component.exports =  {
-    complete: function(){
+    init: function(){
         var ractive = this,
             d = this.data,
             section = d.section
@@ -153,7 +205,7 @@ component.exports = {
             ractive.findAllComponents('editor').forEach(function(editor){
                 editor.reset()
             })
-        })
+        }, { init: false })
             
         function observe(from, to, fn){
             if(typeof section.code[to] === 'undefined') return;
@@ -164,18 +216,23 @@ component.exports = {
                 return function(value){
                     fn(value, function(err, result){
                         if(err){
-                            //console.warn(from, 'to', to, 'err', err)
-                            ractive.set('section.error', {
+                            // ractive.set('section.error', {
+                            //     location: from,
+                            //     message: err
+                            // })
+                            section.error = {
                                 location: from,
                                 message: err
-                            })  
+                            }
                             return;                              
                         }
+                            
+                        //ractive.set('section.code.' + to, result)
+                        section.code[to] = result
 
-                        ractive.set('section.code.' + to, result)
-                        
                         if(section.error && section.error.location===from){
-                            ractive.set('section.error', null)
+                            //ractive.set('section.error', null)
+                            section.error = null
                         }
 
                     })
@@ -242,7 +299,7 @@ component.exports = {
             stylus(s).render(cb)
         })
         
-        observe('eval', 'js', async(function(js){
+        observe('js', 'init', async(function(js){
             eval(js)
             return js
         })) 
@@ -372,7 +429,7 @@ component.exports = {
                     template: assets.template.code.ractive,
                     css: assets.style.code.css,
                     data: assets.data.code.json,
-                    init: assets.script.code.js 
+                    init: assets.script.code.init 
                 }
             }
 
@@ -387,7 +444,7 @@ component.exports = {
             ractive.observe('component.assets.template.code.ractive', function(template){
                 iwin.postMessage({ template: template }, '*')
             })
-            ractive.observe('component.assets.script.code.js', function(init){
+            ractive.observe('component.assets.script.code.init', function(init){
                 iwin.postMessage({ init: init }, '*')
             })
 
@@ -416,7 +473,7 @@ component.exports = {
 },
 {
 	name: 'project',
-	template: [{"t":7,"e":"div","a":{"class":"project"},"f":[{"t":7,"e":"ul","f":[{"t":4,"r":"project","f":["\n",{"t":4,"r":"components","f":[{"t":7,"e":"li","a":{"class":["component ",{"t":4,"x":{"r":[".name","project.current.name"],"s":"${0}===${1}"},"f":"selected"}]},"f":[{"t":2,"r":"name"}],"v":{"click":"select"}}]},"\n"]}]}]}],
+	template: [{"t":7,"e":"div","a":{"class":"project"},"f":[{"t":7,"e":"ul","a":{"class":"components"},"f":[{"t":4,"r":"project","f":["\n",{"t":4,"r":"components","i":"i","f":[{"t":7,"e":"li","a":{"class":[{"t":4,"x":{"r":[".name","project.current.name"],"s":"${0}===${1}"},"f":"selected"}]},"f":[{"t":2,"r":"name"}],"v":{"click":"select"}}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"value":[{"t":2,"r":"new"}]},"v":{"enter_kp":{"n":"add","d":[{"t":2,"r":"new"}]}}}]}]},"\n"]}]}],
 	init: function(component, Ractive) {
 		component.exports = {
     magic: true,
@@ -426,11 +483,26 @@ component.exports = {
         this.on('select', function(e){
             project.current = e.context
         })
-        // r.observe('project.current', function(newV, old){
-        // 	console.log('project.current changed from', 
-        //         old ? old.name : '<none>', 'to', 
-        //         newV ? newV.name : '<none>')	
-        // })
+        this.on('add', function(e, item){
+            if(!item || !item.trim() ) { return }
+            item = item.replace(/ /g, '-')
+            var component = {
+                name: item
+            }
+            r.data.new = ''
+            document.activeElement.blur()
+            e.context.current = component
+            e.context.components.push(component)
+        })
+    },
+    events: {
+        enter_kp: function(node, fire){
+            node.addEventListener('keypress', function(e){
+                if(e.which===13){ fire({
+                    node: node
+                })}
+            })
+        }
     }
 }
 	},

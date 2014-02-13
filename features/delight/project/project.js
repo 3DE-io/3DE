@@ -6,10 +6,25 @@ component.exports = {
         this.on('select', function(e){
             project.current = e.context
         })
-        // r.observe('project.current', function(newV, old){
-        // 	console.log('project.current changed from', 
-        //         old ? old.name : '<none>', 'to', 
-        //         newV ? newV.name : '<none>')	
-        // })
+        this.on('add', function(e, item){
+            if(!item || !item.trim() ) { return }
+            item = item.replace(/ /g, '-')
+            var component = {
+                name: item
+            }
+            r.data.new = ''
+            document.activeElement.blur()
+            e.context.current = component
+            e.context.components.push(component)
+        })
+    },
+    events: {
+        enter_kp: function(node, fire){
+            node.addEventListener('keypress', function(e){
+                if(e.which===13){ fire({
+                    node: node
+                })}
+            })
+        }
     }
 }

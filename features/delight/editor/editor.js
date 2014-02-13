@@ -10,10 +10,7 @@ component.exports = {
         var node = this.find('.editor-control'),
             data = this.data
 
-        this.editor = this.createEditor(node, 
-            data.language,
-            data.code,
-            data.config)
+        this.editor = this.createEditor(node, data)
     },    
     reset: function(){
         if(!this.editor) { return }
@@ -23,11 +20,11 @@ component.exports = {
         if(!this.editor) { return }
         this.editor.teardown()  
     },
-    createEditor: function(node, language, code, config){ 
+    createEditor: function(node, data){ 
         var e = ace.edit(node)
 
         var modes = ace.require('ace/ext/modelist')
-        var mode = modes.getModeForPath('.' + language).mode
+        var mode = modes.getModeForPath('.' + data.language).mode
         var s = e.getSession()
         s.setMode(mode)
         
@@ -37,7 +34,7 @@ component.exports = {
         ractive.observe('code', function(v){
             if(getting) return;
             setting = true
-            e.setValue(v,-1)
+            e.setValue(v)
             e.clearSelection()
             setting = false
         }, {init: false })
@@ -45,7 +42,8 @@ component.exports = {
         e.on('change', function(){
             if(setting) return;
             getting = true
-            ractive.set('code', e.getValue())
+            data.code = e.getValue()
+            //ractive.set('code', e.getValue())
             getting = false
         })
         
@@ -106,7 +104,8 @@ component.exports = {
         return {
             teardown: teardown,
             resize: resize,
-            reset: reset
+            reset: reset,
+            language: data.language
         }
     }
 }

@@ -22,7 +22,7 @@ component.exports =  {
                     template: assets.template.code.ractive,
                     css: assets.style.code.css,
                     data: assets.data.code.json,
-                    init: assets.script.code.js 
+                    init: assets.script.code.init 
                 }
             }
 
@@ -37,7 +37,7 @@ component.exports =  {
             ractive.observe('component.assets.template.code.ractive', function(template){
                 iwin.postMessage({ template: template }, '*')
             })
-            ractive.observe('component.assets.script.code.js', function(init){
+            ractive.observe('component.assets.script.code.init', function(init){
                 iwin.postMessage({ init: init }, '*')
             })
 

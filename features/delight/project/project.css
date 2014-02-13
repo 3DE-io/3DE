@@ -4,16 +4,18 @@
     background: lightsteelblue;
     overflow: scroll;
 }
-.project .component {
+.project .components {
+    list-style-type: circle;
+    padding-left: 20px;
     color: darkgoldenrod;
     cursor: pointer;
     font-family: sans-serif;
     -webkit-user-select: none;
 }
-.project .component.selected {
+.project .selected {
     color: Khaki;
 }
-.project ul {    
-    list-style-type: circle;
-    padding-left: 20px;
+.project .components input {
+    width: 90%;
+    max-width: 150px;
 }

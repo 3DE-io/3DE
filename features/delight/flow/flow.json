@@ -28,7 +28,8 @@
           },
           "script": {
             "code": {
-              "js": ""
+              "js": "",
+              "init": ""
             },
             "error": null
           }

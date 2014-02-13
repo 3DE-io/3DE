@@ -1,5 +1,5 @@
-<div class="project"><ul>{{#project}}
-{{#components}}
-<li on-click="select" class="component {{#(.name===project.current.name)}}selected">{{name}}</li>{{/components}}
-{{/project}}
+<div class="project"><ul class="components">{{#project}}
+{{#components:i}}
+<li on-click="select" class="{{#(.name===project.current.name)}}selected">{{name}}</li>{{/components}}
+<li><input on-enter_kp="add:{{new}}" value="{{new}}"/></li>{{/project}}
 </ul></div>

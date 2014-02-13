@@ -1,5 +1,5 @@
 component.exports =  {
-    complete: function(){
+    init: function(){
         var ractive = this,
             d = this.data,
             section = d.section
@@ -8,7 +8,7 @@ component.exports =  {
             ractive.findAllComponents('editor').forEach(function(editor){
                 editor.reset()
             })
-        })
+        }, { init: false })
             
         function observe(from, to, fn){
             if(typeof section.code[to] === 'undefined') return;
@@ -19,18 +19,23 @@ component.exports =  {
                 return function(value){
                     fn(value, function(err, result){
                         if(err){
-                            //console.warn(from, 'to', to, 'err', err)
-                            ractive.set('section.error', {
+                            // ractive.set('section.error', {
+                            //     location: from,
+                            //     message: err
+                            // })
+                            section.error = {
                                 location: from,
                                 message: err
-                            })  
+                            }
                             return;                              
                         }
+                            
+                        //ractive.set('section.code.' + to, result)
+                        section.code[to] = result
 
-                        ractive.set('section.code.' + to, result)
-                        
                         if(section.error && section.error.location===from){
-                            ractive.set('section.error', null)
+                            //ractive.set('section.error', null)
+                            section.error = null
                         }
 
                     })
@@ -97,7 +102,7 @@ component.exports =  {
             stylus(s).render(cb)
         })
         
-        observe('eval', 'js', async(function(js){
+        observe('js', 'init', async(function(js){
             eval(js)
             return js
         })) 
