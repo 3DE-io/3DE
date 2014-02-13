@@ -25,6 +25,12 @@ module.exports = function(grunt) {
         }    
       }
     },
+    copy: {
+      ractive: {
+        src: '../Ractive/build/Ractive.js',
+        dest: 'src/js/Ractive.js'
+      }
+    },
     components: {
       delight: {
         src: 'features/delight/*',
@@ -67,6 +73,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-jade')
   grunt.loadNpmTasks('grunt-contrib-watch')
+  grunt.loadNpmTasks('grunt-contrib-copy')
 
   grunt.registerTask('default', ['jade', 'cssmin', 'components']);
 

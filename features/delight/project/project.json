@@ -1,0 +1,15 @@
+{
+  "project": {
+    "components": [
+      {
+        "name": "hello",
+        "assets": {}
+      },
+      {
+        "name": "items",
+        "assets": {}
+      }
+    ],
+    "current": null
+  }
+}

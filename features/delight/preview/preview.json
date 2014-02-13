@@ -1,6 +1,1 @@
-{
-  "ractive": "[{\"t\":7,\"e\":\"p\",\"f\":[\"hello \",{\"t\":2,\"r\":\"world\"}]}]",
-  "css": "p { color: orange;}",
-  "json": "{world: 'earth'}",
-  "js": ""
-}
+undefined

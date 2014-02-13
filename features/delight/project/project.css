@@ -1,0 +1,19 @@
+.project {
+    position: absolute;
+    height: 100%; width: 100%;
+    background: lightsteelblue;
+    overflow: scroll;
+}
+.project .component {
+    color: darkgoldenrod;
+    cursor: pointer;
+    font-family: sans-serif;
+    -webkit-user-select: none;
+}
+.project .component.selected {
+    color: Khaki;
+}
+.project ul {    
+    list-style-type: circle;
+    padding-left: 20px;
+}

@@ -71,7 +71,7 @@ var supportedModes = {
     Jack:        ["jack"],
     Jade:        ["jade"],
     Java:        ["java"],
-    JavaScript:  ["js|jsm|eval"],
+    JavaScript:  ["js|jsm|eval|init"],
     JSON:        ["json|ractive"],
     JSONiq:      ["jq"],
     JSP:         ["jsp"],

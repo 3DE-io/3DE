@@ -20,27 +20,22 @@ html
     script(id='#{templateName}', type='text/ractive') !{html}
 
     each component in components
-      link(rel='ractive', href='component/#{app}/#{feature}/#{component}')
+       link(rel='ractive', href='component/#{app}/#{feature}/#{component}')
 
   body
-    #container
-    script(src="http://localhost:8080/Ractive.js")
-    script(src="http://localhost:8080/test/vendor/Ractive-events-tap.js")
-    script(src="../js-new/Ractive-transitions-fade.js")
+    ///- #container
 
-    
-      
-    
-    script(src="http://localhost:8081/js/ace/ace.js")
-    script(src="http://localhost:8081/js/ace/ext-themelist.js")
-    script(src="http://localhost:8081/js/ace/ext-modelist.js")
+    script(src="http://localhost:8080/src/js/Ractive.js")
+    script(src="http://localhost:8080/src/js/Ractive.load.js")
 
+    script(src="http://localhost:8080/src/js/ace/ace.js")
+    script(src="http://localhost:8080/src/js/ace/ext-themelist.js")
+    script(src="http://localhost:8080/src/js/ace/ext-modelist.js")
 
-    script(src="http://localhost:8081/js/move.js")
+    script(src="http://localhost:8080/src/js/move.js")
 
     script(src="../js-new/jade.js")
     script(src="../js-new/stylus.js")
-
 
     script.
 
@@ -56,10 +51,9 @@ html
 
           var Component = Ractive.extend({
             template: '##{templateName}',
-            magic: true
+            magic: true,
+            debug: true
           })
-
-
 
           var component = {}
           init(component)
@@ -81,6 +75,7 @@ html
             components: { '#{templateName}': Component },
             data: !{json}
           }
+          
           //- if(exports && exports.adapt){
           //-     options.adapt = exports.adapt
           //- }  
@@ -89,7 +84,8 @@ html
 
         }
         catch(error){
-          document.body.innerHTML = error
+          console.error('wtf?', error)
+          document.getElementById('container').innerHTML = error
         }
       })
     

@@ -1,30 +1,8 @@
 component.exports =  {
-    decorators: {
-      render: function(node){
-        var r=this
-        //console.log('decorator', JSON.stringify(r.data))
-        return { teardown:function(){} }
-      }  
-    },
     complete: function(){
-        var c = this.data.component,
-            component
-        if(c) {
-            component = {
-                template: c.template.code.ractive,
-                css: c.style.code.css,
-                data: c.data.code.json,
-                init: c.script.code.js 
-            }
-        }
-        
-        var html
-        try{
-            html = jade.render(layout, component)
-        } catch(e){
-            html = e.message
-        }
-        
+        var assets = this.data.component.assets
+       
+
         var ractive = this
     
         //var preview = this.find('.preview')
@@ -36,30 +14,30 @@ component.exports =  {
         ifrm.onload = function(){
             
             var iwin = ifrm.contentWindow,
-                doc = iwin.document
+                doc = iwin.document,
+                component
             
-            
-            // try {
-            // doc.open()
-            // doc.write(html)
-            // doc.close()
-            // }
-            // catch(e){
-            //     console.log('write err', e)
-            // }
+            if(assets) {
+                component = {
+                    template: assets.template.code.ractive,
+                    css: assets.style.code.css,
+                    data: assets.data.code.json,
+                    init: assets.script.code.js 
+                }
+            }
 
             iwin.postMessage(component, '*')
 
-            ractive.observe('component.style.code.css', function(css){
+            ractive.observe('component.assets.style.code.css', function(css){
                 iwin.postMessage({ css: css }, '*')
             })
-            ractive.observe('component.data.code.json', function(data){
+            ractive.observe('component.assets.data.code.json', function(data){
                 iwin.postMessage({ data: data }, '*')
             })
-            ractive.observe('component.template.code.ractive', function(template){
+            ractive.observe('component.assets.template.code.ractive', function(template){
                 iwin.postMessage({ template: template }, '*')
             })
-            ractive.observe('component.script.code.js', function(init){
+            ractive.observe('component.assets.script.code.js', function(init){
                 iwin.postMessage({ init: init }, '*')
             })
 

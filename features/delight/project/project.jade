@@ -1,0 +1,7 @@
+.project
+  ul
+    {{#project}}
+    {{#components}}
+    li.component(on-click='select', class='{{#(.name===project.current.name)}}selected') {{name}}
+    {{/components}}
+    {{/project}}

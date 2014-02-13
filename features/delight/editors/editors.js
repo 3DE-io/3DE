@@ -1,7 +1,14 @@
 component.exports =  {
     complete: function(){
-        var section = this.data.section,
-            ractive = this
+        var ractive = this,
+            d = this.data,
+            section = d.section
+            
+        this.observe('section', function(s){
+            ractive.findAllComponents('editor').forEach(function(editor){
+                editor.reset()
+            })
+        })
             
         function observe(from, to, fn){
             if(typeof section.code[to] === 'undefined') return;
@@ -96,10 +103,15 @@ component.exports =  {
         })) 
     },
     beforeInit: function(o){
-        var section = o.data.section
-        if(!section.selected){
+        var config = o.data.config,
+            section = o.data.section
+            
+        if(!o.data.config){ o.data.config = {} }
+        if(!o.data.config.selected){
             var first = Object.keys(section.code)[0]
-            section.selected = first
+            o.data.config.selected = first
         }
+
+
     }
 }

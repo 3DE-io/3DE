@@ -1,13 +1,16 @@
 {
   "type": "template",
   "component": {
-    "template": {
-      "code": {
-        "jade": "p hello {{world}}",
-        "mustache": "",
-        "ractive": ""
-      },
-      "error": null
+    "name": "name",
+    "assets": {
+      "template": {
+        "code": {
+          "jade": "p hello {{world}}",
+          "mustache": "",
+          "ractive": ""
+        },
+        "error": null
+      }
     }
   }
 }

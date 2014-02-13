@@ -1,0 +1,5 @@
+<div class="project"><ul>{{#project}}
+{{#components}}
+<li on-click="select" class="component {{#(.name===project.current.name)}}selected">{{name}}</li>{{/components}}
+{{/project}}
+</ul></div>

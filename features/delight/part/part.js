@@ -1,11 +1,14 @@
 component.exports = {
     beforeInit: function(o){
-        var d = o.data, err
+        var d = o.data,
+            component = d.component, 
+            err
+        
         if(!d.type) {
             err = 'type must be specifed'
-        } else if(!d.component) {
+        } else if(!component.assets) {
             err = 'component data must exist'
-        } else if(!d.component[d.type]) {
+        } else if(!component.assets[d.type]) {
             err = 'component.' + d.type + ' not found'
         }
          

@@ -1,5 +1,5 @@
 {
-  "component": {
+  "current": {
     "data": {
       "code": {
         "eval": "{ world: 'earth' }",

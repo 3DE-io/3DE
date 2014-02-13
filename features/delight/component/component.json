@@ -1,0 +1,48 @@
+{
+  "pane": {
+    "position": {
+      "x": 70,
+      "y": 50
+    },
+    "pane": {
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    }
+  },
+  "component": {
+    "name": "hello",
+    "assets": {
+      "template": {
+        "code": {
+          "jade": "p hello {{world}}\ninput(value='{{world}}')",
+          "mustache": "",
+          "ractive": ""
+        },
+        "error": null
+      },
+      "style": {
+        "code": {
+          "stylus": "p\n\tcolor: green",
+          "css": ""
+        },
+        "error": null
+      },
+      "data": {
+        "code": {
+          "eval": "{ world: 'earth' }",
+          "json": ""
+        },
+        "error": null
+      },
+      "script": {
+        "code": {
+          "eval": "component.exports = {}",
+          "js": ""
+        },
+        "error": null
+      }
+    }
+  }
+}

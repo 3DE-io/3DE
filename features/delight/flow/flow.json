@@ -1,44 +1,123 @@
 {
-  "pane": {
-    "position": {
-      "x": 70
-    },
-    "pane": {
-      "position": {
-        "x": 50,
-        "y": 50
+  "project": {
+    "components": [
+      {
+        "name": "hello",
+        "assets": {
+          "template": {
+            "code": {
+              "jade": "p hello {{world}}\ninput(value='{{world}}')",
+              "mustache": "",
+              "ractive": ""
+            },
+            "error": null
+          },
+          "style": {
+            "code": {
+              "stylus": "p\n\tcolor: green",
+              "css": ""
+            },
+            "error": null
+          },
+          "data": {
+            "code": {
+              "eval": "{ world: 'earth' }",
+              "json": ""
+            },
+            "error": null
+          },
+          "script": {
+            "code": {
+              "js": ""
+            },
+            "error": null
+          }
+        }
+      },
+      {
+        "name": "items",
+        "assets": {
+          "template": {
+            "code": {
+              "jade": "ul\n\t{{#items}}\n\tli {{.}}\n\t{{/items}}\ninput(value='{{new}}')\nbutton(on-click='add:{{new}}') add",
+              "mustache": "",
+              "ractive": ""
+            },
+            "error": null
+          },
+          "style": {
+            "code": {
+              "stylus": "li\n\tcolor saddlebrown\n\tfont-family fantasy",
+              "css": ""
+            },
+            "error": null
+          },
+          "data": {
+            "code": {
+              "eval": "{ items: ['earth', 'mars','venus'] }",
+              "json": ""
+            },
+            "error": null
+          },
+          "script": {
+            "code": {
+              "eval": "component.exports = {\n\t\tinit: function(){\n\t\t\tvar items = this.data.items\n\t\t\tthis.on('add', function(e, item){\n\t\t\t\tif(!item){ return }\n\t\t\t\titems.push(item)\n\t\t\t\tthis.data.new = ''\n\t\t\t})\n\t\t}\n\t}",
+              "js": ""
+            },
+            "error": null
+          }
+        }
+      }
+    ],
+    "current": {
+      "name": "hello",
+      "assets": {
+        "template": {
+          "code": {
+            "jade": "p hello {{world}}\ninput(value='{{world}}')",
+            "mustache": "",
+            "ractive": ""
+          },
+          "error": null
+        },
+        "style": {
+          "code": {
+            "stylus": "p\n\tcolor: green",
+            "css": ""
+          },
+          "error": null
+        },
+        "data": {
+          "code": {
+            "eval": "{ world: 'earth' }",
+            "json": ""
+          },
+          "error": null
+        },
+        "script": {
+          "code": {
+            "js": ""
+          },
+          "error": null
+        }
       }
     }
   },
-  "component": {
-    "template": {
-      "code": {
-        "jade": "p hello {{world}}\ninput(value='{{world}}')",
-        "mustache": "",
-        "ractive": ""
-      },
-      "error": null
+  "pane": {
+    "position": {
+      "x": 10
     },
-    "style": {
-      "code": {
-        "stylus": "p\n\tcolor: green",
-        "css": ""
+    "pane": {
+      "position": {
+        "x": 70,
+        "y": 50
       },
-      "error": null
-    },
-    "data": {
-      "code": {
-        "eval": "{ world: 'earth' }",
-        "json": ""
-      },
-      "error": null
-    },
-    "script": {
-      "code": {
-        "eval": "",
-        "js": ""
-      },
-      "error": null
+      "pane": {
+        "position": {
+          "x": 50,
+          "y": 50
+        }
+      }
     }
   }
 }

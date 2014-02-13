@@ -1,1 +1,60 @@
-<pre style="color: red;">ReferenceError: feature is not defined</pre>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head><style>body {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+  margin: 0;
+}
+
+</style><style feature="the-feature" template="the-template-name"></style><script id="main" type="text/ractive"><the-template-name
+></the-template-name>
+</script><script id="the-template-name" type="text/ractive"></script></head><body><div id="container"></div><script src="http://localhost:8080/src/js/Ractive.js"></script><script src="http://localhost:8080/src/js/Ractive.load.js"></script><script src="http://localhost:8080/src/js/ace/ace.js"></script><script src="http://localhost:8080/src/js/ace/ext-themelist.js"></script><script src="http://localhost:8080/src/js/ace/ext-modelist.js"></script><script src="http://localhost:8080/src/js/move.js"></script><script src="../js-new/jade.js"></script><script src="../js-new/stylus.js"></script><script>Ractive.load().then( function () {
+  try {
+
+    //- console.log('Ractive components', Ractive.components)
+
+    function init(component){
+      
+    }
+
+    var Component = Ractive.extend({
+      template: '#the-template-name',
+      magic: true
+    })
+
+
+
+    var component = {}
+    init(component)
+    var exports = component.exports;
+
+    if ( typeof exports === 'undefined' ) {
+      //fine for now, need to warn?
+    } else if ( typeof exports === 'function' ) {
+      Component = exports( Component );
+    } else if ( typeof exports === 'object' ) {
+
+      Component = Component.extend( exports );
+    }
+
+    var options = {
+      el: '#container', //document.body,
+      template: '#main',
+      magic: true,
+      components: { 'the-template-name': Component },
+      data: {}
+    }
+    //- if(exports && exports.adapt){
+    //-     options.adapt = exports.adapt
+    //- }  
+
+    var ractive = new Ractive(options)
+
+  }
+  catch(error){
+    console.error('wtf?', error)
+    document.getElementById('container').innerHTML = error
+  }
+})
+
+
+</script></body></html>

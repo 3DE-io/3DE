@@ -1,5 +1,5 @@
 {{#pane}}
-.sizer(decorator='moveable: {{.position}}, {{orientation}}',
+.sizer(
     style='top: {{.position.y || 50}}%; left: {{.position.x || 50}}%;',
-    class='orientation-{{orientation}}') {{ignore(.position)}}
+    class='orientation-{{orientation}}')
 {{/pane}}

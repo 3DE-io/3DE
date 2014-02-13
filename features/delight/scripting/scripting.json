@@ -1,11 +1,14 @@
 {
   "component": {
-    "script": {
-      "code": {
-        "js": "",
-        "init": ""
-      },
-      "error": null
+    "name": "name",
+    "assets": {
+      "script": {
+        "code": {
+          "js": "",
+          "init": ""
+        },
+        "error": null
+      }
     }
   }
 }

@@ -3,8 +3,9 @@ console.log('Ractive components', components.length)
 components.forEach(function(component){
 
 	var Component = Ractive.extend({
-	  template: component.template,
-	  magic: true
+		template: component.template,
+	 	magic: true,
+		debug: true
 	})
 
 	var c = {}
@@ -23,88 +24,136 @@ components.forEach(function(component){
 })
 
 var data = {}
-var component = {
-	"template": {
-		"code": {
-			"jade": "p hello {{world}}\ninput(value='{{world}}')",
-			"mustache": "",
-			"ractive": ""
+var hello = {
+	name: 'hello',
+	assets: {
+		"template": {
+			"code": {
+				"jade": "p hello {{world}}\ninput(value='{{world}}')",
+				"mustache": "",
+				"ractive": ""
+			},
+			"error": null
 		},
-		"error": null
-	},
-	"style": {
-		"code": {
-			"stylus": "p\n\tcolor: green",
-			"css": ""
+		"style": {
+			"code": {
+				"stylus": "p\n\tcolor: green",
+				"css": ""
+			},
+			"error": null
 		},
-		"error": null
-	},
-	"data": {
-		"code": {
-			"eval": "{ world: 'earth' }",
-			"json": ""
+		"data": {
+			"code": {
+				"eval": "{ world: 'earth' }",
+				"json": ""
+			},
+			"error": null
 		},
-		"error": null
-	},
-	"script": {
-		"code": {
-			"js": ""
-		},
-		"error": null
+		"script": {
+			"code": {
+				init: '',
+				"js": ""
+			},
+			"error": null
+		}
 	}
 }
-var other = {
-	"template": {
-		"code": {
-			"jade": "ul\n\t{{#items}}\n\tli {{.}}\n\t{{/items}}\n" +
-					"input(value='{{new}}')\nbutton(on-click='add:{{new}}') add",
-			"mustache": "",
-			"ractive": ""
+var items = {
+	name: 'items',
+	assets: {
+		"template": {
+			"code": {
+				"jade": "ul\n\t{{#items}}\n\tli {{.}}\n\t{{/items}}\n" +
+						"input(value='{{new}}')\nbutton(on-click='add:{{new}}') add",
+				"mustache": "",
+				"ractive": ""
+			},
+			"error": null
 		},
-		"error": null
-	},
-	"style": {
-		"code": {
-			"stylus": "li\n\tcolor saddlebrown\n\tfont-family fantasy",
-			"css": ""
+		"style": {
+			"code": {
+				"stylus": "li\n\tcolor saddlebrown\n\tfont-family fantasy",
+				"css": ""
+			},
+			"error": null
 		},
-		"error": null
-	},
-	"data": {
-		"code": {
-			"eval": "{ items: ['earth', 'mars','venus'] }",
-			"json": ""
+		"data": {
+			"code": {
+				"eval": "{ items: ['earth', 'mars','venus'] }",
+				"json": ""
+			},
+			"error": null
 		},
-		"error": null
-	},
-	"script": {
-		"code": {
-			"eval": "component.exports = {\n\
-	init: function(){\n\
-		var items = this.data.items\n\
-		this.on('add', function(e, item){\n\
-			if(!item){ return }\n\
-			items.push(item)\n\
-			this.data.new = ''\n\
-		})\n\
-	}\n\
-}",
-			"js": ""
+		"script": {
+			"code": {
+				"init": "component.exports = {\n\
+		init: function(){\n\
+			var items = this.data.items\n\
+			this.on('add', function(e, item){\n\
+				if(!item){ return }\n\
+				items.push(item)\n\
+				this.data.new = ''\n\
+			})\n\
+		}\n\
+	}",
+				"js": ""
+			},
+			"error": null
+		}
+	}
+}
+var empty = {
+	name: 'empty',
+	assets: {
+		"template": {
+			"code": {
+				"jade": "",
+				"mustache": "",
+				"ractive": ""
+			},
+			"error": null
 		},
-		"error": null
+		"style": {
+			"code": {
+				"stylus": "",
+				"css": ""
+			},
+			"error": null
+		},
+		"data": {
+			"code": {
+				"eval": "",
+				"json": ""
+			},
+			"error": null
+		},
+		"script": {
+			"code": {
+				"init": "",
+				"js": ""
+			},
+			"error": null
+		}
 	}
 }
 
-data.component = other
+data.project = {
+	current: hello,
+	components: [hello,items, empty]
+}
 
 var config = new ConfigService()
 
 function ConfigService() {
 
 	var defaultPane = {
-		position: { x: 70, y: 50 },
+
+		position: { x: 10, y: 50 },
 		pane: {
-			position: { x: 50, y: 50 }
+			position: { x: 70, y: 50 },
+			pane: {
+				position: { x: 50, y: 50 }
+			}
 		}
 	}
 
@@ -137,12 +186,14 @@ function load(data){
 	})
 	template += '/>'
 
+	var Component = Ractive.components.flow
 	try {
-		var ractive = new Ractive({
-		  el: document.body,
-		  template: template,
-		  magic: true,
-		  data: data
+		var ractive = new Component({
+			debug: true,
+			el: document.body,
+			// template: template,
+			magic: true,
+			data: data
 		})
 
 
