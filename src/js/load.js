@@ -147,7 +147,7 @@ var config = new ConfigService()
 function ConfigService() {
 
 	var defaultPane = {
-
+		version: '0.0.1',
 		position: { x: 10, y: 50 },
 		pane: {
 			position: { x: 70, y: 50 },
@@ -160,7 +160,15 @@ function ConfigService() {
 	return {
 		get pane(){
 			var ls = localStorage.paneConfig
-			return ls ? JSON.parse(ls) : defaultPane
+			if(!ls) {
+				ls = defaultPane
+			} else {
+				ls = JSON.parse(ls)	
+				if(!ls.version) { 
+					ls = defaultPane 
+				}
+			}
+			return ls
 		},
 		set pane(pc){
 			localStorage.paneConfig = JSON.stringify(pc)
