@@ -1,3 +1,13 @@
+.dflux {
+    font-size: 14pt;
+    padding-left: 5px;
+    color: steelblue;
+}
+.dflux span {
+    font-size: 14pt;
+    font-family: cursive; 
+    font-style: italic;
+}
 .project {
     position: absolute;
     height: 100%; width: 100%;

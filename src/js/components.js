@@ -473,7 +473,7 @@ component.exports = {
 },
 {
 	name: 'project',
-	template: [{"t":7,"e":"div","a":{"class":"project"},"f":[{"t":7,"e":"ul","a":{"class":"components"},"f":[{"t":4,"r":"project","f":["\n",{"t":4,"r":"components","i":"i","f":[{"t":7,"e":"li","a":{"class":[{"t":4,"x":{"r":[".name","project.current.name"],"s":"${0}===${1}"},"f":"selected"}]},"f":[{"t":2,"r":"name"}],"v":{"click":"select"}}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"value":[{"t":2,"r":"new"}]},"v":{"enter_kp":{"n":"add","d":[{"t":2,"r":"new"}]}}}]}]},"\n"]}]}],
+	template: [{"t":7,"e":"div","a":{"class":"project"},"f":[{"t":7,"e":"div","a":{"class":"dflux"},"f":"d<span>flux</span>"},{"t":7,"e":"ul","a":{"class":"components"},"f":[{"t":4,"r":"project","f":["\n",{"t":4,"r":"components","i":"i","f":[{"t":7,"e":"li","a":{"class":[{"t":4,"x":{"r":[".name","project.current.name"],"s":"${0}===${1}"},"f":"selected"}]},"f":[{"t":2,"r":"name"}],"v":{"click":"select"}}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"value":[{"t":2,"r":"new"}]},"v":{"enter_kp":{"n":"add","d":[{"t":2,"r":"new"}]}}}]}]},"\n"]}]}],
 	init: function(component, Ractive) {
 		component.exports = {
     magic: true,
