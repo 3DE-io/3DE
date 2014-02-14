@@ -485,7 +485,16 @@ component.exports = {
 	name: 'project',
 	template: [{"t":7,"e":"div","a":{"class":"project"},"f":[{"t":7,"e":"div","a":{"class":"dflux"},"f":"d<span>flux</span>"},{"t":4,"r":"project","f":["\n",{"t":7,"e":"ul","a":{"class":"features"},"f":[{"t":4,"r":"features","f":["\n",{"t":7,"e":"li","f":[{"t":2,"r":"name"},{"t":7,"e":"ul","a":{"class":"components"},"f":[{"t":4,"r":"components","i":"i","f":["\n",{"t":7,"e":"li","a":{"class":[{"t":4,"x":{"r":[".name","project.current.name"],"s":"${0}===${1}"},"f":"selected"}]},"f":[{"t":2,"r":"name"}],"v":{"click":"select"}}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"type":"text","value":[{"t":2,"r":".new"}],"placeholder":"new component..."},"v":{"enter_kp":{"n":"addComponent","d":[{"t":2,"r":".new"}]}}}]}]}]}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"type":"text","value":[{"t":2,"r":".new"}],"placeholder":"new feature..."},"v":{"enter_kp":{"n":"addFeature","d":[{"t":2,"r":".new"}]}}}]}]}]},"\n"]},{"t":7,"e":"ul"},{"t":7,"e":"div"}],
 	init: function(component, Ractive) {
-		component.exports = {
+		function nameSort(a, b) {
+    if (a.name > b.name)
+      return 1;
+    if (a.name < b.name)
+      return -1;
+    // a must be equal to b
+    return 0;
+}
+
+component.exports = {
     magic: true,
     init: function(){
         var r = this,
@@ -493,6 +502,7 @@ component.exports = {
         this.on('select', function(e){
             project.current = e.context
         })
+        
         function add(item, collection){
             if(!item || !item.trim() ) { return }
             item = item.replace(/ /g, '-')
@@ -504,29 +514,35 @@ component.exports = {
                 alert('"' + item + '" already exists')
                 return;
             }
-            return {
-                name: item
-            }
+            return { name: item }
         }
+        function insert(collection, item){
+            collection.push(item)
+            collection.sort(nameSort)
+        }
+
         this.on('addComponent', function(e, item){
             var components =  e.context.components,
                 component = add(item, components)
             if(!component) { return }
-
+            
+            insert(components, component)
             e.context.new = ''
             document.activeElement.blur()
+            
             r.data.project.current = component
-            components.push(component)
         })
+        
         this.on('addFeature', function(e, item){
             var features = e.context.features,
                 feature = add(item, features)
             if(!feature) { return }
+            
             feature.components = []
-            features.push(feature)
+            
+            insert(features, feature)
             e.context.new = ''
             document.activeElement.blur()
-            console.log(this.data.project.features)
         })
     },
     events: {

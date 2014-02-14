@@ -39,6 +39,10 @@
 .project .selected {
     color: Khaki;
 }
+.project .features input {
+    width: 85%;
+    max-width: 120px;
+}
 .project .components input {
     width: 80%;
     max-width: 100px;
