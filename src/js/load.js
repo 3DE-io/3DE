@@ -138,8 +138,12 @@ var empty = {
 }
 
 data.project = {
+	name: 'project',
 	current: hello,
-	components: [hello,items, empty]
+	features: [{
+		name: 'examples',
+		components: [hello,items, empty]
+	}]
 }
 
 var config = new ConfigService()
@@ -160,18 +164,18 @@ function ConfigService() {
 	return {
 		get pane(){
 			var ls = localStorage.paneConfig
-			if(!ls) {
+			// if(!ls) {
 				ls = defaultPane
-			} else {
-				ls = JSON.parse(ls)	
-				if(!ls.version) { 
-					ls = defaultPane 
-				}
-			}
+			// } else {
+			// 	ls = JSON.parse(ls)	
+			// 	if(!ls.version) { 
+			// 		ls = defaultPane 
+			// 	}
+			// }
 			return ls
 		},
 		set pane(pc){
-			localStorage.paneConfig = JSON.stringify(pc)
+			//localStorage.paneConfig = JSON.stringify(pc)
 		}
 	}
 }

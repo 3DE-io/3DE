@@ -1,5 +1,7 @@
-<div class="project"><div class="dflux">d<span>flux</span></div><ul class="components">{{#project}}
-{{#components:i}}
+<div class="project"><div class="dflux">d<span>flux</span></div>{{#project}}
+<ul class="features">{{#features}}
+<li>{{name}}<ul class="components">{{#components:i}}
 <li on-click="select" class="{{#(.name===project.current.name)}}selected">{{name}}</li>{{/components}}
-<li><input on-enter_kp="add:{{new}}" value="{{new}}"/></li>{{/project}}
+<li><input on-enter_kp="addComponent:{{.new}}" type="text" value="{{.new}}" placeholder="new component..."/></li></ul></li>{{/features}}
+<li><input on-enter_kp="addFeature:{{.new}}" type="text" value="{{.new}}" placeholder="new feature..."/></li>{{/project}}
 </ul></div>

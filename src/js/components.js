@@ -172,8 +172,10 @@ component.exports = {
             e.destroy()
         }
         function reset(){
+            
             //ace bug: https://github.com/ajaxorg/ace/issues/1243
             //s.getUndoManager().reset()
+
             setting = true
             s.setValue(e.getValue(), -1)
             e.clearSelection()
@@ -193,22 +195,31 @@ component.exports = {
 },
 {
 	name: 'editors',
-	template: [{"t":7,"e":"div","a":{"class":"editors"},"f":[{"t":4,"r":"section","f":["\n",{"t":7,"e":"settings","a":{"tabs":[{"t":2,"r":"code"}],"selected":[{"t":2,"r":"config.selected"}],"error":[{"t":2,"r":"error.location"}]}},{"t":7,"e":"div","a":{"class":"editor-container"},"f":[{"t":4,"r":"code","i":"language","f":["\n",{"t":7,"e":"div","a":{"style":[{"t":4,"x":{"r":["config.selected","language"],"s":"${0}!==${1}"},"f":" visibility: none; z-index: -1; "}],"class":"editor"},"f":[{"t":7,"e":"editor","a":{"language":[{"t":2,"r":"language"}],"code":[{"t":2,"r":"."}],"config":[{"t":2,"x":{"r":["language","title","config"],"s":"${2}[${1}][${0}]"}}]}}]}]},"\n"]},{"t":7,"e":"error"}]},"\n"]}],
+	template: [{"t":7,"e":"div","a":{"class":"editors"},"f":[{"t":4,"r":"section","f":["\n",{"t":7,"e":"settings","a":{"tabs":[{"t":2,"r":"code"}],"selected":[{"t":2,"r":"config.selected"}],"error":[{"t":2,"r":"error.location"}]}},{"t":7,"e":"div","a":{"class":"editor-container"},"f":[{"t":4,"r":"code","i":"language","f":["\n",{"t":7,"e":"div","a":{"style":[{"t":4,"x":{"r":["config.selected","language"],"s":"${0}!==${1}"},"f":" visibility: none; z-index: -1; "}],"class":"editor"},"f":[{"t":7,"e":"editor","a":{"language":[{"t":2,"r":"language"}],"code":[{"t":2,"r":"."}],"config":[{"t":2,"x":{"r":["language","title","config"],"s":"${2}[${1}][${0}]"}}]}}]}]},"\n"]},{"t":4,"r":"error","f":["\n",{"t":7,"e":"error"}]},"\n"]}]}],
 	init: function(component, Ractive) {
 		component.exports =  {
     init: function(){
         var ractive = this,
-            d = this.data,
-            section = d.section
+            d = this.data
             
-        this.observe('section', function(s){
+        //close example of this component:
+        //http://jsfiddle.net/85a9Z/1/
+        
+        this.observe('section', function(n,o){
+            if(n===o){ return }
             ractive.findAllComponents('editor').forEach(function(editor){
                 editor.reset()
             })
+
         }, { init: false })
+        
+
+        this.on('change', function(changed){
+            console.log(Object.keys(changed)[0])
+        })
             
         function observe(from, to, fn){
-            if(typeof section.code[to] === 'undefined') return;
+            if(typeof d.section.code[to] === 'undefined') return;
             
             ractive.observe('section.code.' + from, transform())
             
@@ -220,19 +231,19 @@ component.exports = {
                             //     location: from,
                             //     message: err
                             // })
-                            section.error = {
+                            d.section.error = {
                                 location: from,
                                 message: err
                             }
                             return;                              
                         }
                             
-                        //ractive.set('section.code.' + to, result)
-                        section.code[to] = result
+                        ractive.set('section.code.' + to, result)
+                        //d.section.code[to] = result
 
-                        if(section.error && section.error.location===from){
+                        if(d.section.error && d.section.error.location===from){
                             //ractive.set('section.error', null)
-                            section.error = null
+                            d.section.error = null
                         }
 
                     })
@@ -299,9 +310,8 @@ component.exports = {
             stylus(s).render(cb)
         })
         
-        observe('js', 'init', async(function(js){
-            eval(js)
-            return js
+        observe('init', 'js', async(function(js){
+            return js ? js.trim() : js
         })) 
     },
     beforeInit: function(o){
@@ -473,7 +483,7 @@ component.exports = {
 },
 {
 	name: 'project',
-	template: [{"t":7,"e":"div","a":{"class":"project"},"f":[{"t":7,"e":"div","a":{"class":"dflux"},"f":"d<span>flux</span>"},{"t":7,"e":"ul","a":{"class":"components"},"f":[{"t":4,"r":"project","f":["\n",{"t":4,"r":"components","i":"i","f":[{"t":7,"e":"li","a":{"class":[{"t":4,"x":{"r":[".name","project.current.name"],"s":"${0}===${1}"},"f":"selected"}]},"f":[{"t":2,"r":"name"}],"v":{"click":"select"}}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"value":[{"t":2,"r":"new"}]},"v":{"enter_kp":{"n":"add","d":[{"t":2,"r":"new"}]}}}]}]},"\n"]}]}],
+	template: [{"t":7,"e":"div","a":{"class":"project"},"f":[{"t":7,"e":"div","a":{"class":"dflux"},"f":"d<span>flux</span>"},{"t":4,"r":"project","f":["\n",{"t":7,"e":"ul","a":{"class":"features"},"f":[{"t":4,"r":"features","f":["\n",{"t":7,"e":"li","f":[{"t":2,"r":"name"},{"t":7,"e":"ul","a":{"class":"components"},"f":[{"t":4,"r":"components","i":"i","f":["\n",{"t":7,"e":"li","a":{"class":[{"t":4,"x":{"r":[".name","project.current.name"],"s":"${0}===${1}"},"f":"selected"}]},"f":[{"t":2,"r":"name"}],"v":{"click":"select"}}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"type":"text","value":[{"t":2,"r":".new"}],"placeholder":"new component..."},"v":{"enter_kp":{"n":"addComponent","d":[{"t":2,"r":".new"}]}}}]}]}]}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"type":"text","value":[{"t":2,"r":".new"}],"placeholder":"new feature..."},"v":{"enter_kp":{"n":"addFeature","d":[{"t":2,"r":".new"}]}}}]}]}]},"\n"]},{"t":7,"e":"ul"},{"t":7,"e":"div"}],
 	init: function(component, Ractive) {
 		component.exports = {
     magic: true,
@@ -483,16 +493,40 @@ component.exports = {
         this.on('select', function(e){
             project.current = e.context
         })
-        this.on('add', function(e, item){
+        function add(item, collection){
             if(!item || !item.trim() ) { return }
             item = item.replace(/ /g, '-')
-            var component = {
+            
+            var exists = collection.some(function(c){
+                return c.name===item
+            })
+            if(exists){
+                alert('"' + item + '" already exists')
+                return;
+            }
+            return {
                 name: item
             }
-            r.data.new = ''
+        }
+        this.on('addComponent', function(e, item){
+            var components =  e.context.components,
+                component = add(item, components)
+            if(!component) { return }
+
+            e.context.new = ''
             document.activeElement.blur()
-            e.context.current = component
-            e.context.components.push(component)
+            r.data.project.current = component
+            components.push(component)
+        })
+        this.on('addFeature', function(e, item){
+            var features = e.context.features,
+                feature = add(item, features)
+            if(!feature) { return }
+            feature.components = []
+            features.push(feature)
+            e.context.new = ''
+            document.activeElement.blur()
+            console.log(this.data.project.features)
         })
     },
     events: {
@@ -516,7 +550,7 @@ component.exports = {
 },
 {
 	name: 'settings',
-	template: [{"t":7,"e":"div","a":{"force":[{"t":2,"x":{"r":["error"],"s":"!!${0}"}}],"class":"settings"},"f":[{"t":7,"e":"div","a":{"class":"set-box"},"f":[{"t":7,"e":"div","a":{"class":"gear"},"f":"&#x2699;"},{"t":7,"e":"div","a":{"class":"title"},"f":[{"t":2,"r":"title"}]},{"t":7,"e":"div","a":{"class":"tabs"},"f":[{"t":4,"r":"tabs","i":"code","f":["\n",{"t":7,"e":"label","a":{"selected":[{"t":2,"x":{"r":["code","selected"],"s":"${0}===${1}"}}],"error":[{"t":2,"x":{"r":["code","error"],"s":"${0}===${1}"}}]},"f":[{"t":2,"r":"code"},{"t":7,"e":"input","a":{"type":"radio","name":[{"t":2,"r":"selected"}],"value":[{"t":2,"r":"code"}]}}]}]},"\n"]}]}]}],
+	template: [{"t":7,"e":"div","a":{"force":[{"t":2,"x":{"r":["error"],"s":"!!${0}"}}],"class":"settings"},"f":[{"t":7,"e":"div","a":{"class":"set-box"},"f":[{"t":7,"e":"div","a":{"class":"gear"},"f":"&#x2699;"},{"t":7,"e":"div","a":{"class":"gear"},"f":"&#x229A;"},{"t":7,"e":"div","a":{"class":"gear circle"},"f":"!"},{"t":7,"e":"div","a":{"class":"title"},"f":[{"t":2,"r":"title"}]},{"t":7,"e":"div","a":{"class":"tabs"},"f":[{"t":4,"r":"tabs","i":"code","f":["\n",{"t":7,"e":"label","a":{"selected":[{"t":2,"x":{"r":["code","selected"],"s":"${0}===${1}"}}],"error":[{"t":2,"x":{"r":["code","error"],"s":"${0}===${1}"}}]},"f":[{"t":2,"r":"code"},{"t":7,"e":"input","a":{"type":"radio","name":[{"t":2,"r":"selected"}],"value":[{"t":2,"r":"code"}]}}]}]},"\n"]}]}]}],
 	init: function(component, Ractive) {
 		
 	},

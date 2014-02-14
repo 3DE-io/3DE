@@ -6,5 +6,7 @@
     .editor(style="{{#config.selected!==language}} visibility: none; z-index: -1; {{/}}")
       editor(language='{{language}}', code='{{.}}', config='{{config[title][language]}}')
     {{/code}}
+  {{#error}}
   error
+  {{/error}}
   {{/section}}

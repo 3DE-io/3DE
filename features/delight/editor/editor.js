@@ -93,8 +93,10 @@ component.exports = {
             e.destroy()
         }
         function reset(){
+            
             //ace bug: https://github.com/ajaxorg/ace/issues/1243
             //s.getUndoManager().reset()
+
             setting = true
             s.setValue(e.getValue(), -1)
             e.clearSelection()

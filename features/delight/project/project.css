@@ -14,6 +14,17 @@
     background: lightsteelblue;
     overflow: scroll;
 }
+.project .features {
+    list-style: none;
+    font-family: arial;
+    color: rgb(105, 105, 105);
+    padding-left: 5px;
+    margin: 0px;    
+}
+.project .features>li {
+    padding-left: 0px;
+    margin-top: 10px;
+}
 .project .components {
     list-style-type: circle;
     padding-left: 20px;
@@ -22,10 +33,13 @@
     font-family: sans-serif;
     -webkit-user-select: none;
 }
+.project .components>li {
+    padding-top: 1px;
+}
 .project .selected {
     color: Khaki;
 }
 .project .components input {
-    width: 90%;
-    max-width: 150px;
+    width: 80%;
+    max-width: 100px;
 }

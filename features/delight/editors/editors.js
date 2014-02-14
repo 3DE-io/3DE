@@ -1,17 +1,26 @@
 component.exports =  {
     init: function(){
         var ractive = this,
-            d = this.data,
-            section = d.section
+            d = this.data
             
-        this.observe('section', function(s){
+        //close example of this component:
+        //http://jsfiddle.net/85a9Z/1/
+        
+        this.observe('section', function(n,o){
+            if(n===o){ return }
             ractive.findAllComponents('editor').forEach(function(editor){
                 editor.reset()
             })
+
         }, { init: false })
+        
+
+        this.on('change', function(changed){
+            console.log(Object.keys(changed)[0])
+        })
             
         function observe(from, to, fn){
-            if(typeof section.code[to] === 'undefined') return;
+            if(typeof d.section.code[to] === 'undefined') return;
             
             ractive.observe('section.code.' + from, transform())
             
@@ -23,19 +32,19 @@ component.exports =  {
                             //     location: from,
                             //     message: err
                             // })
-                            section.error = {
+                            d.section.error = {
                                 location: from,
                                 message: err
                             }
                             return;                              
                         }
                             
-                        //ractive.set('section.code.' + to, result)
-                        section.code[to] = result
+                        ractive.set('section.code.' + to, result)
+                        //d.section.code[to] = result
 
-                        if(section.error && section.error.location===from){
+                        if(d.section.error && d.section.error.location===from){
                             //ractive.set('section.error', null)
-                            section.error = null
+                            d.section.error = null
                         }
 
                     })
@@ -102,9 +111,8 @@ component.exports =  {
             stylus(s).render(cb)
         })
         
-        observe('js', 'init', async(function(js){
-            eval(js)
-            return js
+        observe('init', 'js', async(function(js){
+            return js ? js.trim() : js
         })) 
     },
     beforeInit: function(o){

@@ -1,10 +1,22 @@
 .project
   .dflux d<span>flux</span>
-  ul.components
-    {{#project}}
-    {{#components:i}}
-    li(on-click='select', class='{{#(.name===project.current.name)}}selected') {{name}}
-    {{/components}}
+  {{#project}}
+  ul.features
+    {{#features}}
+    li {{name}}
+      ul.components
+        {{#components:i}}
+        li(on-click='select', class='{{#(.name===project.current.name)}}selected') {{name}}
+        {{/components}}
+        li
+          input(on-enter_kp='addComponent:{{.new}}', 
+                type='text',
+                value='{{.new}}',
+                placeholder="new component...")
+    {{/features}}
     li
-      input(on-enter_kp='add:{{new}}', value='{{new}}')
+      input(on-enter_kp='addFeature:{{.new}}', 
+            type='text',
+            value='{{.new}}',
+            placeholder="new feature...")
     {{/project}}

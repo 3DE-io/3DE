@@ -1,13 +1,32 @@
 {
   "project": {
-    "components": [
+    "name": "project name",
+    "features": [
       {
-        "name": "hello",
-        "assets": {}
+        "name": "first",
+        "components": [
+          {
+            "name": "hello",
+            "assets": {}
+          },
+          {
+            "name": "items",
+            "assets": {}
+          }
+        ]
       },
       {
-        "name": "items",
-        "assets": {}
+        "name": "second",
+        "components": [
+          {
+            "name": "something",
+            "assets": {}
+          },
+          {
+            "name": "whatelse",
+            "assets": {}
+          }
+        ]
       }
     ],
     "current": null
