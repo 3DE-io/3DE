@@ -170,19 +170,24 @@ data.pane = config.pane
 var projectData = localStorage.project
 if(projectData){
 	setTimeout(function(){
+		console.log('loading project from localStorage')
 		load(JSON.parse(projectData))
 	})
 } else {
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', 'data/project.json', true);
 	xhr.onreadystatechange = function (aEvt) {
-	  if (xhr.readyState == 4) {
-	     if(xhr.status == 200)
-	      load(JSON.parse(xhr.responseText));
-	     else
-	      alert('failed to load project data')
-	  }
-	};
+		if (xhr.readyState == 4) {
+			if(xhr.status == 200) {
+				console.log('loading default project from server')
+				load(JSON.parse(xhr.responseText))
+			}
+			else {
+				alert('failed to load project data')
+			}
+		}
+
+	}
 	xhr.send(null);	
 }
 
