@@ -1,3 +1,7 @@
 body {
     background: rgba(143, 188, 143, 0.5);    
 }
+@font-face {
+  font-family: 'flux';
+  src: url('fonts/Tangerine/Tangerine_Bold.ttf')  format('truetype');
+}

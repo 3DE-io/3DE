@@ -13,10 +13,10 @@ html
     style(feature=feature, template=templateName) !{style}
        
     script(id='main', type='text/ractive')
-      <#{templateName}
-      each v, key in JSON.parse(json)
-        #{key}='{{#{key}}}'
-      ></#{templateName}>
+       <#{templateName}
+       each v, key in JSON.parse(json)
+         #{key}='{{#{key}}}'
+       ></#{templateName}>
     script(id='#{templateName}', type='text/ractive') !{html}
 
     each component in components

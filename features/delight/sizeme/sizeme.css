@@ -1,0 +1,16 @@
+ul{
+    height: 80%;    
+}
+li {
+    -webkit-transition: height 1s;    
+}
+.delete {
+    color: red;
+    font-family: symbol;
+    font-weight: bold;
+    font-size: 8pt;
+    border-radius: 100%;
+    margin-left: 9px;
+    cursor: pointer;
+    opacity: .5
+}

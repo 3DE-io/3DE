@@ -2,6 +2,7 @@
 <html>
   <head>
     <style>
+      title &#x24D3;flux
       body {
         position: absolute;
         top: 0; bottom: 0;
@@ -17,19 +18,45 @@
   </head>
   <body>
     <script src="js/Ractive.js"></script>
+    <script src="js/components.load.ractive.js"></script>
+    <script>
+      function addStyle(css){
+        if(!css.trim()) { return }
+        
+        var style = document.createElement('style');
+        style.type = 'text/css'
+        style.innerHTML = css
+        document.head.appendChild(style)
+      }
+    </script>
     <script>
       window.addEventListener('message', function(e){
-        var component = e.data
+        var message = e.data
         
-        if(component.hasOwnProperty('css')) {
-          document.getElementById('component-css').innerHTML = component.css
-        }
-        if(component.hasOwnProperty('init') || 
-           component.hasOwnProperty('template') || 
-           component.hasOwnProperty('data')) {
-           
-        render(component)
+        if(message.components){
         
+          message.components
+            .map(loader.unpack)
+            .map(loader.load)
+            .forEach(function(component){
+              addStyle(component.css)
+            })
+            
+        } else {
+        
+          var component = message
+          
+          if(component.hasOwnProperty('css')) {
+            document.getElementById('component-css').innerHTML = component.css
+          }
+          
+          if(component.hasOwnProperty('init') || 
+             component.hasOwnProperty('template') || 
+             component.hasOwnProperty('data')) {
+             
+              render(component)
+          }
+          
         }
       })
       

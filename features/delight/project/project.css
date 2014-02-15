@@ -1,13 +1,27 @@
+@font-face {
+  font-family: 'flux';
+  src: url("fonts/Tangerine/Tangerine_Bold.ttf") format('truetype');
+}
 .dflux {
-    font-size: 14pt;
-    padding-left: 5px;
-    color: steelblue;
+  font-size: 14pt;
+  padding-left: 5px;
+  color: #fff;
+  font-family: monospace;
+  background: #4682b4;
+  letter-spacing: 0.1em;
 }
 .dflux span {
-    font-size: 14pt;
-    font-family: cursive; 
-    font-style: italic;
+  font-size: 18pt;
+  font-family: flux;
+/*font-style: italic;*/
 }
+.dflux .fl {
+  letter-spacing: 0.21em;
+}
+.dflux.ux {
+  letter-spacing: 0.1em;
+}
+
 .project {
     position: absolute;
     height: 100%; width: 100%;

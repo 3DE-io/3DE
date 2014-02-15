@@ -1,7 +1,7 @@
 var components = [
 {
 	name: 'component',
-	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"pane","f":[{"t":7,"e":"template","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"styling","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"datum","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"scripting","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"sizer"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"preview","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"sizer","a":{"orientation":"horizontal"}}],
+	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"pane","f":[{"t":7,"e":"template","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"styling","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"datum","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"scripting","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"sizer"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"preview","a":{"component":[{"t":2,"r":"component"}],"features":[{"t":2,"r":"features"}]}}]},{"t":7,"e":"sizer","a":{"orientation":"horizontal"}}],
 	init: function(component, Ractive) {
 		var empty = JSON.stringify({
 	"template": {
@@ -195,7 +195,7 @@ component.exports = {
 },
 {
 	name: 'editors',
-	template: [{"t":7,"e":"div","a":{"class":"editors"},"f":[{"t":4,"r":"section","f":["\n",{"t":7,"e":"settings","a":{"tabs":[{"t":2,"r":"code"}],"selected":[{"t":2,"r":"config.selected"}],"error":[{"t":2,"r":"error.location"}]}},{"t":7,"e":"div","a":{"class":"editor-container"},"f":[{"t":4,"r":"code","i":"language","f":["\n",{"t":7,"e":"div","a":{"style":[{"t":4,"x":{"r":["config.selected","language"],"s":"${0}!==${1}"},"f":" visibility: none; z-index: -1; "}],"class":"editor"},"f":[{"t":7,"e":"editor","a":{"language":[{"t":2,"r":"language"}],"code":[{"t":2,"r":"."}],"config":[{"t":2,"x":{"r":["language","title","config"],"s":"${2}[${1}][${0}]"}}]}}]}]},"\n"]},{"t":4,"r":"error","f":["\n",{"t":7,"e":"error"}]},"\n"]}]}],
+	template: [{"t":7,"e":"div","a":{"class":"editors"},"f":[{"t":4,"r":"section","f":["\n",{"t":7,"e":"settings","a":{"tabs":[{"t":2,"r":"code"}],"selected":[{"t":2,"r":"config.selected"}],"error":[{"t":2,"r":"error.location"}]}},{"t":7,"e":"div","a":{"class":"editor-container"},"f":[{"t":4,"r":"code","i":"language","f":["\n",{"t":7,"e":"div","a":{"style":[{"t":4,"x":{"r":["config.selected","language"],"s":"${0}!==${1}"},"f":" visibility: none; z-index: -1; "}],"class":"editor"},"f":[{"t":7,"e":"editor","a":{"language":[{"t":2,"r":"language"}],"code":[{"t":2,"r":"."}]}}]}]},"\n"]},{"t":4,"r":"error","f":["\n",{"t":7,"e":"error"}]},"\n"]}]}],
 	init: function(component, Ractive) {
 		component.exports =  {
     init: function(){
@@ -212,11 +212,6 @@ component.exports = {
             })
 
         }, { init: false })
-        
-
-        this.on('change', function(changed){
-            console.log(Object.keys(changed)[0])
-        })
             
         function observe(from, to, fn){
             if(typeof d.section.code[to] === 'undefined') return;
@@ -247,24 +242,6 @@ component.exports = {
                         }
 
                     })
-
-                    // try {
-                    //     var start = new Date()
-                    //     var transformed = fn(value)
-                    //     ractive.set('section.code.' + to, transformed)
-                    //     if(section.error && section.error.location===from){
-                    //         ractive.set('section.error', null)
-                    //     }
-                    //     //console.log('transform', value, 'to', transformed, new Date()-start, 'ms')
-                    // }
-                    // catch(e)
-                    // {
-                    //     console.warn(from, 'to', to, 'err', e)
-                    //     ractive.set('section.error', {
-                    //         location: from,
-                    //         message: e
-                    //     })
-                    // }
                     
                 }
             }
@@ -339,7 +316,7 @@ component.exports = {
 },
 {
 	name: 'flow',
-	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"project","a":{"project":[{"t":2,"r":"project"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"component","a":{"component":[{"t":2,"r":"project.current"}]}}]},{"t":7,"e":"sizer","a":{"orientation":"horizontal"}}],
+	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"project","a":{"project":[{"t":2,"r":"project"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"component","a":{"component":[{"t":2,"r":"project.current"}],"features":[{"t":2,"r":"project.features"}]}}]},{"t":7,"e":"sizer","a":{"orientation":"horizontal"}}],
 	init: function(component, Ractive) {
 		
 	},
@@ -417,58 +394,77 @@ component.exports = {
 	init: function(component, Ractive) {
 		component.exports =  {
     complete: function(){
-        var assets = this.data.component.assets
-       
+        var r = this,
+            ifrm = this.find('iframe')
 
-        var ractive = this
-    
-        //var preview = this.find('.preview')
-        //ifrm = document.createElement("IFRAME"); 
-       	//ifrm.setAttribute("name", "preview");
-	   	//ifrm.setAttribute("class", "preview"); 
-	   	//preview.appendChild(ifrm); 
-        var ifrm = this.find('iframe')
-        ifrm.onload = function(){
-            
-            var iwin = ifrm.contentWindow,
-                doc = iwin.document,
-                component
-            
-            if(assets) {
-                component = {
-                    template: assets.template.code.ractive,
-                    css: assets.style.code.css,
-                    data: assets.data.code.json,
-                    init: assets.script.code.init 
-                }
+        this.observe('component', function(n,o){
+            if(n===o){ return }
+            ifrm.contentWindow.location.reload()
+            loadPreview()
+        }, { init: false })
+
+        loadPreview()
+
+        function package(component){
+            var a = component.assets
+            return {
+                name: component.name,
+                template: a.template.code.ractive,
+                css: a.style.code.css,
+                data: a.data.code.json,
+                init: a.script.code.init 
             }
-
-            iwin.postMessage(component, '*')
-
-            ractive.observe('component.assets.style.code.css', function(css){
-                iwin.postMessage({ css: css }, '*')
-            })
-            ractive.observe('component.assets.data.code.json', function(data){
-                iwin.postMessage({ data: data }, '*')
-            })
-            ractive.observe('component.assets.template.code.ractive', function(template){
-                iwin.postMessage({ template: template }, '*')
-            })
-            ractive.observe('component.assets.script.code.init', function(init){
-                iwin.postMessage({ init: init }, '*')
-            })
-
-            
-
         }
-        
 
+        function loadPreview(){
+            var all = []
+            r.data.features.forEach(function(feature){
+                feature.components.filter(function(component){
+                    //MUSTDO: need to add feature name and compare on that too...
+                    return component.name!==r.data.component.name
+                })
+                .forEach(function(component){
+                    all.push( package(component) )
+                })
+            })
+
+            console.log('loading preview...', all.length, 'components')
+
+            ifrm.onload = function(){
+                
+                var iwin = ifrm.contentWindow,
+                    doc = iwin.document,
+                    component = package(r.data.component)
+                    
+                iwin.postMessage( { components: all }, '*')
+
+                function componentMessage(data){
+                    iwin.postMessage( data, '*')
+                }
+
+                componentMessage(component)
+
+                r.observe('component.assets.style.code.css', function(css){
+                    componentMessage({ css: css })
+                })
+                r.observe('component.assets.data.code.json', function(data){
+                    componentMessage({ data: data })
+                })
+                r.observe('component.assets.template.code.ractive', function(template){
+                    componentMessage({ template: template })
+                })
+                r.observe('component.assets.script.code.init', function(init){
+                    componentMessage({ init: init })
+                })
+
+                
+
+            }
+        
+        }
 
     	
 
-    },
-    beforeInit: function(o){
-        // console.log('preview data', o.data)
     }
 }
 
@@ -483,7 +479,7 @@ component.exports = {
 },
 {
 	name: 'project',
-	template: [{"t":7,"e":"div","a":{"class":"project"},"f":[{"t":7,"e":"div","a":{"class":"dflux"},"f":"d<span>flux</span>"},{"t":4,"r":"project","f":["\n",{"t":7,"e":"ul","a":{"class":"features"},"f":[{"t":4,"r":"features","f":["\n",{"t":7,"e":"li","f":[{"t":2,"r":"name"},{"t":7,"e":"ul","a":{"class":"components"},"f":[{"t":4,"r":"components","i":"i","f":["\n",{"t":7,"e":"li","a":{"class":[{"t":4,"x":{"r":[".name","project.current.name"],"s":"${0}===${1}"},"f":"selected"}]},"f":[{"t":2,"r":"name"}],"v":{"click":"select"}}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"type":"text","value":[{"t":2,"r":".new"}],"placeholder":"new component..."},"v":{"enter_kp":{"n":"addComponent","d":[{"t":2,"r":".new"}]}}}]}]}]}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"type":"text","value":[{"t":2,"r":".new"}],"placeholder":"new feature..."},"v":{"enter_kp":{"n":"addFeature","d":[{"t":2,"r":".new"}]}}}]}]}]},"\n"]},{"t":7,"e":"ul"},{"t":7,"e":"div"}],
+	template: [{"t":7,"e":"div","a":{"class":"project"},"f":[{"t":7,"e":"div","a":{"class":"dflux"},"f":"&#x24D3;<span class=fl>f</span><span class=ux>lux</span>"},{"t":4,"r":"project","f":["\n",{"t":7,"e":"ul","a":{"class":"features"},"f":[{"t":4,"r":"features","f":["\n",{"t":7,"e":"li","f":[{"t":2,"r":"name"},{"t":7,"e":"ul","a":{"class":"components"},"f":[{"t":4,"r":"components","i":"i","f":["\n",{"t":7,"e":"li","a":{"class":[{"t":4,"x":{"r":[".name","project.current.name"],"s":"${0}===${1}"},"f":"selected"}]},"f":[{"t":2,"r":"name"}],"v":{"click":"select"}}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"type":"text","value":[{"t":2,"r":".new"}],"placeholder":"new component..."},"v":{"enter_kp":{"n":"addComponent","d":[{"t":2,"r":".new"}]}}}]}]}]}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"type":"text","value":[{"t":2,"r":".new"}],"placeholder":"new feature..."},"v":{"enter_kp":{"n":"addFeature","d":[{"t":2,"r":".new"}]}}}]}]}]},"\n"]},{"t":7,"e":"ul"},{"t":7,"e":"div"}],
 	init: function(component, Ractive) {
 		function nameSort(a, b) {
     if (a.name > b.name)
@@ -569,6 +565,34 @@ component.exports = {
 	template: [{"t":7,"e":"div","a":{"force":[{"t":2,"x":{"r":["error"],"s":"!!${0}"}}],"class":"settings"},"f":[{"t":7,"e":"div","a":{"class":"set-box"},"f":[{"t":7,"e":"div","a":{"class":"gear"},"f":"&#x2699;"},{"t":7,"e":"div","a":{"class":"gear"},"f":"&#x229A;"},{"t":7,"e":"div","a":{"class":"gear circle"},"f":"!"},{"t":7,"e":"div","a":{"class":"title"},"f":[{"t":2,"r":"title"}]},{"t":7,"e":"div","a":{"class":"tabs"},"f":[{"t":4,"r":"tabs","i":"code","f":["\n",{"t":7,"e":"label","a":{"selected":[{"t":2,"x":{"r":["code","selected"],"s":"${0}===${1}"}}],"error":[{"t":2,"x":{"r":["code","error"],"s":"${0}===${1}"}}]},"f":[{"t":2,"r":"code"},{"t":7,"e":"input","a":{"type":"radio","name":[{"t":2,"r":"selected"}],"value":[{"t":2,"r":"code"}]}}]}]},"\n"]}]}]}],
 	init: function(component, Ractive) {
 		
+	},
+},
+{
+	name: 'sizeme',
+	template: [{"t":7,"e":"ul","f":[{"t":4,"r":"items","f":["\n",{"t":7,"e":"li","f":[{"t":2,"r":"."},{"t":7,"e":"span","a":{"class":"delete"},"f":"&#x24E7;","v":{"click":{"n":"remove","d":[{"t":2,"r":"."}]}}}],"o":{"n":"sizeme","d":[{"t":2,"r":"../length"}]}}]},"\n"]},{"t":7,"e":"input","a":{"value":[{"t":2,"r":"new"}]}},{"t":7,"e":"button","f":"add","v":{"click":{"n":"add","d":[{"t":2,"r":"new"}]}}}],
+	init: function(component, Ractive) {
+		component.exports = {
+    	init: function(){
+			var items = this.data.items
+			this.on('add', function(e, item){
+				if(!item){ return }
+				items.push(item)
+				this.data.new = ''
+			})    		
+            this.on('remove', function(e, item){
+                if ((index = items.indexOf(item)) > -1) {
+                    console.log(item, index)
+                    items.splice(index, 1);
+                }
+			})
+		},
+		decorators: {
+			sizeme: function(node, length){
+                node.style.height = 100/length + '%'
+				return { teardown: function(){} }
+			}
+		}
+	}
 	},
 },
 {

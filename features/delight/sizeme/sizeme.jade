@@ -1,0 +1,7 @@
+ul
+  {{#items}}
+  li(decorator='sizeme:{{../length}}') {{.}}
+    span.delete(on-click='remove:{{this}}') &#x24E7;
+  {{/items}}
+input(value='{{new}}')
+button(on-click='add:{{new}}') add

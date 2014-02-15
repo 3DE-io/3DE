@@ -4,7 +4,7 @@
   .editor-container
     {{#code:language}}
     .editor(style="{{#config.selected!==language}} visibility: none; z-index: -1; {{/}}")
-      editor(language='{{language}}', code='{{.}}', config='{{config[title][language]}}')
+      editor(language='{{language}}', code='{{.}}')
     {{/code}}
   {{#error}}
   error

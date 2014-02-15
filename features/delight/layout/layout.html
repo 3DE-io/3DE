@@ -7,7 +7,7 @@
 
 </style><style feature="the-feature" template="the-template-name"></style><script id="main" type="text/ractive"><the-template-name
 ></the-template-name>
-</script><script id="the-template-name" type="text/ractive"></script></head><body><div id="container"></div><script src="http://localhost:8080/src/js/Ractive.js"></script><script src="http://localhost:8080/src/js/Ractive.load.js"></script><script src="http://localhost:8080/src/js/ace/ace.js"></script><script src="http://localhost:8080/src/js/ace/ext-themelist.js"></script><script src="http://localhost:8080/src/js/ace/ext-modelist.js"></script><script src="http://localhost:8080/src/js/move.js"></script><script src="../js-new/jade.js"></script><script src="../js-new/stylus.js"></script><script>Ractive.load().then( function () {
+</script><script id="the-template-name" type="text/ractive"></script></head><body><!--/- #container--><script src="http://localhost:8080/src/js/Ractive.js"></script><script src="http://localhost:8080/src/js/Ractive.load.js"></script><script src="http://localhost:8080/src/js/ace/ace.js"></script><script src="http://localhost:8080/src/js/ace/ext-themelist.js"></script><script src="http://localhost:8080/src/js/ace/ext-modelist.js"></script><script src="http://localhost:8080/src/js/move.js"></script><script src="../js-new/jade.js"></script><script src="../js-new/stylus.js"></script><script>Ractive.load().then( function () {
   try {
 
     //- console.log('Ractive components', Ractive.components)
@@ -18,10 +18,9 @@
 
     var Component = Ractive.extend({
       template: '#the-template-name',
-      magic: true
+      magic: true,
+      debug: true
     })
-
-
 
     var component = {}
     init(component)
@@ -37,12 +36,13 @@
     }
 
     var options = {
-      el: '#container', //document.body,
+      el: document.body,
       template: '#main',
       magic: true,
       components: { 'the-template-name': Component },
       data: {}
     }
+
     //- if(exports && exports.adapt){
     //-     options.adapt = exports.adapt
     //- }  

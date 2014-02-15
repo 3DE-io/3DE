@@ -13,11 +13,6 @@ component.exports =  {
             })
 
         }, { init: false })
-        
-
-        this.on('change', function(changed){
-            console.log(Object.keys(changed)[0])
-        })
             
         function observe(from, to, fn){
             if(typeof d.section.code[to] === 'undefined') return;
@@ -48,24 +43,6 @@ component.exports =  {
                         }
 
                     })
-
-                    // try {
-                    //     var start = new Date()
-                    //     var transformed = fn(value)
-                    //     ractive.set('section.code.' + to, transformed)
-                    //     if(section.error && section.error.location===from){
-                    //         ractive.set('section.error', null)
-                    //     }
-                    //     //console.log('transform', value, 'to', transformed, new Date()-start, 'ms')
-                    // }
-                    // catch(e)
-                    // {
-                    //     console.warn(from, 'to', to, 'err', e)
-                    //     ractive.set('section.error', {
-                    //         location: from,
-                    //         message: e
-                    //     })
-                    // }
                     
                 }
             }

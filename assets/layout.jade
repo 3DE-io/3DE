@@ -2,6 +2,7 @@ doctype
 html
   head
     style.
+      title &#x24D3;flux
       body {
         position: absolute;
         top: 0; bottom: 0;
@@ -14,19 +15,44 @@ html
       component
   body
     script(src="js/Ractive.js")
+    script(src="js/components.load.ractive.js")
+    script.
+      function addStyle(css){
+        if(!css.trim()) { return }
+        
+        var style = document.createElement('style');
+        style.type = 'text/css'
+        style.innerHTML = css
+        document.head.appendChild(style)
+      }
     script.
       window.addEventListener('message', function(e){
-        var component = e.data
-        
-        if(component.hasOwnProperty('css')) {
-          document.getElementById('component-css').innerHTML = component.css
-        }
-        if(component.hasOwnProperty('init') || 
-           component.hasOwnProperty('template') || 
-           component.hasOwnProperty('data')) {
-           
-          render(component)
-        
+        var message = e.data
+
+        if(message.components){
+
+          message.components
+            .map(loader.unpack)
+            .map(loader.load)
+            .forEach(function(component){
+              addStyle(component.css)
+            })
+
+        } else {
+
+          var component = message
+
+          if(component.hasOwnProperty('css')) {
+            document.getElementById('component-css').innerHTML = component.css
+          }
+
+          if(component.hasOwnProperty('init') || 
+             component.hasOwnProperty('template') || 
+             component.hasOwnProperty('data')) {
+             
+              render(component)
+          }
+          
         }
       })
       

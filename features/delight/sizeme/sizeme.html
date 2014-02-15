@@ -1,0 +1,3 @@
+<ul>{{#items}}
+<li decorator="sizeme:{{../length}}">{{.}}<span on-click="remove:{{this}}" class="delete">&#x24E7;</span></li>{{/items}}
+</ul><input value="{{new}}"/><button on-click="add:{{new}}">add</button>

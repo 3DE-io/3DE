@@ -1,0 +1,6 @@
+ul
+  {{#items}}
+	li(decorator='sizeme:{{../length}}') {{.}}
+	{{/items}}
+input(value='{{new}}')
+button(on-click='add:{{new}}') add
