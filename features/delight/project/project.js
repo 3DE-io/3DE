@@ -9,13 +9,12 @@ function nameSort(a, b) {
 
 component.exports = {
     magic: true,
+    isolate: true,
     init: function(){
         var r = this,
             project = r.data.project
-            
         this.on('select', function(e){
-            //r.set('project.current', e.context)
-            project.current = e.context
+            r.set('project.current', e.context)
         })
         
         function add(item, collection){
@@ -45,7 +44,8 @@ component.exports = {
             e.context.new = ''
             document.activeElement.blur()
             
-            r.data.project.current = component
+            //r.data.project.current = component
+            r.set('project.current',  component)
         })
         
         this.on('addFeature', function(e, item){

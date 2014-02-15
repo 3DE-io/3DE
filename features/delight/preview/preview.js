@@ -3,13 +3,13 @@ component.exports =  {
         var r = this,
             ifrm = this.find('iframe')
 
-        this.observe('component', function(n,o){
-            if(n===o){ return }
-            ifrm.contentWindow.location.reload()
+        this.observe('component', function(component,old){
+            if(component===old){ return }
+            if(ifrm.contentWindow){
+                ifrm.contentWindow.location.reload()
+            }
             loadPreview()
-        }, { init: false })
-
-        loadPreview()
+        })
 
         function package(component){
             var a = component.assets
@@ -23,6 +23,7 @@ component.exports =  {
         }
 
         function loadPreview(){
+
             var all = []
             r.data.features.forEach(function(feature){
                 feature.components.filter(function(component){

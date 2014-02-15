@@ -316,7 +316,7 @@ component.exports = {
 },
 {
 	name: 'flow',
-	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"project","a":{"project":[{"t":2,"r":"project"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"component","a":{"component":[{"t":2,"r":"project.current"}],"features":[{"t":2,"r":"project.features"}]}}]},{"t":7,"e":"sizer","a":{"orientation":"horizontal"}}],
+	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"project"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"component","a":{"component":[{"t":2,"r":"project.current"}],"features":[{"t":2,"r":"project.features"}]}}]},{"t":7,"e":"sizer","a":{"orientation":"horizontal"}}],
 	init: function(component, Ractive) {
 		
 	},
@@ -397,13 +397,13 @@ component.exports = {
         var r = this,
             ifrm = this.find('iframe')
 
-        this.observe('component', function(n,o){
-            if(n===o){ return }
-            ifrm.contentWindow.location.reload()
+        this.observe('component', function(component,old){
+            if(component===old){ return }
+            if(ifrm.contentWindow){
+                ifrm.contentWindow.location.reload()
+            }
             loadPreview()
-        }, { init: false })
-
-        loadPreview()
+        })
 
         function package(component){
             var a = component.assets
@@ -417,6 +417,7 @@ component.exports = {
         }
 
         function loadPreview(){
+
             var all = []
             r.data.features.forEach(function(feature){
                 feature.components.filter(function(component){
@@ -477,7 +478,7 @@ component.exports = {
 },
 {
 	name: 'project',
-	template: [{"t":7,"e":"div","a":{"class":"project"},"f":[{"t":7,"e":"div","a":{"class":"dflux"},"f":"&#x24D3;<span class=fl>f</span><span class=ux>lux</span>"},{"t":4,"r":"project","f":["\n",{"t":7,"e":"ul","a":{"class":"features"},"f":[{"t":4,"r":"features","f":["\n",{"t":7,"e":"li","f":[{"t":2,"r":"name"},{"t":7,"e":"ul","a":{"class":"components"},"f":[{"t":4,"r":"components","i":"i","f":["\n",{"t":7,"e":"li","a":{"class":[{"t":4,"x":{"r":[".name","../../../../current.name"],"s":"${0}===${1}"},"f":"selected"}]},"f":[{"t":2,"r":"name"}],"v":{"click":"select"}}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"type":"text","value":[{"t":2,"r":".new"}],"placeholder":"new component..."},"v":{"enter_kp":{"n":"addComponent","d":[{"t":2,"r":".new"}]}}}]}]}]}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"type":"text","value":[{"t":2,"r":".new"}],"placeholder":"new feature..."},"v":{"enter_kp":{"n":"addFeature","d":[{"t":2,"r":".new"}]}}}]}]}]},"\n"]},{"t":7,"e":"ul"},{"t":7,"e":"div"}],
+	template: [{"t":7,"e":"div","a":{"class":"project"},"f":[{"t":7,"e":"div","a":{"class":"dflux"},"f":"<span class=d>&#x24D3;</span><span class=f>f</span><span class=l>l</span><span class=ux>ux</span>"},{"t":4,"r":"project","f":["\n",{"t":7,"e":"ul","a":{"class":"features"},"f":[{"t":4,"r":"features","f":["\n",{"t":7,"e":"li","f":[{"t":2,"r":"name"},{"t":7,"e":"ul","a":{"class":"components"},"f":[{"t":4,"r":"components","i":"i","f":["\n",{"t":7,"e":"li","a":{"class":[{"t":2,"x":{"r":["name"],"s":"${0}===\"bob\"?\"selected\":\"\""}}]},"f":[{"t":2,"r":"name"}],"v":{"click":"select"}}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"type":"text","value":[{"t":2,"r":".new"}],"placeholder":"new component..."},"v":{"enter_kp":{"n":"addComponent","d":[{"t":2,"r":".new"}]}}}]}]}]}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"type":"text","value":[{"t":2,"r":".new"}],"placeholder":"new feature..."},"v":{"enter_kp":{"n":"addFeature","d":[{"t":2,"r":".new"}]}}}]}]}]},"\n"]}],
 	init: function(component, Ractive) {
 		function nameSort(a, b) {
     if (a.name > b.name)
@@ -490,13 +491,12 @@ component.exports = {
 
 component.exports = {
     magic: true,
+    isolate: true,
     init: function(){
         var r = this,
             project = r.data.project
-            
         this.on('select', function(e){
-            //r.set('project.current', e.context)
-            project.current = e.context
+            r.set('project.current', e.context)
         })
         
         function add(item, collection){
@@ -526,7 +526,8 @@ component.exports = {
             e.context.new = ''
             document.activeElement.blur()
             
-            r.data.project.current = component
+            //r.data.project.current = component
+            r.set('project.current',  component)
         })
         
         this.on('addFeature', function(e, item){
