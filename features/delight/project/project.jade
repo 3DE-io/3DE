@@ -8,7 +8,7 @@
     li {{name}}
       ul.components
         {{#components:i}}
-        li(on-click='select', class='{{#(.name===project.current.name)}}selected') {{name}}
+        li(on-click='select', class='{{#(.name===../../../../current.name)}}selected') {{name}}
         {{/components}}
         li
           input(on-enter_kp='addComponent:{{.new}}', 

@@ -12,7 +12,9 @@ component.exports = {
     init: function(){
         var r = this,
             project = r.data.project
+            
         this.on('select', function(e){
+            //r.set('project.current', e.context)
             project.current = e.context
         })
         

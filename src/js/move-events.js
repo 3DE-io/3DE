@@ -162,6 +162,6 @@ module.exports = TrackMoveEvents
 
 
 
-},{"./animation-frame":1,"./move-events":3}],"move":[function(require,module,exports){
+},{"./animation-frame":1,"./move-events":3}],"track-move-events":[function(require,module,exports){
 module.exports=require('9Zb6PD');
 },{}]},{},[])

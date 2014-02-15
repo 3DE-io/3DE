@@ -50,6 +50,7 @@ module.exports = function MoveEvents(node, notify){
     }  
 
     function endMove(){
+        if(!events) { return; }
         subscriber.remove(document, events.move, onmove)
         subscriber.remove(document, events.end, onend)
         subscriber.remove(window.top, events.end, onend)

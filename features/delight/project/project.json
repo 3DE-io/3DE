@@ -29,6 +29,8 @@
         ]
       }
     ],
-    "current": null
+    "current": {
+      "name": "items"
+    }
   }
 }

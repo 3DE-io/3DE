@@ -34,8 +34,6 @@ component.exports =  {
                 })
             })
 
-            console.log('loading preview...', all.length, 'components')
-
             ifrm.onload = function(){
                 
                 var iwin = ifrm.contentWindow,

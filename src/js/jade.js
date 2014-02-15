@@ -1533,6 +1533,7 @@ Lexer.prototype = {
           return str[i] === ','
         } else if (loc === 'value' && !state.isNesting()) {
           try {
+            if(!val) { return false }
             Function('', 'return (' + val + ');');
             if (str[i] === ' ' || str[i] === '\n') {
               for (var x = i; x < str.length; x++) {
