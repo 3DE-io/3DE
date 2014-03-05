@@ -13,7 +13,7 @@ pane-node:first-of-type:last-of-type {
     left: 0 !important; 
     right: 0 !important;
 }
-/* of 4 */
+
 pane-node:first-of-type:nth-last-of-type(4) {
     top: 0 !important;
     left: 0 !important;
@@ -38,7 +38,6 @@ pane-node:first-of-type:nth-last-of-type(4)
     left: 50%; top: 50%; 
 }
 
-/* of 2 */
 pane-node:first-of-type:nth-last-of-type(2){
     top: 0 !important; 
     bottom: 0 !important;

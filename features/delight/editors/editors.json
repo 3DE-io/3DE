@@ -1,26 +1,31 @@
 {
-  "title": "layout",
-  "section": {
-    "code": {
-      "jade": "p hello {{world}}",
-      "mustache": "",
-      "ractive": ""
+  "name": "template",
+  "steps": [
+    {
+      "name": "jade",
+      "code": "p hello {{world}}",
+      "process": "jade"
     },
-    "error": null
-  },
-  "config": {
-    "layout": {
-      "jade": {
-        "theme": "solarized_light",
-        "gutter": true,
-        "tab": 2,
-        "softTab": false,
-        "highlightLine": false,
-        "invisibles": false,
-        "indentGuides": true,
-        "fadeFold": true,
-        "scrollPastEnd": true
-      }
+    {
+      "name": "mustache",
+      "code": null,
+      "process": "ractive"
+    },
+    {
+      "mode": "json",
+      "name": "template",
+      "code": null
     }
+  ],
+  "config": {
+    "theme": "ace/theme/cobalt",
+    "gutter": true,
+    "tab": 2,
+    "softTab": false,
+    "highlightLine": false,
+    "invisibles": false,
+    "indentGuides": true,
+    "fadeFold": true,
+    "scrollPastEnd": true
   }
 }

@@ -1,59 +1,94 @@
 var components = [
 {
 	name: 'component',
-	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"pane","f":[{"t":7,"e":"template","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"styling","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"datum","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"pane","f":[{"t":7,"e":"scripting","a":{"component":[{"t":2,"r":"component"}]}}]},{"t":7,"e":"sizer"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"preview","a":{"component":[{"t":2,"r":"component"}],"features":[{"t":2,"r":"features"}]}}]},{"t":7,"e":"sizer","a":{"orientation":"horizontal"}}],
+	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"pane","f":[{"t":7,"e":"template"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"styling"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"datum"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"scripting"}]},{"t":7,"e":"sizer"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"preview","a":{"component":[{"t":2,"r":"definition.component"}],"features":[{"t":2,"r":"features"}]}}]},{"t":7,"e":"sizer","a":{"orientation":"horizontal"}}],
 	init: function(component, Ractive) {
 		var empty = JSON.stringify({
-	"template": {
-		"code": {
-			"jade": "",
-			"mustache": "",
-			"ractive": ""
-		},
-		"error": null
-	},
-	"style": {
-		"code": {
-			"stylus": "",
-			"css": ""
-		},
-		"error": null
-	},
-	"data": {
-		"code": {
-			"eval": "",
-			"json": ""
-		},
-		"error": null
-	},
-	"script": {
-		"code": {
-			"js": "",
-			"init": ""
-		},
-		"error": null
-	}
+	"template": [
+	  {
+		"name": "jade"
+	  },
+	  {
+		"name": "mustache",
+		"process": "ractive"
+	  },
+	  {
+		"name": "ractive",
+		"mode": "json"
+	  }
+	],
+	"style": [
+	  {
+		"name": "stylus"
+	  },
+	  {
+		"name": "css"
+	  }
+	],
+	"data": [
+	  {
+		"name": "js",
+		"process": "eval"
+	  },
+	  {
+		"name": "json"
+	  }
+	],
+	"script": [
+	  {
+		"name": "init",
+		"mode": "js"
+	  }
+	]
 })
+
+var Definition = require('definition')
+
 component.exports = (function(){
 
-	function validate(comp){
-		if(!comp){
-        	throw 'Data "component" must be provided'
-        }
-        if(!comp.name) { 
-            throw 'Component must be named with property "name"'
-        }
-        if(!comp.assets){
-            comp.assets = JSON.parse(empty)
-        }        
+	function fillDefaults(comp){
+		var defaultSections
+		function fill(part){
+			if(!comp[part]){
+				if(!defaultSections){ defaultSections = JSON.parse(empty)}
+				comp[part] = defaultSections[part]
+			}        
+		}
+		['template', 'style', 'data', 'script'].forEach(fill)
+		
 	}
 
 	return {
 		beforeInit: function(options){
-			validate(options.data.component)
+			var d = options.data = options.data || {}
+				if(!d.componentData) {
+				d.componentData = {}
+			}
+				
+		  fillDefaults(d.componentData)
+		  d.definition = new Definition(d.componentData)
 		},
 		init: function(){
-			this.observe('component', validate)
+			var editors = this.findAllComponents('editors'),
+				preview = this.findAllComponents('preview')[0],
+				noLive = {}
+
+			this.observe('config.*.noLiveRefresh', function(value, o, keypath){
+			    var section = keypath.split('.')[1]
+			    noLive[section] = value
+			})
+ 
+            this.data.definition.component.on('change', function(section){
+            	if(noLive[section]) { return }
+                preview.update(section)
+            })
+
+            editors.forEach(function(editor){
+            	editor.on('refreshRequested', function(){
+            		preview.reload()
+            	})
+            })
+
 		}
 	}
 })()
@@ -68,28 +103,54 @@ component.exports = (function(){
 },
 {
 	name: 'datum',
-	template: [{"t":7,"e":"part","a":{"component":[{"t":2,"r":"component"}],"type":"data"}}],
+	template: [{"t":7,"e":"part","a":{"type":"data","allconfig":[{"t":2,"r":"config"}],"defaultConfig":[{"t":2,"r":"defaultConfig"}]}}],
 	init: function(component, Ractive) {
-		
+		var config = {
+    "theme": "ace/theme/merbivore_soft",
+    "gutter": false,
+    "tab": 2,
+    "softTab": false,
+    "highlightLine": false,
+    "invisibles": false,
+    "indentGuides": true,
+    "fadeFold": true,
+    "scrollPastEnd": true
+}
+
+component.exports = {
+    data: {
+        defaultConfig: config 
+    }
+}
+
 	},
 },
 {
 	name: 'editor',
-	template: [{"t":7,"e":"div","a":{"class":"editor-control"},"f":[{"t":2,"r":"code"}]}],
+	template: [{"t":4,"r":"resource","f":["\n",{"t":7,"e":"div","a":{"class":"editor-control"},"f":[{"t":2,"r":".code"}],"v":{"keydown":"keypress"}}]},"\n"],
 	init: function(component, Ractive) {
-		
+		//save for later...
 
 //themelist.toCss = function(theme){
 //  return 'ace-' + theme.replace(/_/g, '-')
 //}
 
-
+var modes = ace.require('ace/ext/modelist')
 component.exports = {
+    magic: true,
     init: function(){
-        var node = this.find('.editor-control'),
-            data = this.data
-
-        this.editor = this.createEditor(node, data)
+        var r = this,
+            node = r.find('.editor-control')
+        this.editor = this.createEditor(node, this.data.resource)
+        this.on('keypress', function(event){
+            var e = event.original
+            if(e.ctrlKey && e.which === 13) {
+                e.preventDefault()
+		        r.fire('refreshRequest')
+		    }
+            
+        })
+    
     },    
     reset: function(){
         if(!this.editor) { return }
@@ -99,50 +160,54 @@ component.exports = {
         if(!this.editor) { return }
         this.editor.teardown()  
     },
-    createEditor: function(node, data){ 
-        var e = ace.edit(node)
-
-        var modes = ace.require('ace/ext/modelist')
-        var mode = modes.getModeForPath('.' + data.language).mode
-        var s = e.getSession()
-        s.setMode(mode)
-        
-        var setting, getting
+    createEditor: function(node, step){ 
+        var e = ace.edit(node),
+            mode = modes.getModeForPath('.' + step.mode).mode,
+            s = e.getSession(),
+            setting, getting,
             ractive = this
         
-        ractive.observe('code', function(v){
+        s.setMode(mode)
+
+        ractive.observe('resource.code', function(v){
             if(getting) return;
             setting = true
             e.setValue(v)
             e.clearSelection()
             setting = false
-        }, {init: false })
+        }, { init: false })
             
         e.on('change', function(){
             if(setting) return;
             getting = true
-            data.code = e.getValue()
-            //ractive.set('code', e.getValue())
+            step.code = e.getValue()
+            ractive.fire('codeChange')
             getting = false
         })
         
-        var themelist = ace.require("ace/ext/themelist")  
-        function setTheme(theme, oldTheme){
-            //this check should be in config.theme
-            if(theme && !themelist.themesByName[theme]){
-                console.warn('no theme', theme)
-                theme = oldTheme
-            }
-            theme = theme || 'merbivore_soft'
-            var full = themelist.themesByName[theme]
-            e.setTheme(full.theme)        
-        }
-        ractive.observe('config.theme', setTheme)
+
+        ractive.observe('config.theme', function(t){
+            e.setTheme(t)   
+        })
         ractive.observe('config.tab', function(i){
             s.setTabSize(i)
         })
+
+        // ace-bug:  https://github.com/ajaxorg/ace/issues/1825
+        // .setShowGutter must be first set to true to be changable
+        var first = true
         ractive.observe('config.gutter', function(b){
-            e.renderer.setShowGutter(b)
+            if(first){   
+                e.renderer.setShowGutter(true)
+                first = false
+                if(!b){
+                    setTimeout(function(){
+                        e.renderer.setShowGutter(false)
+                    })
+                }
+            } else {
+                e.renderer.setShowGutter(b)
+            }
         })
         ractive.observe('config.softTab', function(b){
             s.setUseSoftTabs(b)
@@ -172,10 +237,8 @@ component.exports = {
             e.destroy()
         }
         function reset(){
-            
             //ace bug: https://github.com/ajaxorg/ace/issues/1243
-            //s.getUndoManager().reset()
-
+            //s.getUndoManager().reset() doesn't work
             setting = true
             s.setValue(e.getValue(), -1)
             e.clearSelection()
@@ -185,8 +248,7 @@ component.exports = {
         return {
             teardown: teardown,
             resize: resize,
-            reset: reset,
-            language: data.language
+            reset: reset
         }
     }
 }
@@ -194,113 +256,54 @@ component.exports = {
 	},
 },
 {
-	name: 'editors',
-	template: [{"t":7,"e":"div","a":{"class":"editors"},"f":[{"t":4,"r":"section","f":["\n",{"t":7,"e":"settings","a":{"tabs":[{"t":2,"r":"code"}],"selected":[{"t":2,"r":"config.selected"}],"error":[{"t":2,"r":"error.location"}]}},{"t":7,"e":"div","a":{"class":"editor-container"},"f":[{"t":4,"r":"code","i":"language","f":["\n",{"t":7,"e":"div","a":{"style":[{"t":4,"x":{"r":["config.selected","language"],"s":"${0}!==${1}"},"f":" visibility: none; z-index: -1; "}],"class":"editor"},"f":[{"t":7,"e":"editor","a":{"language":[{"t":2,"r":"language"}],"code":[{"t":2,"r":"."}]}}]}]},"\n"]},{"t":4,"r":"error","f":["\n",{"t":7,"e":"error"}]},"\n"]}]}],
+	name: 'editor-config',
+	template: [{"t":7,"e":"div","a":{"class":"editor-config"},"f":[{"t":7,"e":"div","a":{"class":"gear"},"f":"&#x2699;"},{"t":7,"e":"div","a":{"class":"config-box"},"f":[{"t":4,"r":"config","f":["\n",{"t":7,"e":"fieldset","f":[{"t":7,"e":"legend","f":"theme"},{"t":7,"e":"select","a":{"value":[{"t":2,"r":"config.theme"}]},"f":[{"t":4,"r":"themes","i":"theme","f":["\n",{"t":7,"e":"option","a":{"value":[{"t":2,"r":".theme"}],"selected":[{"t":2,"x":{"r":[".theme","config.theme"],"s":"${0}===${1}"}}]},"f":[{"t":2,"r":"desc"}]}]},"\n"]}]},{"t":7,"e":"fieldset","f":[{"t":7,"e":"legend","f":"live refresh"},{"t":7,"e":"div","a":{"class":"config-item"},"f":[{"t":7,"e":"label","f":["ctrl+enter only",{"t":7,"e":"input","a":{"type":"checkbox","checked":[{"t":2,"r":"noLiveRefresh"}]}}]}]}]},{"t":7,"e":"fieldset","f":[{"t":7,"e":"legend","f":"tabs"},{"t":7,"e":"div","a":{"class":"config-item"},"f":[{"t":7,"e":"label","f":["indent",{"t":7,"e":"input","a":{"type":"number","min":"0","max":"8","value":[{"t":2,"r":".tab"}]}}]}]},{"t":7,"e":"div","a":{"class":"config-item"},"f":[{"t":7,"e":"label","f":["soft",{"t":7,"e":"input","a":{"type":"checkbox","checked":[{"t":2,"r":".softTab"}]}}]}]}]},{"t":7,"e":"fieldset","f":[{"t":7,"e":"legend","f":"format"},{"t":7,"e":"div","a":{"class":"config-item"},"f":[{"t":7,"e":"label","f":["indent guides",{"t":7,"e":"input","a":{"type":"checkbox","checked":[{"t":2,"r":".indentGuides"}]}}]}]},{"t":7,"e":"div","a":{"class":"config-item"},"f":[{"t":7,"e":"label","f":["invisibles",{"t":7,"e":"input","a":{"type":"checkbox","checked":[{"t":2,"r":".invisibles"}]}}]}]}]},{"t":7,"e":"div","a":{"class":"config-item"},"f":[{"t":7,"e":"label","f":["gutter (line #'s)",{"t":7,"e":"input","a":{"type":"checkbox","checked":[{"t":2,"r":"gutter"}]}}]}]},{"t":7,"e":"div","a":{"class":"config-item"},"f":[{"t":7,"e":"label","f":["highlight line",{"t":7,"e":"input","a":{"type":"checkbox","checked":[{"t":2,"r":".highlightLine"}]}}]}]},{"t":7,"e":"div","a":{"class":"config-item"},"f":[{"t":7,"e":"label","f":["scroll past",{"t":7,"e":"input","a":{"type":"checkbox","checked":[{"t":2,"r":".scrollPastEnd"}]}}]}]}]},"\n"]}]}],
 	init: function(component, Ractive) {
-		component.exports =  {
+		var themelist = ace.require("ace/ext/themelist")  
+
+component.exports = {
+    beforeInit: function(o){
+        o.data.themes = themelist.themesByName
+    }
+}
+	},
+},
+{
+	name: 'editors',
+	template: [{"t":7,"e":"div","a":{"class":"editors"},"f":[{"t":7,"e":"div","a":{"class":"editor-container"},"f":[{"t":7,"e":"editor-config","a":{"config":[{"t":2,"r":"config"}]}},{"t":4,"r":"section","f":["\n",{"t":7,"e":"steps","a":{"steps":[{"t":2,"r":"section.steps"}],"selected":[{"t":2,"r":"selected"}]}},{"t":4,"r":"steps","i":"i","f":["\n",{"t":7,"e":"div","a":{"style":[{"t":4,"x":{"r":["i","selected"],"s":"${0}!==${1}"},"f":"visibility: hidden; z-index: -1; "}],"class":"editor"},"f":[{"t":7,"e":"editor","a":{"resource":[{"t":2,"r":"."}],"config":[{"t":2,"r":"config"}]},"v":{"codeChange":"codeChanged","refreshRequest":"refreshRequested"}}]},{"t":4,"r":"error","f":["\n",{"t":7,"e":"error","a":{"error":[{"t":2,"r":"."}]}}]},"\n"]}]},"\n"]}]}],
+	init: function(component, Ractive) {
+		var Section = require('section')
+var steps = 'steps'
+component.exports =  {
+    magic: true,
+    beforeInit: function(o){
+        var d = o.data
+        if(!d.section) {
+            o.data.section = new Section(d.name, d.steps)
+        }
+        o.data.selected = 0
+        //o.data.errorIndex = null
+    },
     init: function(){
+        var r = this
+
+        this.on('refreshRequested', function(){
+            r.fire('refreshRequest', r.data.section.name)
+        })
+        
         var ractive = this,
             d = this.data
-            
-        //close example of this component:
-        //http://jsfiddle.net/85a9Z/1/
-        
-        this.observe('section', function(n,o){
+       
+        this.observe(steps, function(n,o){
             if(n===o){ return }
+            console.log('reset')
             ractive.findAllComponents('editor').forEach(function(editor){
                 editor.reset()
             })
 
         }, { init: false })
-            
-        function observe(from, to, fn){
-            if(typeof d.section.code[to] === 'undefined') return;
-            
-            ractive.observe('section.code.' + from, transform())
-            
-            function transform(){
-                return function(value){
-                    fn(value, function(err, result){
-                        if(err){
-                            // ractive.set('section.error', {
-                            //     location: from,
-                            //     message: err
-                            // })
-                            d.section.error = {
-                                location: from,
-                                message: err
-                            }
-                            return;                              
-                        }
-                            
-                        ractive.set('section.code.' + to, result)
-                        //d.section.code[to] = result
 
-                        if(d.section.error && d.section.error.location===from){
-                            //ractive.set('section.error', null)
-                            d.section.error = null
-                        }
-
-                    })
-                    
-                }
-            }
-        }
-        function async(fn){
-            return function(value, cb){
-                setTimeout(function(){
-                    try {
-                        var result = fn(value)
-                        cb(null, result)
-                    }
-                    catch(e){
-                        cb(e)
-                    }
-                })
-            }
-        }
-
-        observe('jade', 'mustache', async(function(j){
-            return jade.render(j, { pretty: true, compileDebug: true}).trim()
-        }))
-
-        observe('mustache', 'ractive', async(function(m){
-            var parsed = Ractive.parse(m, { preserveWhitespace: true })
-        	return JSON.stringify(parsed, true, 2)
-        }))
-        observe('eval', 'json', async(function(js){
-            var code = js.trim(),
-                result
-	        if(code!==''){
-                try{
-	                var fn = new Function('return (' + code + ');')
-                }
-                catch(e){
-                    eval(code)
-                }
-	            result = JSON.stringify(fn(), true, 2) 
-            }
-            return result
-        }))   
-
-        observe('stylus', 'css', function(s, cb){
-            stylus(s).render(cb)
-        })
-        
-        observe('init', 'js', async(function(js){
-            return js ? js.trim() : js
-        })) 
-    },
-    beforeInit: function(o){
-        var config = o.data.config,
-            section = o.data.section
-            
-        if(!o.data.config){ o.data.config = {} }
-        if(!o.data.config.selected){
-            var first = Object.keys(section.code)[0]
-            o.data.config.selected = first
-        }
-
+       
 
     }
 }
@@ -309,9 +312,11 @@ component.exports = {
 },
 {
 	name: 'error',
-	template: [{"t":4,"r":"error","f":["\n",{"t":7,"e":"pre","a":{"class":"error"},"f":[{"t":2,"r":"location"}," error: ",{"t":2,"r":"message"},"\n"]}]},"\n"],
+	template: [{"t":7,"e":"pre","a":{"class":"error"},"f":[{"t":2,"r":"error.message"}],"t1":{"n":"fade","a":[{"delay":2000}]}}],
 	init: function(component, Ractive) {
-		
+		component.exports = {
+    magic: true
+}
 	},
 },
 {
@@ -365,104 +370,88 @@ component.exports = {
 },
 {
 	name: 'part',
-	template: [{"t":7,"e":"editors","a":{"title":[{"t":2,"r":"type"}],"section":[{"t":2,"x":{"r":["type","component.assets"],"s":"${1}[${0}]"}}]}}],
+	template: [{"t":7,"e":"editors","a":{"section":[{"t":2,"x":{"r":["type","definition"],"s":"${1}[${0}]"}}],"config":[{"t":2,"r":"config"}]}}],
 	init: function(component, Ractive) {
 		component.exports = {
+    magic: true,
     beforeInit: function(o){
-        var d = o.data,
-            component = d.component, 
-            err
+    
+        var d = o.data
+        d.allconfig = d.allconfig || {}
+        if(!d.allconfig[d.type]) { d.allconfig[d.type] = {} }
         
-        if(!d.type) {
-            err = 'type must be specifed'
-        } else if(!component.assets) {
-            err = 'component data must exist'
-        } else if(!component.assets[d.type]) {
-            err = 'component.' + d.type + ' not found'
+        d.config = d.allconfig[d.type]
+        
+        for(var key in d.defaultConfig){
+            if(!d.config.hasOwnProperty(key)) {
+                d.config[key] = d.defaultConfig[key]
+            }
         }
-         
-        if(err) {
-            throw 'part component: ' + err
+        
+        if(!d.config.hasOwnProperty('noLiveRefresh')){
+            d.config.noLiveRefresh = false
         }
+       
     }
 }
 	},
 },
 {
 	name: 'preview',
-	template: ["<div class=preview><iframe name=newpreview seamless=seamless src=layout.html></iframe></div>"],
+	template: [{"t":7,"e":"div","a":{"class":"preview"},"f":"<iframe name=newpreview seamless=seamless src=layout.html></iframe>"}],
 	init: function(component, Ractive) {
-		component.exports =  {
-    complete: function(){
-        var r = this,
-            ifrm = this.find('iframe')
+		
+function PreviewWindow(iframe){
+    var win = iframe.contentWindow
+
+    this.send = function(m){
+        win.postMessage(m, '*')
+    }
+}
+
+component.exports = {
+    magic: true,
+    init: function(){
+        var self = this,
+            d = this.data,
+            iframe = this.find('iframe')
+
+        self.reload = function(){
+            if(iframe.contentWindow){
+                iframe.contentWindow.location.reload()
+            }           
+        }
+
+        iframe.onload = function(){
+            var pw = self.previewWindow = new PreviewWindow(iframe)
+
+            //pw.postMessage( { components: all }, '*')
+            
+            //hack
+            var _events = d.component._events
+            delete d.component._events
+
+            pw.send(d.component)
+
+            d.component._events = _events
+        }
+
+        self.update = function(name){
+            //debugger;
+            var msg = {}
+            msg[name] = this.data.component[name]
+            this.previewWindow.send(msg)  
+        }
 
         this.observe('component', function(component,old){
             if(component===old){ return }
-            if(ifrm.contentWindow){
-                ifrm.contentWindow.location.reload()
+            if(iframe.contentWindow){
+                iframe.contentWindow.location.reload()
             }
-            loadPreview()
+            self.reload()
         })
+            
 
-        function package(component){
-            var a = component.assets
-            return {
-                name: component.name,
-                template: a.template.code.ractive,
-                css: a.style.code.css,
-                data: a.data.code.json,
-                init: a.script.code.init 
-            }
-        }
-
-        function loadPreview(){
-
-            var all = []
-            r.data.features.forEach(function(feature){
-                feature.components.filter(function(component){
-                    //MUSTDO: need to add feature name and compare on that too...
-                    return component.name!==r.data.component.name
-                })
-                .forEach(function(component){
-                    all.push( package(component) )
-                })
-            })
-
-            ifrm.onload = function(){
-                
-                var iwin = ifrm.contentWindow,
-                    doc = iwin.document,
-                    component = package(r.data.component)
-                    
-                iwin.postMessage( { components: all }, '*')
-
-                function componentMessage(data){
-                    iwin.postMessage( data, '*')
-                }
-
-                componentMessage(component)
-
-                r.observe('component.assets.style.code.css', function(css){
-                    componentMessage({ css: css })
-                })
-                r.observe('component.assets.data.code.json', function(data){
-                    componentMessage({ data: data })
-                })
-                r.observe('component.assets.template.code.ractive', function(template){
-                    componentMessage({ template: template })
-                })
-                r.observe('component.assets.script.code.init', function(init){
-                    componentMessage({ init: init })
-                })
-
-                
-
-            }
-        
-        }
-
-    	
 
     }
 }
@@ -556,16 +545,27 @@ component.exports = {
 },
 {
 	name: 'scripting',
-	template: [{"t":7,"e":"part","a":{"component":[{"t":2,"r":"component"}],"type":"script"}}],
+	template: [{"t":7,"e":"part","a":{"type":"script","allconfig":[{"t":2,"r":"config"}],"defaultConfig":[{"t":2,"r":"defaultConfig"}]}}],
 	init: function(component, Ractive) {
-		
-	},
-},
-{
-	name: 'settings',
-	template: [{"t":7,"e":"div","a":{"force":[{"t":2,"x":{"r":["error"],"s":"!!${0}"}}],"class":"settings"},"f":[{"t":7,"e":"div","a":{"class":"set-box"},"f":[{"t":7,"e":"div","a":{"class":"gear"},"f":"&#x2699;"},{"t":7,"e":"div","a":{"class":"gear"},"f":"&#x229A;"},{"t":7,"e":"div","a":{"class":"gear circle"},"f":"!"},{"t":7,"e":"div","a":{"class":"title"},"f":[{"t":2,"r":"title"}]},{"t":7,"e":"div","a":{"class":"tabs"},"f":[{"t":4,"r":"tabs","i":"code","f":["\n",{"t":7,"e":"label","a":{"selected":[{"t":2,"x":{"r":["code","selected"],"s":"${0}===${1}"}}],"error":[{"t":2,"x":{"r":["code","error"],"s":"${0}===${1}"}}]},"f":[{"t":2,"r":"code"},{"t":7,"e":"input","a":{"type":"radio","name":[{"t":2,"r":"selected"}],"value":[{"t":2,"r":"code"}]}}]}]},"\n"]}]}]}],
-	init: function(component, Ractive) {
-		
+		var config = {
+    "theme": "ace/theme/merbivore_soft",
+    "gutter": true,
+    "tab": 4,
+    "softTab": false,
+    "highlightLine": false,
+    "invisibles": false,
+    "indentGuides": true,
+    "fadeFold": true,
+    "scrollPastEnd": true,
+    noLiveRefresh: true
+}
+
+component.exports = {
+    data: {
+        defaultConfig: config 
+    }
+}
+
 	},
 },
 {
@@ -601,10 +601,12 @@ component.exports = {
 	template: [{"t":4,"r":"pane","f":["\n",{"t":7,"e":"div","a":{"style":["top: ",{"t":2,"x":{"r":[".position.y"],"s":"${0}||50"}},"%; left: ",{"t":2,"x":{"r":[".position.x"],"s":"${0}||50"}},"%;"],"class":["sizer orientation-",{"t":2,"r":"orientation"}]}}]},"\n"],
 	init: function(component, Ractive) {
 		component.exports = {
-    data: {
-        "orientation": 'both'
+    beforeInit: function(o){
+      if(!o.data.orientation){
+        o.data.orientation = 'both'
+      }  
     },
-    init: function(o){
+    init: function(){
         var node = this.find('.sizer'),
             data = this.data,
             position = data.pane.position,
@@ -689,17 +691,57 @@ component.exports = {
 	},
 },
 {
-	name: 'styling',
-	template: [{"t":7,"e":"part","a":{"component":[{"t":2,"r":"component"}],"type":"style"}}],
+	name: 'steps',
+	template: [{"t":7,"e":"div","a":{"class":"steps"},"f":[{"t":7,"e":"div","a":{"class":"extend"},"f":[{"t":7,"e":"label","a":{"class":"title"},"f":[{"t":2,"r":"name"}]},{"t":7,"e":"span","a":{"class":"circle"},"f":"&#8858; "},{"t":4,"r":"steps","i":"i","f":["\n",{"t":7,"e":"label","a":{"selected":[{"t":2,"x":{"r":["i","selected"],"s":"${0}===${1}"}}],"error":[{"t":2,"x":{"r":["error"],"s":"!!${0}"}}],"class":"step"},"f":[{"t":2,"r":"name"},{"t":7,"e":"input","a":{"type":"radio","name":[{"t":2,"r":"selected"}],"value":[{"t":2,"r":"i"}]}}]}]},"\n"]}]}],
 	init: function(component, Ractive) {
 		
 	},
 },
 {
-	name: 'template',
-	template: [{"t":7,"e":"part","a":{"component":[{"t":2,"r":"component"}],"type":"template"}}],
+	name: 'styling',
+	template: [{"t":7,"e":"part","a":{"type":"style","allconfig":[{"t":2,"r":"config"}],"defaultConfig":[{"t":2,"r":"defaultConfig"}]}}],
 	init: function(component, Ractive) {
-		
+		var config = {
+    "theme": "ace/theme/merbivore_soft",
+    "gutter": false,
+    "tab": 2,
+    "softTab": false,
+    "highlightLine": false,
+    "invisibles": false,
+    "indentGuides": true,
+    "fadeFold": true,
+    "scrollPastEnd": true
+}
+
+component.exports = {
+    data: {
+        defaultConfig: config 
+    }
+}
+
+	},
+},
+{
+	name: 'template',
+	template: [{"t":7,"e":"part","a":{"type":"template","allconfig":[{"t":2,"r":"config"}],"defaultConfig":[{"t":2,"r":"defaultConfig"}]}}],
+	init: function(component, Ractive) {
+		var config = {
+    "theme": "ace/theme/merbivore_soft",
+    "gutter": true,
+    "tab": 2,
+    "softTab": true,
+    "highlightLine": false,
+    "invisibles": false,
+    "indentGuides": true,
+    "fadeFold": true,
+    "scrollPastEnd": true
+}
+
+component.exports = {
+    data: {
+        defaultConfig: config 
+    }
+}
 	},
 },
 ]

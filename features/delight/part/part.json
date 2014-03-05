@@ -1,16 +1,33 @@
 {
   "type": "template",
   "component": {
-    "name": "name",
-    "assets": {
-      "template": {
-        "code": {
-          "jade": "p hello {{world}}",
-          "mustache": "",
-          "ractive": ""
-        },
-        "error": null
+    "template": [
+      {
+        "name": "jade",
+        "code": "p hello {{world}}",
+        "process": "jade"
+      },
+      {
+        "name": "mustache",
+        "code": null,
+        "process": "ractive"
+      },
+      {
+        "mode": "json",
+        "name": "template",
+        "code": null
       }
-    }
+    ]
+  },
+  "defaultConfig": {
+    "theme": "ace/theme/cobalt",
+    "gutter": true,
+    "tab": 2,
+    "softTab": false,
+    "highlightLine": false,
+    "invisibles": false,
+    "indentGuides": true,
+    "fadeFold": true,
+    "scrollPastEnd": true
   }
 }

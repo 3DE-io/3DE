@@ -66,9 +66,7 @@ module.exports = function(grunt) {
     }
   })
 
-//browserify -r ./assets/js/track-move-events:track-move-events > ./src/js/move-events.js
-
-  grunt.loadTasks('./tasks')
+  grunt.loadTasks('./tasks/grunt')
   grunt.loadNpmTasks('grunt-contrib-cssmin')
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-jade')

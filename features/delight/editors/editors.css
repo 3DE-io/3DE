@@ -1,42 +1,15 @@
 .editors {
     height: 100%; width: 100%;
 }
-.editors > .title {
-  position: absolute;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 200;
-  background: steelblue;
-  color: whitesmoke;
-  font-family: sans-serif;
-  text-align: center;
-  padding-top: 3px;
-  font-size: 8pt;
-    margin: 5px;
-    border-radius: 3px;
-opacity: .6
-}
-.editors > .title:hover {
-       
-  height: 15px; 
-}
-.editors > .settings {
-  position: absolute;
-  right: 2px;
-  left: 3px;
-  bottom: 2px;
-  z-index: 200;
-  opacity: .7;
-}
+/*
 .editor-container {
     position: absolute;
     top:0; left: 0;
     bottom: 0; right: 0;
     background: white;
 }
+*/
 .editor {
   position: absolute;
   height: 100%; width: 100%;    
 }
-

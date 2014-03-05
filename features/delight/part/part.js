@@ -1,19 +1,22 @@
 component.exports = {
+    magic: true,
     beforeInit: function(o){
-        var d = o.data,
-            component = d.component, 
-            err
+    
+        var d = o.data
+        d.allconfig = d.allconfig || {}
+        if(!d.allconfig[d.type]) { d.allconfig[d.type] = {} }
         
-        if(!d.type) {
-            err = 'type must be specifed'
-        } else if(!component.assets) {
-            err = 'component data must exist'
-        } else if(!component.assets[d.type]) {
-            err = 'component.' + d.type + ' not found'
+        d.config = d.allconfig[d.type]
+        
+        for(var key in d.defaultConfig){
+            if(!d.config.hasOwnProperty(key)) {
+                d.config[key] = d.defaultConfig[key]
+            }
         }
-         
-        if(err) {
-            throw 'part component: ' + err
+        
+        if(!d.config.hasOwnProperty('noLiveRefresh')){
+            d.config.noLiveRefresh = false
         }
+       
     }
 }

@@ -11,38 +11,59 @@
       }
     }
   },
-  "component": {
+  "componentData": {
     "name": "hello",
-    "assets": {
-      "template": {
-        "code": {
-          "jade": "p hello {{world}}\ninput(value='{{world}}')",
-          "mustache": "",
-          "ractive": ""
-        },
-        "error": null
+    "template": [
+      {
+        "name": "jade",
+        "code": "p hello {{world}}",
+        "process": "jade"
       },
-      "style": {
-        "code": {
-          "stylus": "p\n\tcolor: green",
-          "css": ""
-        },
-        "error": null
+      {
+        "name": "mustache",
+        "code": null,
+        "process": "ractive"
       },
-      "data": {
-        "code": {
-          "eval": "{ world: 'earth' }",
-          "json": ""
-        },
-        "error": null
-      },
-      "script": {
-        "code": {
-          "eval": "component.exports = {}",
-          "js": ""
-        },
-        "error": null
+      {
+        "mode": "json",
+        "name": "ractive",
+        "code": null
       }
-    }
+    ],
+    "style": [
+      {
+        "name": "stylus",
+        "code": "p\n\tcolor: green",
+        "process": "stylus"
+      },
+      {
+        "mode": "jade",
+        "name": "css",
+        "code": null,
+        "output": true
+      }
+    ],
+    "data": [
+      {
+        "mode": "js",
+        "name": "js",
+        "code": "{ world: 'earth' }",
+        "process": "eval"
+      },
+      {
+        "mode": "json",
+        "name": "json",
+        "code": null,
+        "output": true
+      }
+    ],
+    "script": [
+      {
+        "mode": "js",
+        "name": "init",
+        "code": "component.exports = {\n\t\n}",
+        "output": true
+      }
+    ]
   }
 }

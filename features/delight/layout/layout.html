@@ -7,7 +7,9 @@
 
 </style><style feature="the-feature" template="the-template-name"></style><script id="main" type="text/ractive"><the-template-name
 ></the-template-name>
-</script><script id="the-template-name" type="text/ractive"></script></head><body><!--/- #container--><script src="http://localhost:8080/src/js/Ractive.js"></script><script src="http://localhost:8080/src/js/Ractive.load.js"></script><script src="http://localhost:8080/src/js/ace/ace.js"></script><script src="http://localhost:8080/src/js/ace/ext-themelist.js"></script><script src="http://localhost:8080/src/js/ace/ext-modelist.js"></script><script src="http://localhost:8080/src/js/move.js"></script><script src="../js-new/jade.js"></script><script src="../js-new/stylus.js"></script><script>Ractive.load().then( function () {
+</script><script id="the-template-name" type="text/ractive"></script></head><body><!--/- #container--><script src="http://localhost:8080/src/js/Ractive.js"></script><script src="http://localhost:8080/src/js/Ractive-transitions-fade.js"></script><script src="http://localhost:8080/src/js/Ractive.load.js"></script><script src="js-new/ace/ace.js"></script><script src="js-new/ace/ext-themelist.js"></script><script src="js-new/ace/ext-modelist.js"></script><script src="http://localhost:8080/src/js/move.js"></script><script src="http://localhost:8080/src/js/component.js"></script><script src="../js-new/jade.js"></script><script src="../js-new/stylus.js"></script><script>Ractive.defaults.noCssTransform = true
+Ractive.lib = require
+Ractive.load().then( function () {
   try {
 
     //- console.log('Ractive components', Ractive.components)

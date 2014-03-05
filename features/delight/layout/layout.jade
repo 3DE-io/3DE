@@ -26,20 +26,22 @@ html
     ///- #container
 
     script(src="http://localhost:8080/src/js/Ractive.js")
+    script(src="http://localhost:8080/src/js/Ractive-transitions-fade.js")
     script(src="http://localhost:8080/src/js/Ractive.load.js")
 
-    script(src="http://localhost:8080/src/js/ace/ace.js")
-    script(src="http://localhost:8080/src/js/ace/ext-themelist.js")
-    script(src="http://localhost:8080/src/js/ace/ext-modelist.js")
+    script(src="js-new/ace/ace.js")
+    script(src="js-new/ace/ext-themelist.js")
+    script(src="js-new/ace/ext-modelist.js")
 
     script(src="http://localhost:8080/src/js/move.js")
+    script(src="http://localhost:8080/src/js/component.js")
 
     script(src="../js-new/jade.js")
     script(src="../js-new/stylus.js")
-
-    script.
-
     
+    script.
+      Ractive.defaults.noCssTransform = true
+      Ractive.lib = require
       Ractive.load().then( function () {
         try {
 

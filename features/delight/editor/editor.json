@@ -1,8 +1,10 @@
 {
-  "code": "ul\n\tli hello",
-  "language": "jade",
+  "resource": {
+    "mode": "jade",
+    "code": "p hello {{world}}"
+  },
   "config": {
-    "theme": "",
+    "theme": "ace/theme/solarized_light",
     "gutter": true,
     "tab": 2,
     "softTab": false,

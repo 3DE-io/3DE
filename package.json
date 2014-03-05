@@ -33,10 +33,17 @@
     "grunt-contrib-concat": "~0.3.0",
     "ractive": "~0.3.9",
     "browserify": "~3.24.13",
-    "grunt-contrib-copy": "~0.5.0"
+    "grunt-contrib-copy": "~0.5.0",
+    "mocha": "~1.17.1",
+    "chai": "~1.9.0",
+    "stylus": "~0.42.2",
+    "ractify": "~0.2.0",
+    "browserify-plain-jade": "~0.2.0"
   },
   "dependencies": {
     "jade": "~1.1.5",
-    "brace": "~0.2.0"
+    "brace": "~0.2.0",
+    "ractive": "git://github.com/RactiveJS/Ractive.git#5fe0aa6",
+    "stylus": "~0.42.2"
   }
 }

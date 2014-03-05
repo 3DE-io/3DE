@@ -1,7 +1,7 @@
-<div class="editors">{{#section}}
-<settings tabs="{{code}}" selected="{{config.selected}}" error="{{error.location}}"></settings><div class="editor-container">{{#code:language}}
-<div style="{{#config.selected!==language}} visibility: none; z-index: -1; {{/}}" class="editor"><editor language="{{language}}" code="{{.}}"></editor></div>{{/code}}
-</div>{{#error}}
-<error></error>{{/error}}
+<div class="editors"><div class="editor-container"><editor-config config="{{config}}"></editor-config>{{#section}}
+<steps steps="{{section.steps}}" selected="{{selected}}"></steps>{{#steps:i}}
+<div style="{{#i!==selected}}visibility: hidden; z-index: -1; {{/}}" class="editor"><editor on-codeChange="codeChanged" on-refreshRequest="refreshRequested" resource="{{.}}" config="{{config}}"></editor></div>{{#error}}
+<error error="{{.}}"></error>{{/error}}
+{{/steps}}
 {{/section}}
-</div>
+</div></div>

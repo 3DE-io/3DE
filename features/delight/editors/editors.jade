@@ -1,12 +1,13 @@
 .editors
-  {{#section}}
-  settings(tabs='{{code}}', selected='{{config.selected}}', error='{{error.location}}')
   .editor-container
-    {{#code:language}}
-    .editor(style="{{#config.selected!==language}} visibility: none; z-index: -1; {{/}}")
-      editor(language='{{language}}', code='{{.}}')
-    {{/code}}
-  {{#error}}
-  error
-  {{/error}}
-  {{/section}}
+    editor-config(config='{{config}}')
+    {{#section}}
+    steps(steps='{{section.steps}}', selected='{{selected}}')
+    {{#steps:i}}
+    .editor(style="{{#i!==selected}}visibility: hidden; z-index: -1; {{/}}")
+      editor(on-codeChange='codeChanged', on-refreshRequest='refreshRequested', resource='{{.}}', config='{{config}}')
+    {{#error}}
+    error(error='{{.}}')
+    {{/error}}
+    {{/steps}}
+    {{/section}}

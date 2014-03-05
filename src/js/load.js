@@ -190,10 +190,27 @@ if(projectData){
 
 
 function load(data){
-	window.data = data
+	window.data = data = {
+				pane: {
+					"position": {
+					  "x": 70,
+					  "y": 50
+					},
+					"pane": {
+					  "position": {
+						"x": 50,
+						"y": 50
+					  }
+					}
+				  },
+				component: {
+					name: 'name'
+				},
+				config : {}
+			}
 
 	var ractive,
-		Component = Ractive.components.flow
+		Component = Ractive.components.component
 	try {
 		ractive = new Component({
 			debug: true,
@@ -208,14 +225,14 @@ function load(data){
 		document.body.innerHTML = error
 	}
 
-	window.onbeforeunload = function(){
-		console.log('writing project to localStorage')
-		if(ractive) { ractive.teardown() }
-		var current = data.project.current.name
-		delete data.project.current
-		data.project.current = current
-		localStorage.project = JSON.stringify(data)
-	}
+	// window.onbeforeunload = function(){
+	// 	console.log('writing project to localStorage')
+	// 	if(ractive) { ractive.teardown() }
+	// 	var current = data.project.current.name
+	// 	delete data.project.current
+	// 	data.project.current = current
+	// 	localStorage.project = JSON.stringify(data)
+	// }
 }
 
 

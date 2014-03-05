@@ -46,11 +46,11 @@
         
           var component = message
           
-          if(component.hasOwnProperty('css')) {
-            document.getElementById('component-css').innerHTML = component.css
+          if(component.hasOwnProperty('style')) {
+            document.getElementById('component-css').innerHTML = component.style
           }
           
-          if(component.hasOwnProperty('init') || 
+          if(component.hasOwnProperty('script') || 
              component.hasOwnProperty('template') || 
              component.hasOwnProperty('data')) {
              
@@ -62,8 +62,8 @@
       
       var ractive, component = {}
       function render(c){
-        if(c.hasOwnProperty('init')){ 
-          component.init = c.init 
+        if(c.hasOwnProperty('script')){ 
+          component.init = c.script 
         }
         if(c.hasOwnProperty('template')){ 
           component.template = c.template ? JSON.parse(c.template) : null

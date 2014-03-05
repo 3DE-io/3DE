@@ -1,8 +1,10 @@
 component.exports = {
-    data: {
-        "orientation": 'both'
+    beforeInit: function(o){
+      if(!o.data.orientation){
+        o.data.orientation = 'both'
+      }  
     },
-    init: function(o){
+    init: function(){
         var node = this.find('.sizer'),
             data = this.data,
             position = data.pane.position,

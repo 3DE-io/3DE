@@ -1,14 +1,18 @@
 {
   "component": {
     "name": "name",
-    "assets": {
-      "style": {
-        "code": {
-          "stylus": "p\n\tcolor: green",
-          "css": ""
-        },
-        "error": null
+    "style": [
+      {
+        "name": "stylus",
+        "code": "p\n\tcolor: green",
+        "process": "stylus"
+      },
+      {
+        "mode": "jade",
+        "name": "css",
+        "code": null,
+        "output": true
       }
-    }
+    ]
   }
 }

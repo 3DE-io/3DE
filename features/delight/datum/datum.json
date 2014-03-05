@@ -1,14 +1,19 @@
 {
   "component": {
     "name": "name",
-    "assets": {
-      "data": {
-        "code": {
-          "eval": "{ world: 'earth' }",
-          "json": ""
-        },
-        "error": null
+    "data": [
+      {
+        "mode": "js",
+        "name": "js",
+        "code": "{ world: 'earth' }",
+        "process": "eval"
+      },
+      {
+        "mode": "json",
+        "name": "json",
+        "code": null,
+        "output": true
       }
-    }
+    ]
   }
 }

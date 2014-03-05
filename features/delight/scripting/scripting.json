@@ -1,14 +1,13 @@
 {
   "component": {
     "name": "name",
-    "assets": {
-      "script": {
-        "code": {
-          "js": "",
-          "init": ""
-        },
-        "error": null
+    "script": [
+      {
+        "mode": "js",
+        "name": "init",
+        "code": "component.exports = {\n\t\n}",
+        "output": true
       }
-    }
+    ]
   }
 }
