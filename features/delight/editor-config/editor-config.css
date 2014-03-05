@@ -1,0 +1,57 @@
+.editor-config {
+    background: steelblue;
+    color: white;
+    font-family: monospace;
+    position: absolute;
+    z-index: 100;
+    bottom: 0; right: 0;
+    opacity: .2;
+    height: 26px; width: 25px;
+    overflow: hidden;
+    border-radius: 3px;
+    -webkit-transition: all .5s ease-out .5s;
+    -webkit-user-select: none;
+}
+.editor-config .config-box {
+    visibility: hidden;
+    height: 400px;
+    width: 200px;
+    -webkit-transition: all .5s ease-out .5s;
+}
+.editor-config:hover {
+    height: 410px;
+    width: 200px;
+    padding: 10px;
+    padding-bottom: 20px;
+    opacity: 1;
+    -webkit-transition-delay: 0;
+}
+.editor-config:hover .config-box {
+    visibility: visible;
+    -webkit-transition-delay: 0;
+}
+.config-item  {
+    margin: 10px 0px;    
+}
+.config-item input {
+    float: right;    
+}
+.editor-config fieldset {
+    border: 1px solid white;
+    margin-bottom: 10px;
+}
+.editor-config select {
+    width: 100%;    
+}
+
+.gear {
+    position: absolute;
+    bottom: 0; right: 0;
+    font-size: 16pt;
+    font-family: symbol;
+    cursor: default;
+    text-align: right;
+    margin-right: 5px;
+    height: 25px;
+    width: 13px;
+}

@@ -1,0 +1,110 @@
+.steps {
+    position: absolute;
+    z-index: 100;
+    left: 10px; width: 25px;
+    bottom: 0;
+    height: 26px;
+    border-radius: 3px;
+    line-height: 14px;   
+    -webkit-user-select: none;
+    overflow: hidden;
+    background: steelblue;
+    color: whitesmoke;
+    opacity: .2;
+    -webkit-transition: all .5s ease-out 1s;
+}
+.steps:hover {
+    width: 100%;
+    left: 0px;
+}
+.steps:hover {
+    opacity: 1;
+    -webkit-transition-delay: 0;
+}
+
+
+.step-box-outer {
+    display: inline-block; 
+    float: left;
+    overflow: none;
+}
+.step-box-inner {
+    display: flex;
+    justify-content: flex-start;
+    -webkit-flex-flow: no-wrap;
+}
+.circle {
+    font-size: 16pt;
+    font-family: symbol;
+    text-align: center;
+    width: 25px;
+    line-height: 30px;
+    margin-bottom: -9px;
+    margin-left: -1px;
+    cursor: default;
+}
+
+.extend {
+    width: 300%;    
+}
+.extend > * {
+    float: left;
+}
+.steps label {
+    padding: 6px;
+    font-size: 10pt;
+    font-family: sans-serif;
+}
+.steps label.title {
+    font-size: 10pt;
+    color: lightsteelblue;
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 0px;
+    overflow: hidden;
+    -webkit-transition: all .5s ease-out 1s;
+}
+.steps:hover label.title,
+.steps[error=true] label.title {
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 50px;
+}
+.steps[error=true] label.title,
+    -webkit-transition-delay: 2s !important;
+}
+.steps:hover label.title,
+    -webkit-transition-delay: 0s !important;
+}
+.steps label.step {
+    cursor: pointer;
+    opacity: 0;
+    -webkit-transition: all 300ms 900ms;
+}
+.steps:hover label.step,
+.steps[error=true] label.step {
+    opacity: 1;
+}
+.steps[error=true] label.step {
+    -webkit-transition-delay: 2s;
+}
+.steps:hover label.step {
+    -webkit-transition-delay: 100ms;
+}
+
+
+.steps label[selected=true] {
+    background: lightsteelblue;
+    color: steelblue;
+}
+.steps [type='radio']{
+    display: none;    
+}
+.steps label[error=true]{
+    color: red;
+    background: pink;
+}
+.steps label[error=true][selected=true]{
+    color: pink;
+    background: crimson;
+}

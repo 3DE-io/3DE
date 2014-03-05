@@ -1,0 +1,11 @@
+p {
+    color: blue    
+}
+
+input[d-id='1'][type='number'] {
+    color: green;    
+}
+
+input[d-id='1']:hover {
+    color: red;    
+}

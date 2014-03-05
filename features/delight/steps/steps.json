@@ -1,0 +1,22 @@
+{
+  "name": "name",
+  "steps": [
+    {
+      "name": "jade",
+      "code": "p hello !{{world}}",
+      "process": "jade"
+    },
+    {
+      "name": "mustache",
+      "code": null,
+      "process": "ractive",
+      "error": {}
+    },
+    {
+      "mode": "json",
+      "name": "ractive",
+      "code": null
+    }
+  ],
+  "selected": 0
+}

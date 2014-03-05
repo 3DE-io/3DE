@@ -1,0 +1,41 @@
+.editor-config
+  .gear &#x2699;
+  .config-box
+    {{#config}}
+    fieldset
+      legend theme
+      select(value='{{config.theme}}')
+        {{#themes:theme}}
+        option(value='{{.theme}}', selected='{{.theme===config.theme}}') {{desc}}
+        {{/themes}}
+    fieldset
+      legend live refresh
+      .config-item
+        label ctrl+enter only
+          input(type='checkbox', checked='{{noLiveRefresh}}') 
+    fieldset 
+      legend tabs
+      .config-item
+        label indent
+          input(type='number', min='0', max='8', value='{{.tab}}')
+      .config-item
+        label soft
+          input(type='checkbox', checked='{{.softTab}}') 
+    fieldset
+      legend format
+      .config-item
+        label indent guides
+          input(type='checkbox', checked='{{.indentGuides}}') 
+      .config-item
+        label invisibles
+          input(type='checkbox', checked='{{.invisibles}}') 
+    .config-item
+      label gutter (line #'s)
+        input(type='checkbox', checked='{{gutter}}') 
+    .config-item
+      label highlight line
+        input(type='checkbox', checked='{{.highlightLine}}') 
+    .config-item
+      label scroll past
+        input(type='checkbox', checked='{{.scrollPastEnd}}') 
+    {{/config}}

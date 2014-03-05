@@ -1,0 +1,8 @@
+.steps
+  .extend
+    label.title {{name}}
+    span.circle &#8858; 
+    {{#steps:i}}
+    label.step(selected='{{i===selected}}', error='{{!!error}}') {{name}}
+      input(type='radio', name='{{selected}}', value='{{i}}') 
+    {{/steps}}

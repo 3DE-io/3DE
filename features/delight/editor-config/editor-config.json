@@ -1,0 +1,13 @@
+{
+  "config": {
+    "theme": "solarized_light",
+    "gutter": true,
+    "tab": 2,
+    "softTab": false,
+    "highlightLine": false,
+    "invisibles": false,
+    "indentGuides": true,
+    "fadeFold": true,
+    "scrollPastEnd": true
+  }
+}
