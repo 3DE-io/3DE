@@ -65,7 +65,7 @@ module.exports = function MoveEvents(node, notify){
 
         subscriber.add(document, events.move, onmove)
         subscriber.add(document, events.end, onend)
-        subscriber.add(window.top, events.end, onend)
+        // subscriber.add(window.top, events.end, onend)
     }
 
     function onmove(e) {
@@ -82,7 +82,7 @@ module.exports = function MoveEvents(node, notify){
         if(!events) { return; }
         subscriber.remove(document, events.move, onmove)
         subscriber.remove(document, events.end, onend)
-        subscriber.remove(window.top, events.end, onend)
+        // subscriber.remove(window.top, events.end, onend)
     }
 
     function stop(){
