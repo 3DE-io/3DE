@@ -7,6 +7,8 @@ module.exports = function(componentData, options){
         sections = []
         lastSteps = []
 
+    componentData = fillDefaults(componentData)
+
     sectionNames.forEach(function(sectionName){
         var sectionData = componentData[sectionName]
         if(!sectionData) { 
@@ -48,10 +50,64 @@ module.exports = function(componentData, options){
 
 }
 
+function fillDefaults(data){
+    data = data || {}
+    var defaultSections
+    function fill(part){
+        if(!data[part]){
+            if(!defaultSections){ defaultSections = empty()}
+            data[part] = defaultSections[part]
+        }        
+    }
+    ['template', 'style', 'data', 'script'].forEach(fill)  
 
-var microevent = require('../util/event/microevent')
+    return data 
+}
+
+function empty(){
+    return {
+        "template": [
+          {
+            "name": "jade"
+          },
+          {
+            "name": "mustache",
+            "process": "ractive"
+          },
+          {
+            "name": "ractive",
+            "mode": "json"
+          }
+        ],
+        "style": [
+          {
+            "name": "stylus"
+          },
+          {
+            "name": "css"
+          }
+        ],
+        "data": [
+          {
+            "name": "js",
+            "process": "eval"
+          },
+          {
+            "name": "json"
+          }
+        ],
+        "script": [
+          {
+            "name": "init",
+            "mode": "js"
+          }
+        ]
+    }
+}
+
 function Component(lastSteps){
     var self = this
+    self.data = {}
 
     lastSteps.forEach(function(step){
         var lastStep = step.lastStep,
@@ -70,17 +126,17 @@ function Component(lastSteps){
             enumerable: true
         })
 
-        Object.defineProperty(self, name, {
+        Object.defineProperty(self.data, name, {
             get: function(){
                 return codeProp.get()
             },
-            set: function(v){},
             configurable: true,
             enumerable: true
         })        
     })
       
 }
+var microevent = require('../util/event/microevent')
 microevent.mixin(Component)
 
 

@@ -1,9 +1,5 @@
 .project
-  .dflux 
-    span.d &#x24D3;
-    span.f f
-    span.l l
-    span.ux ux
+  .dflux 3DE
   {{#project}}
   ul.features
     {{#features}}
@@ -13,14 +9,14 @@
         li(on-click='select', class="{{name==='bob' ? 'selected' : ''}}") {{name}}
         {{/components}}
         li
-          input(on-enter_kp='addComponent:{{.new}}', 
+          input(on-enter_kp='addComponent:{{this.new}}', 
                 type='text',
-                value='{{.new}}',
+                value='{{this.new}}',
                 placeholder="new component...")
     {{/features}}
-    li
-      input(on-enter_kp='addFeature:{{.new}}', 
+    li {{layout}}
+      input(on-enter_kp='addFeature:{{this.new}}', 
             type='text',
-            value='{{.new}}',
+            value='{{this.new}}',
             placeholder="new feature...")
   {{/project}}

@@ -1,0 +1,13 @@
+pane
+  project
+pane
+  {{#editing}}
+  	{{#components}}
+  		component(component='{{component}}')
+  	{{/components}}
+  	{{^component}}
+  		.create Create a feature and component
+  	{{/component}}
+  {{/editing}}
+
+sizer(orientation='horizontal')

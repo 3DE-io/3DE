@@ -37,9 +37,20 @@ module.exports = function(grunt) {
         dest: 'src/js/components.js'
       }
     },
+    shell: {
+        bundle: {
+            command: 'node tasks/browserify.js',
+            options: {
+                stdout: true
+            }
+        }
+    },
     watch: {
       options: {
-          interrupt: true
+          interrupt: true,
+          atBegin: true,
+          spawn: false,
+          debounceDelay: 100
       },
       jade_index: {
           files: ['<%= jade.index.src %>'],
@@ -51,17 +62,15 @@ module.exports = function(grunt) {
       },
       components: {
         files: ['features/delight/**/*.{js,html}'],
-        tasks: ['components'],
-        options: {
-          interrupt: true
-        }
+        tasks: ['components']
       },
       components_css: {
         files: ['features/delight/**/*.css'],
-        tasks: ['cssmin:components'],
-        options: {
-          interrupt: true
-        }
+        tasks: ['cssmin:components']
+      },
+      js: {
+        files: ['assets/js/**/*.js'],
+        tasks: ['shell:bundle']
       }
     }
   })
@@ -72,7 +81,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jade')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-contrib-copy')
+  grunt.loadNpmTasks('grunt-shell')
 
-  grunt.registerTask('default', ['jade', 'cssmin', 'components']);
+  grunt.registerTask('default', ['jade', 'cssmin', 'components', 'shell:bundle']);
 
 };

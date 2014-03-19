@@ -1,0 +1,50 @@
+pane-node{
+    position: absolute;
+}
+.pane-inner {
+    position: absolute;
+    top: 2px; bottom: 2px;
+    left: 2px; right: 2px;
+}
+
+pane-node:first-of-type:last-of-type {
+    top: 0 !important; 
+    bottom: 0 !important;
+    left: 0 !important; 
+    right: 0 !important;
+}
+pane-node:first-of-type:nth-last-of-type(4) {
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 50%; right: 50%;
+}
+pane-node:first-of-type:nth-last-of-type(4) 
++ pane-node {
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 50%; left: 50%;
+}
+pane-node:first-of-type:nth-last-of-type(4)
++ pane-node + pane-node  {
+    bottom: 0 !important;
+    left: 0 !important; 
+    top: 50%; right: 50%;
+}
+pane-node:first-of-type:nth-last-of-type(4)
++ pane-node + pane-node + pane-node {
+    bottom: 0 !important;
+    right: 0 !important;
+    left: 50%; top: 50%; 
+}
+pane-node:first-of-type:nth-last-of-type(2){
+    top: 0 !important; 
+    bottom: 0 !important;
+    left: 0 !important; 
+    right: 30%;
+}
+pane-node:first-of-type:nth-last-of-type(2) ~ pane-node {
+    top: 0 !important; 
+    bottom: 0 !important;
+    right: 0 !important;
+    left: 70%;
+}

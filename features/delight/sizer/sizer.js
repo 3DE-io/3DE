@@ -46,7 +46,6 @@ component.exports = {
         }
 
         function move(delta){
-            _ticking = false
             
             var asPercent = {
                 x: delta.x/total.x*100,
@@ -62,10 +61,10 @@ component.exports = {
             moveTo.y = Math.max(moveTo.y, buffer.y)
             moveTo.y = Math.min(moveTo.y, 100-buffer.y)
 
-            //console.log(moveTo.x, moveTo.y)
+            //console.log(ractive.data.pane.position.x, moveTo.x)
             if(direction.x){
                 ractive.set('pane.position.x', moveTo.x )
-                //position.x = moveTo.x
+                //ractive.data.pane.position.x = moveTo.x
             }
             if(direction.y){
                 ractive.set('pane.position.y', moveTo.y )

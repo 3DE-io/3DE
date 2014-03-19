@@ -10,22 +10,6 @@
   background: #556270;
   padding: 5px;
 }
-.dflux .d {
-  /*font-family: monospace;*/
-  font-size: 11pt;
-  font-family: flux;
-  letter-spacing: .03em;
-  vertical-align: 3px;
-}
-.dflux .f {
-  letter-spacing: 0.16em;
-}
-.dflux .l {
-  letter-spacing: 0.1em;
-}
-.dflux .ux {
-  letter-spacing: 0.05em;
-}
 
 .project {
     position: absolute;

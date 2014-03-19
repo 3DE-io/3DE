@@ -38,7 +38,8 @@
     "chai": "~1.9.0",
     "stylus": "~0.42.2",
     "ractify": "~0.2.0",
-    "browserify-plain-jade": "~0.2.0"
+    "browserify-plain-jade": "~0.2.0",
+    "grunt-shell": "~0.6.4"
   },
   "dependencies": {
     "jade": "~1.1.5",

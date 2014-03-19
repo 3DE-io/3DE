@@ -1,7 +1,6 @@
 var defaultPosition = { position: { x:50, y:50 } }
 
 component.exports = {
-    debug: true,
     setContext: function(pane){
         if(!this.data.pane){
             console.log('no pane')

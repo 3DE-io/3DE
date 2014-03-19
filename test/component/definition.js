@@ -76,20 +76,17 @@ describe('component definition', function(){
     			assert.ok(component)
 		    })
 		    it('with final data from each step', function(){
-	    		assert.equal(component.template, '[\n  "<p></p>"\n]')
-	    		assert.equal(component.style, 'p {\n  color: #00f;\n}\n')
-	    		assert.equal(component.data, '{\n  "world": "earth"\n}')
-	    		assert.isUndefined(component.script)
-		    })
-
-		    it('with configurable properties', function(){
-		    	assert.isTrue(Object.getOwnPropertyDescriptor(component, 'template').configurable)
+		    	var data = component.data
+	    		assert.equal(data.template, '[\n  "<p></p>"\n]')
+	    		assert.equal(data.style, 'p {\n  color: #00f;\n}\n')
+	    		assert.equal(data.data, '{\n  "world": "earth"\n}')
+	    		assert.isUndefined(data.script)
 		    })
 
 		    it('raises events when underlying definition is updated', function(done){
 		    	component.on('change', function(section){
 		    		assert.equal(section, 'template')		    		
-		    		assert.equal(component.template, '[\n  "<div></div>"\n]')
+		    		assert.equal(component.data.template, '[\n  "<div></div>"\n]')
 		    		done()
 		    	})
 		    	define.template.jade.code = 'div'
@@ -97,18 +94,13 @@ describe('component definition', function(){
 		})
 	})
 
-	describe('throws if section is missing', function(){
-		var data = {
-		    name: 'notemplate',
-		    style: [],
-		    data: [],
-		    script: []
-		}
-		
+	describe('can create from scratch', function(){
 		it('on construction', function(){
-			assert.throws(function(){
-    			new Definition(data)	
-			}, /no section template found/)
+			var define = new Definition()
+			assert.equal(define.template.name, 'template')
+    		assert.equal(define.style.name, 'style')
+    		assert.equal(define.data.name, 'data')
+    		assert.equal(define.script.name, 'script')
 	    })
 	})
 

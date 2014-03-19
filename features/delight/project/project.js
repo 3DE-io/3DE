@@ -7,14 +7,29 @@ function nameSort(a, b) {
     return 0;
 }
 
+var Definition = require('definition')
+
 component.exports = {
     magic: true,
     isolate: true,
+    beforeInit: function(options){
+        var d = options.data
+        if(!d.project){
+            d.project = {}
+        }
+        if(!d.project.features){
+            d.project.features = []
+        }
+    },
     init: function(){
-        var r = this,
-            project = r.data.project
+        var self = this,
+            project = self.data.project
+
+        function fireSelected(component){
+            self.fire('componentSelect', component)
+        }
         this.on('select', function(e){
-            r.set('project.current', e.context)
+            fireSelected(e.context)
         })
         
         function add(item, collection){
@@ -32,7 +47,9 @@ component.exports = {
         }
         function insert(collection, item){
             collection.push(item)
-            collection.sort(nameSort)
+            try {
+                collection.sort(nameSort)
+            } catch(e){}
         }
 
         this.on('addComponent', function(e, item){
@@ -41,22 +58,20 @@ component.exports = {
             if(!component) { return }
             
             insert(components, component)
-            e.context.new = ''
+            e.context[''].new = ''
             document.activeElement.blur()
             
-            //r.data.project.current = component
-            r.set('project.current',  component)
+            fireSelected(component)
         })
         
         this.on('addFeature', function(e, item){
             var features = e.context.features,
-                feature = add(item, features)
+            feature = add(item, features)
             if(!feature) { return }
             
             feature.components = []
-            
             insert(features, feature)
-            e.context.new = ''
+            e.context[''].new = ''
             document.activeElement.blur()
         })
     },

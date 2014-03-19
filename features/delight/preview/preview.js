@@ -13,41 +13,47 @@ component.exports = {
         var self = this,
             d = this.data,
             iframe = this.find('iframe')
+            // _layout, _component
 
-        self.reload = function(){
+        // function loadable(){
+        //     return _layout && _component
+        // }
+
+        this.reload = function(){
+            // if(!loadable()) { return }
             if(iframe.contentWindow){
                 iframe.contentWindow.location.reload()
             }           
         }
+
+        // this.observe('project.layout', function(layout, old){
+        //     if(layout===old) { return; }
+        //     _layout = layout
+        //     self.reload()
+        // })  
+
+        this.observe('component', function(component,old){
+            if(component===old){ return }
+            _component = component
+            self.reload()
+        })
 
         iframe.onload = function(){
             var pw = self.previewWindow = new PreviewWindow(iframe)
 
             //pw.postMessage( { components: all }, '*')
             
-            //hack
-            var _events = d.component._events
-            delete d.component._events
+            pw.send(d.component.data)
 
-            pw.send(d.component)
-
-            d.component._events = _events
         }
 
         self.update = function(name){
-            //debugger;
+            if(!self.previewWindow) { return }
             var msg = {}
-            msg[name] = this.data.component[name]
-            this.previewWindow.send(msg)  
+            msg[name] = d.component.data[name]
+            self.previewWindow.send(msg)  
         }
 
-        this.observe('component', function(component,old){
-            if(component===old){ return }
-            if(iframe.contentWindow){
-                iframe.contentWindow.location.reload()
-            }
-            self.reload()
-        })
             
 
 

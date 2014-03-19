@@ -1,6 +1,6 @@
 /*
 
-	Ractive - v0.4.0-pre - 2014-03-05
+	Ractive - v0.4.0-pre - 2014-03-06
 	==============================================================
 
 	Next-generation DOM manipulation - http://ractivejs.org
@@ -1245,9 +1245,7 @@
 						enumerable: true,
 						configurable: true
 					} );
-					if ( !this.originalDescriptor || this.originalDescriptor.writable || this.originalDescriptor.set ) {
-						this.obj[ this.prop ] = value;
-					}
+					this.obj[ this.prop ] = value;
 				}
 			}
 		};
@@ -9352,6 +9350,9 @@
 			findComponent: function( selector ) {
 				if ( !selector || selector === this.name ) {
 					return this.instance;
+				}
+				if ( this.instance.fragment ) {
+					return this.instance.fragment.findComponent( selector );
 				}
 				return null;
 			},

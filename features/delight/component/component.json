@@ -11,7 +11,7 @@
       }
     }
   },
-  "componentData": {
+  "component": {
     "name": "hello",
     "template": [
       {

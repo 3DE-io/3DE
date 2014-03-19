@@ -1,121 +1,6 @@
 
 loader.loadAll(components)
 
-var hello = {
-	name: 'hello',
-	assets: {
-		"template": {
-			"code": {
-				"jade": "p hello {{world}}\ninput(value='{{world}}')",
-				"mustache": "",
-				"ractive": ""
-			},
-			"error": null
-		},
-		"style": {
-			"code": {
-				"stylus": "p\n\tcolor: green",
-				"css": ""
-			},
-			"error": null
-		},
-		"data": {
-			"code": {
-				"eval": "{ world: 'earth' }",
-				"json": ""
-			},
-			"error": null
-		},
-		"script": {
-			"code": {
-				init: '',
-				"js": ""
-			},
-			"error": null
-		}
-	}
-}
-var items = {
-	name: 'items',
-	assets: {
-		"template": {
-			"code": {
-				"jade": "ul\n\t{{#items}}\n\tli {{.}}\n\t{{/items}}\n" +
-						"input(value='{{new}}')\nbutton(on-click='add:{{new}}') add",
-				"mustache": "",
-				"ractive": ""
-			},
-			"error": null
-		},
-		"style": {
-			"code": {
-				"stylus": "li\n\tcolor saddlebrown\n\tfont-family fantasy",
-				"css": ""
-			},
-			"error": null
-		},
-		"data": {
-			"code": {
-				"eval": "{ items: ['earth', 'mars','venus'] }",
-				"json": ""
-			},
-			"error": null
-		},
-		"script": {
-			"code": {
-				"init": "component.exports = {\n\
-		init: function(){\n\
-			var items = this.data.items\n\
-			this.on('add', function(e, item){\n\
-				if(!item){ return }\n\
-				items.push(item)\n\
-				this.data.new = ''\n\
-			})\n\
-		}\n\
-	}",
-				"js": ""
-			},
-			"error": null
-		}
-	}
-}
-var empty = {
-	name: 'empty',
-	assets: {
-		"template": {
-			"code": {
-				"jade": "",
-				"mustache": "",
-				"ractive": ""
-			},
-			"error": null
-		},
-		"style": {
-			"code": {
-				"stylus": "",
-				"css": ""
-			},
-			"error": null
-		},
-		"data": {
-			"code": {
-				"eval": "",
-				"json": ""
-			},
-			"error": null
-		},
-		"script": {
-			"code": {
-				"init": "",
-				"js": ""
-			},
-			"error": null
-		}
-	}
-}
-
-
-
 var config = new ConfigService()
 
 function ConfigService() {
@@ -191,32 +76,30 @@ if(projectData){
 
 function load(data){
 	window.data = data = {
+		pane: {
+			position: { x: 20 },
+			pane: {
+				position: { x: 70, y: 50 },
 				pane: {
-					"position": {
-					  "x": 70,
-					  "y": 50
-					},
-					"pane": {
-					  "position": {
-						"x": 50,
-						"y": 50
-					  }
-					}
-				  },
-				component: {
-					name: 'name'
-				},
-				config : {}
+					position: { x: 50, y: 50 }
+				}
 			}
+		}
+		,
+		project: {
+			layout: null,
+			add: {} //Ractive bug workaround
+		},
+		config : {}
+	}
 
 	var ractive,
-		Component = Ractive.components.component
+		Component = Ractive.components.threeDE
 	try {
 		ractive = new Component({
 			debug: true,
 			el: document.body,
-			// template: template,
-			magic: true,
+			//template: '<threeDE/>',
 			data: data
 		})
 
@@ -234,5 +117,3 @@ function load(data){
 	// 	localStorage.project = JSON.stringify(data)
 	// }
 }
-
-

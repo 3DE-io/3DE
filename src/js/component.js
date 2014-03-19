@@ -8,6 +8,8 @@ module.exports = function(componentData, options){
         sections = []
         lastSteps = []
 
+    componentData = fillDefaults(componentData)
+
     sectionNames.forEach(function(sectionName){
         var sectionData = componentData[sectionName]
         if(!sectionData) { 
@@ -49,10 +51,64 @@ module.exports = function(componentData, options){
 
 }
 
+function fillDefaults(data){
+    data = data || {}
+    var defaultSections
+    function fill(part){
+        if(!data[part]){
+            if(!defaultSections){ defaultSections = empty()}
+            data[part] = defaultSections[part]
+        }        
+    }
+    ['template', 'style', 'data', 'script'].forEach(fill)  
 
-var microevent = require('../util/event/microevent')
+    return data 
+}
+
+function empty(){
+    return {
+        "template": [
+          {
+            "name": "jade"
+          },
+          {
+            "name": "mustache",
+            "process": "ractive"
+          },
+          {
+            "name": "ractive",
+            "mode": "json"
+          }
+        ],
+        "style": [
+          {
+            "name": "stylus"
+          },
+          {
+            "name": "css"
+          }
+        ],
+        "data": [
+          {
+            "name": "js",
+            "process": "eval"
+          },
+          {
+            "name": "json"
+          }
+        ],
+        "script": [
+          {
+            "name": "init",
+            "mode": "js"
+          }
+        ]
+    }
+}
+
 function Component(lastSteps){
     var self = this
+    self.data = {}
 
     lastSteps.forEach(function(step){
         var lastStep = step.lastStep,
@@ -71,17 +127,17 @@ function Component(lastSteps){
             enumerable: true
         })
 
-        Object.defineProperty(self, name, {
+        Object.defineProperty(self.data, name, {
             get: function(){
                 return codeProp.get()
             },
-            set: function(v){},
             configurable: true,
             enumerable: true
         })        
     })
       
 }
+var microevent = require('../util/event/microevent')
 microevent.mixin(Component)
 
 
@@ -23356,29 +23412,22 @@ exports.yui = {
 },{}],11:[function(require,module,exports){
 /**
  * MicroEvent - to make any js object an event emitter (server or browser)
- * 
- * - pure javascript - server compatible, browser compatible
- * - dont rely on the browser doms
- * - super simple - you get it immediatly, no mistery, no magic involved
- *
- * - create a MicroEventDebug with goodies to debug
- *   - make it safer to use
 */
 
 var MicroEvent	= module.exports = function(){}
 MicroEvent.prototype	= {
 	on	: function(event, fct){
-		this._events = this._events || {};
+		this._events = createEventsProperty(this)
 		this._events[event] = this._events[event]	|| [];
 		this._events[event].push(fct);
 	},
 	off	: function(event, fct){
-		this._events = this._events || {};
+		this._events = createEventsProperty(this)
 		if( event in this._events === false  )	return;
 		this._events[event].splice(this._events[event].indexOf(fct), 1);
 	},
 	fire	: function(event /* , args... */){
-		this._events = this._events || {};
+		this._events = createEventsProperty(this)
 		if( event in this._events === false  )	return;
 		for(var i = 0; i < this._events[event].length; i++){
 			this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1))
@@ -23386,6 +23435,14 @@ MicroEvent.prototype	= {
 	}
 };
 
+var propName = '_events'
+function createEventsProperty(obj){
+	if(obj[propName]) { return }
+
+	Object.defineProperty(obj, propName, {
+		value : {}, enumerable:false
+	})
+}
 /**
  * mixin will delegate all MicroEvent.js function in the destination object
  *
@@ -23393,6 +23450,7 @@ MicroEvent.prototype	= {
  *
  * @param {Object} the object which will support MicroEvent
 */
+
 MicroEvent.mixin	= function(destObject){
 	var props	= ['on', 'off', 'fire'];
 	for(var i = 0; i < props.length; i ++){

@@ -1,5 +1,4 @@
 component.exports = {
-    magic: true,
     beforeInit: function(o){
     
         var d = o.data

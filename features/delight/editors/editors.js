@@ -1,7 +1,6 @@
 var Section = require('section')
 var steps = 'steps'
 component.exports =  {
-    magic: true,
     beforeInit: function(o){
         var d = o.data
         if(!d.section) {

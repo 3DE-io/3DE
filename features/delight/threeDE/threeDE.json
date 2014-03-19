@@ -1,0 +1,25 @@
+{
+  "pane": {
+    "position": {
+      "x": 10
+    },
+    "pane": {
+      "position": {
+        "x": 70,
+        "y": 50
+      },
+      "pane": {
+        "position": {
+          "x": 50,
+          "y": 50
+        }
+      }
+    }
+  },
+  "project": {
+    "layout": {
+      "src": "layout.html"
+    }
+  },
+  "component": {}
+}

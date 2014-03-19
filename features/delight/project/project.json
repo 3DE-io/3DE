@@ -1,6 +1,7 @@
 {
   "project": {
     "name": "project name",
+    "add": {},
     "features": [
       {
         "name": "first",
