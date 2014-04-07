@@ -7,7 +7,6 @@ component.exports =  {
             o.data.section = new Section(d.name, d.steps)
         }
         o.data.selected = 0
-        //o.data.errorIndex = null
     },
     init: function(){
         var r = this
@@ -19,7 +18,7 @@ component.exports =  {
         var ractive = this,
             d = this.data
        
-        this.observe(steps, function(n,o){
+        this.observe('section', function(n,o){
             if(n===o){ return }
             console.log('reset')
             ractive.findAllComponents('editor').forEach(function(editor){

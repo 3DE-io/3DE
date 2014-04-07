@@ -1,8 +1,8 @@
-dflux
+3DE
 ============
-DelightFuLUX - Realtime component-based template design and development
+Realtime component-based template design and development
 
-### design <> develop <> delight ###
+### delight design develop ###
 
 Project Goals
 ------------

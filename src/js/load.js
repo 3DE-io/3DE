@@ -76,25 +76,70 @@ if(projectData){
 
 function load(data){
 	window.data = data = {
-		pane: {
-			position: { x: 20 },
+		// pane: {
+		// 	position: { x: 20 },
 			pane: {
 				position: { x: 70, y: 50 },
 				pane: {
 					position: { x: 50, y: 50 }
 				}
 			}
-		}
+		// }
 		,
 		project: {
-			layout: null,
+			layout: {
+				src: 'layout.html'
+			},
 			add: {} //Ractive bug workaround
 		},
-		config : {}
+		config : {},
+		component: {
+		    name: 'mycomponent',
+		    template: [
+		      {
+		        name: 'jade',
+		        code: 'p hello {{world}}'
+		      },
+		      {
+		        name: 'mustache',
+		        process: 'ractive'
+		      },
+		      {
+		        mode: 'json',
+		        name: 'ractive'
+		      }
+		    ],
+		    style: [
+		      {
+		        name: 'stylus',
+		        code: 'p\n\tcolor steelblue'
+		      },
+		      {
+		        mode: 'jade',
+		        name: 'css'
+		      }
+		    ],
+		    data: [
+		      {
+		        name: 'js',
+		        code: '{ world: \'earth\' }',
+		        process: 'eval'
+		      },
+		      {
+		        name: 'json'
+		      }
+		    ],
+		    script: [
+		      {
+		        mode: 'js',
+		        name: 'init'
+		      }
+		    ]
+		}
 	}
 
 	var ractive,
-		Component = Ractive.components.threeDE
+		Component = Ractive.components.component
 	try {
 		ractive = new Component({
 			debug: true,

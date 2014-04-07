@@ -1,4 +1,4 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"QjfBzt":[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"LnREYa":[function(require,module,exports){
 var Section = require('./section')
 
 module.exports = function(componentData, options){
@@ -145,9 +145,9 @@ microevent.mixin(Component)
 
 
 
-},{"../util/event/microevent":11,"./section":"PSRXzm"}],"definition":[function(require,module,exports){
-module.exports=require('QjfBzt');
-},{}],"PSRXzm":[function(require,module,exports){
+},{"../util/event/microevent":11,"./section":"IRNVC2"}],"definition":[function(require,module,exports){
+module.exports=require('LnREYa');
+},{}],"IRNVC2":[function(require,module,exports){
 var Transformer = require('./transform/transformer')
 
 module.exports = function(name, steps, options){
@@ -187,7 +187,9 @@ module.exports = function(name, steps, options){
 					if(err){
 						stepObj.error = err
 					} else {
-						stepObj.error = void 0
+						if(stepObj.error) {
+							stepObj.error = void 0
+						}
 						next.code = result
 					}
 				})
@@ -212,7 +214,7 @@ module.exports = function(name, steps, options){
 	this.steps[0].update()
 }
 },{"./transform/transformer":9}],"section":[function(require,module,exports){
-module.exports=require('PSRXzm');
+module.exports=require('IRNVC2');
 },{}],5:[function(require,module,exports){
 var async = require('../../util/function/sync-as-async')
 

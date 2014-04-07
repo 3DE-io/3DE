@@ -91,7 +91,7 @@ module.exports = function MoveEvents(node, notify){
     }
 }
 
-},{"./event-subscriber":2}],"9Zb6PD":[function(require,module,exports){
+},{"./event-subscriber":2}],"0v0QNP":[function(require,module,exports){
 var af = require('./animation-frame'),
     MoveEvents = require('./move-events')
 
@@ -163,5 +163,5 @@ module.exports = TrackMoveEvents
 
 
 },{"./animation-frame":1,"./move-events":3}],"move":[function(require,module,exports){
-module.exports=require('9Zb6PD');
+module.exports=require('0v0QNP');
 },{}]},{},[])

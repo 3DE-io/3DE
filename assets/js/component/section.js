@@ -37,7 +37,9 @@ module.exports = function(name, steps, options){
 					if(err){
 						stepObj.error = err
 					} else {
-						stepObj.error = void 0
+						if(stepObj.error) {
+							stepObj.error = void 0
+						}
 						next.code = result
 					}
 				})

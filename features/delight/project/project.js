@@ -57,11 +57,12 @@ component.exports = {
                 component = add(item, components)
             if(!component) { return }
             
-            insert(components, component)
-            e.context[''].new = ''
+            var definition = new Definition(component)
+            insert( components, definition )
+            e.context['']['new'] = ''
             document.activeElement.blur()
             
-            fireSelected(component)
+            fireSelected(definition)
         })
         
         this.on('addFeature', function(e, item){
@@ -71,7 +72,7 @@ component.exports = {
             
             feature.components = []
             insert(features, feature)
-            e.context[''].new = ''
+            e.context['']['new'] = ''
             document.activeElement.blur()
         })
     },

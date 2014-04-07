@@ -26,8 +26,10 @@ component.exports = {
         this.editor.reset()
     },
     teardown: function(){
-        if(!this.editor) { return }
-        this.editor.teardown()  
+        if(this.editor) { 
+            this.editor.teardown() 
+        }
+        this._super()
     },
     createEditor: function(node, step){ 
         var e = ace.edit(node),

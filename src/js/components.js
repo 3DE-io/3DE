@@ -1,18 +1,12 @@
 var components = [
 {
-	name: '3DE',
-	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"project"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"component","a":{"component":[{"t":2,"r":"component"}],"project":[{"t":2,"r":"project"}]}}]},{"t":7,"e":"sizer","a":{"orientation":"horizontal"}}],
-	init: function(component, Ractive) {
-		
-	},
-},
-{
 	name: 'component',
 	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"pane","f":[{"t":7,"e":"template"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"styling"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"datum"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"scripting"}]},{"t":7,"e":"sizer"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"preview","a":{"component":[{"t":2,"r":"definition.component"}],"project":[{"t":2,"r":"project"}]}}]},{"t":7,"e":"sizer","a":{"orientation":"horizontal"}}],
 	init: function(component, Ractive) {
 		var Definition = require('definition')
 
 component.exports = {
+	magic: true,
 	beforeInit: function(options){
 		var d = options.data = options.data || {}
 		if(typeof d.component !== Definition) {
@@ -22,9 +16,22 @@ component.exports = {
 		}
 	},
 	init: function(){
-		var editors = this.findAllComponents('editors'),
+		var self = this,
+			editors = this.findAllComponents('editors'),
 			preview = this.findAllComponents('preview')[0],
 			noLive = {}
+
+		// this.observe('component', function(component){
+			
+		// })
+
+		this.observe('', function(n,o){
+			if(n===o) { return }
+
+			console.log('component change from', o ? o.name : '', 'to', n ? n.name : '')
+
+			self.data.definition = n
+		}, {init: false})
 
 		this.observe('config.*.noLiveRefresh', function(value, o, keypath){
 		    var section = keypath.split('.')[1]
@@ -46,13 +53,6 @@ component.exports = {
 	
 }
 
-	},
-},
-{
-	name: 'data',
-	template: [{"t":7,"e":"part","a":{"component":[{"t":2,"r":"current"}],"type":"data"}}],
-	init: function(component, Ractive) {
-		
 	},
 },
 {
@@ -111,8 +111,10 @@ component.exports = {
         this.editor.reset()
     },
     teardown: function(){
-        if(!this.editor) { return }
-        this.editor.teardown()  
+        if(this.editor) { 
+            this.editor.teardown() 
+        }
+        this._super()
     },
     createEditor: function(node, step){ 
         var e = ace.edit(node),
@@ -235,7 +237,6 @@ component.exports =  {
             o.data.section = new Section(d.name, d.steps)
         }
         o.data.selected = 0
-        //o.data.errorIndex = null
     },
     init: function(){
         var r = this
@@ -247,7 +248,7 @@ component.exports =  {
         var ractive = this,
             d = this.data
        
-        this.observe(steps, function(n,o){
+        this.observe('section', function(n,o){
             if(n===o){ return }
             console.log('reset')
             ractive.findAllComponents('editor').forEach(function(editor){
@@ -270,13 +271,6 @@ component.exports =  {
 		component.exports = {
     magic: true
 }
-	},
-},
-{
-	name: 'flow',
-	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"project"}]},{"t":7,"e":"pane","f":[{"t":7,"e":"component","a":{"component":[{"t":2,"r":"project.current"}],"features":[{"t":2,"r":"project.features"}]}}]},{"t":7,"e":"sizer","a":{"orientation":"horizontal"}}],
-	init: function(component, Ractive) {
-		
 	},
 },
 {
@@ -322,7 +316,7 @@ component.exports = {
 },
 {
 	name: 'part',
-	template: [{"t":7,"e":"editors","a":{"section":[{"t":2,"x":{"r":["type","definition"],"s":"${1}[${0}]"}}],"config":[{"t":2,"r":"config"}]}}],
+	template: [{"t":7,"e":"editors","a":{"section":[{"t":2,"kx":{"r":"definition","m":[{"t":30,"n":"type"}]}}],"config":[{"t":2,"r":"config"}]}}],
 	init: function(component, Ractive) {
 		component.exports = {
     beforeInit: function(o){
@@ -416,13 +410,6 @@ component.exports = {
 	},
 },
 {
-	name: 'preview-adapt',
-	template: [{"t":4,"r":"component","f":["\n",{"t":7,"e":"p","f":[{"t":2,"r":"template.ractive"}]},{"t":7,"e":"preview","a":{"ractive":[{"t":2,"r":"template.ractive"}],"css":[{"t":2,"r":"style.css"}],"json":[{"t":2,"r":"data.json"}],"js":[{"t":2,"r":"style.js"}]}}]},"\n"],
-	init: function(component, Ractive) {
-		
-	},
-},
-{
 	name: 'project',
 	template: [{"t":7,"e":"div","a":{"class":"project"},"f":[{"t":7,"e":"div","a":{"class":"dflux"},"f":"3DE"},{"t":4,"r":"project","f":["\n",{"t":7,"e":"ul","a":{"class":"features"},"f":[{"t":4,"r":"features","f":["\n",{"t":7,"e":"li","f":[{"t":2,"r":"name"},{"t":7,"e":"ul","a":{"class":"components"},"f":[{"t":4,"r":"components","i":"i","f":["\n",{"t":7,"e":"li","a":{"class":[{"t":2,"x":{"r":["name"],"s":"${0}===\"bob\"?\"selected\":\"\""}}]},"f":[{"t":2,"r":"name"}],"v":{"click":"select"}}]},"\n",{"t":7,"e":"li","f":[{"t":7,"e":"input","a":{"type":"text","value":[{"t":2,"r":"..new"}],"placeholder":"new component..."},"v":{"enter_kp":{"n":"addComponent","d":[{"t":2,"r":"..new"}]}}}]}]}]}]},"\n",{"t":7,"e":"li","f":[{"t":2,"r":"layout"},{"t":7,"e":"input","a":{"type":"text","value":[{"t":2,"r":"..new"}],"placeholder":"new feature..."},"v":{"enter_kp":{"n":"addFeature","d":[{"t":2,"r":"..new"}]}}}]}]}]},"\n"]}],
 	init: function(component, Ractive) {
@@ -485,11 +472,12 @@ component.exports = {
                 component = add(item, components)
             if(!component) { return }
             
-            insert(components, component)
-            e.context[''].new = ''
+            var definition = new Definition(component)
+            insert( components, definition )
+            e.context['']['new'] = ''
             document.activeElement.blur()
             
-            fireSelected(component)
+            fireSelected(definition)
         })
         
         this.on('addFeature', function(e, item){
@@ -499,7 +487,7 @@ component.exports = {
             
             feature.components = []
             insert(features, feature)
-            e.context[''].new = ''
+            e.context['']['new'] = ''
             document.activeElement.blur()
         })
     },
@@ -717,7 +705,7 @@ component.exports = {
 },
 {
 	name: 'threeDE',
-	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"project"}]},{"t":7,"e":"pane","f":[{"t":4,"r":"component","f":["\n",{"t":7,"e":"component","a":{"component":[{"t":2,"r":"component"}]}}]},"\n",{"t":4,"r":"component","n":true,"f":"<div class=create>Create a feature and component</div>"},"\n"]},{"t":7,"e":"sizer","a":{"orientation":"horizontal"}}],
+	template: [{"t":7,"e":"pane","f":[{"t":7,"e":"project"}]},{"t":7,"e":"pane","f":[{"t":4,"r":"component","f":["\n",{"t":7,"e":"component","a":{"component":[{"t":2,"r":"."}]}}]},"\n",{"t":4,"r":"component","n":true,"f":"<div class=create>Create a feature and component</div>"},"\n"]},{"t":7,"e":"sizer","a":{"orientation":"horizontal"}}],
 	init: function(component, Ractive) {
 		var Definition = require('definition')
 
@@ -727,6 +715,9 @@ component.exports = {
     		project = this.findComponent('project')
         
 	        project.on('componentSelect', function(component){
+	        	// if(typeof component !== Definition) {
+	        	// 	component = new Definition({ name: component.name } )
+	        	// }
 	        	self.set('component', component)
 	        })
     }

@@ -13,10 +13,11 @@ html
     style(feature=feature, template=templateName) !{style}
        
     script(id='main', type='text/ractive')
-       <#{templateName}
+       - var template = '<' + templateName
        each v, key in JSON.parse(json)
-         #{key}='{{#{key}}}'
-       ></#{templateName}>
+         - template += (' ' + key + '="{{' + key + '}}"')
+       - template += '></' + templateName + '>'
+       !{template}
     script(id='#{templateName}', type='text/ractive') !{html}
 
     each component in components
@@ -25,9 +26,9 @@ html
   body
     ///- #container
 
-    script(src="http://localhost:8080/src/js/Ractive.js")
+    script(src="http://localhost:8080/src/js/ractive.js")
     script(src="http://localhost:8080/src/js/Ractive-transitions-fade.js")
-    script(src="http://localhost:8080/src/js/Ractive.load.js")
+    script(src="http://localhost:8080/src/js/ractive-load.js")
 
     script(src="js-new/ace/ace.js")
     script(src="js-new/ace/ext-themelist.js")

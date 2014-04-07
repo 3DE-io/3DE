@@ -51,6 +51,7 @@ describe('component definition', function(){
 
 		var define = new Definition(data)
 
+    		console.log(JSON.stringify(define, true, 2))
 		beforeEach(function(done){
 			setTimeout(done, 1)
 		})
@@ -96,11 +97,14 @@ describe('component definition', function(){
 
 	describe('can create from scratch', function(){
 		it('on construction', function(){
+
 			var define = new Definition()
 			assert.equal(define.template.name, 'template')
     		assert.equal(define.style.name, 'style')
     		assert.equal(define.data.name, 'data')
     		assert.equal(define.script.name, 'script')
+
+    		console.log(JSON.stringify(define, true, 2))
 	    })
 	})
 
