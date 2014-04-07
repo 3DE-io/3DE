@@ -13,11 +13,11 @@
     opacity: .2;
     -webkit-transition: all .5s ease-out 1s;
 }
-.steps /*:hover*/ {
+.steps:hover {
     width: 100%;
     left: 0px;
 }
-.steps/*:hover*/ {
+.steps:hover {
     opacity: 1;
     -webkit-transition-delay: 0;
 }
